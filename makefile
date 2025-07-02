@@ -19,19 +19,24 @@ LINKER_FLAGS :=
 PASS_OBJECTS := $(filter-out %.compile.pass.cpp.o,$(TEST_OBJECTS))
 PASS_EXES := $(patsubst %.cpp.o,%,$(PASS_OBJECTS))
 
+COMPILE_OBJECTS := $(filter %.compile.pass.cpp.o,$(TEST_OBJECTS))
+
 .PHONY = all clean run compile $(TEST_OBJECTS)
 
 all: run
 	@
 
-run: $(PASS_EXES)
+run: $(PASS_EXES) $(COMPILE_OBJECTS)
 	@
 
 compile: $(TEST_OBJECTS)
 	@
 
+print:
+	@echo $(TEST_OBJECTS)
+
 $(PASS_EXES):%: $(OUTPUT_DIR)/%
-	@$< && echo "Test $@: \033[0;32mSUCCESS\033[0m" || { echo "Test $@: \033[0;31mFAILED\033[0m"; exit 1; }
+	@$< && echo "\033[0;34mTEST\033[0m $@: \033[0;32mSUCCESS\033[0m" || { echo "Test $@: \033[0;31mFAILED\033[0m"; exit 1; }
 
 $(OUTPUT_DIR)/%.pass: $(INTERMEDIATE_DIR)/%.pass.cpp.o makefile
 	@mkdir -p '$(@D)'
@@ -41,11 +46,17 @@ $(OUTPUT_DIR)/%.pass: $(INTERMEDIATE_DIR)/%.pass.cpp.o makefile
 $(TEST_OBJECTS):%.cpp.o: $(INTERMEDIATE_DIR)/%.cpp.o
 	@
 
-$(INTERMEDIATE_DIR)/%.cpp.o: $(TEST_ROOT)/%.cpp makefile
+$(INTERMEDIATE_DIR)/%.compile.pass.cpp.o: $(TEST_ROOT)/%.compile.pass.cpp makefile
+	@mkdir -p '$(@D)'
+	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@' && \
+	echo "\033[0;34mCOMPILE\033[0m $(patsubst $(INTERMEDIATE_DIR)/%,%,$@): \033[0;32mSUCCESS\033[0m"  || \
+	{ echo "\033[0;34mCOMPILE\033[0m $(patsubst $(INTERMEDIATE_DIR)/%,%,$@): \033[0;31mFAILED\033[0m"; exit 1; }
+
+$(INTERMEDIATE_DIR)/%.pass.cpp.o: $(TEST_ROOT)/%.pass.cpp makefile
 	@mkdir -p '$(@D)'
 	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@'
 
 -include $(addprefix $(INTERMEDIATE_DIR)/,$(DEPENDENCIES))
 
 clean:
-	@rm -rvf $(INTERMEDIATE_DIR)/**/*.o $(INTERMEDIATE_DIR)/**/*.d $(INTERMEDIATE_DIR)/**/*.prep.cpp $(OUTPUT_DIR)/
+	@rm -rf $(INTERMEDIATE_DIR)/**/*.o $(INTERMEDIATE_DIR)/**/*.d $(INTERMEDIATE_DIR)/**/*.prep.cpp $(OUTPUT_DIR)/
