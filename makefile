@@ -31,8 +31,7 @@ compile: $(TEST_OBJECTS)
 	@
 
 $(PASS_EXES):%: $(OUTPUT_DIR)/%
-	@echo "Running test" $@
-	@$< && echo $@ succeeded || { echo $@ failed; exit 1; }
+	@$< && echo "Test $@: \033[0;32mSUCCESS\033[0m" || { echo "Test $@: \033[0;31mFAILED\033[0m"; exit 1; }
 
 $(OUTPUT_DIR)/%.pass: $(INTERMEDIATE_DIR)/%.pass.cpp.o makefile
 	@mkdir -p '$(@D)'
@@ -44,11 +43,9 @@ $(TEST_OBJECTS):%.cpp.o: $(INTERMEDIATE_DIR)/%.cpp.o
 
 $(INTERMEDIATE_DIR)/%.cpp.o: $(TEST_ROOT)/%.cpp makefile
 	@mkdir -p '$(@D)'
-	@echo "Creating object" $(patsubst $(INTERMEDIATE_DIR)/%,%,$@)
 	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@'
 
 -include $(addprefix $(INTERMEDIATE_DIR)/,$(DEPENDENCIES))
 
 clean:
-	@echo "Cleaning up..."
 	@rm -rvf $(INTERMEDIATE_DIR)/**/*.o $(INTERMEDIATE_DIR)/**/*.d $(INTERMEDIATE_DIR)/**/*.prep.cpp $(OUTPUT_DIR)/
