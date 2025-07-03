@@ -23,6 +23,38 @@
 #include <type_traits>
 #include <utility>
 
+namespace details {
+namespace constructible {
+template <typename T>
+void implicit_conv(T) noexcept;
+
+template <typename T, typename THead, typename TMid, typename... TTail>
+auto explicit_test(int) noexcept -> decltype((
+    implicit_conv<T>({declval<THead>(), declval<TMid>(), declval<TTail>()...}),
+    std::false_type{}));
+template <typename T, typename THead, typename TMid, typename... TTail>
+auto explicit_test(float) noexcept
+    -> std::is_constructible<T, THead, TMid, TTail...>;
+template <typename T, typename THead>
+auto explicit_test(int) noexcept
+    -> std::conjunction<std::negation<std::is_convertible<THead, T>>,
+        std::is_constructible<T, THead>>;
+template <typename T>
+auto explicit_test(int) noexcept
+    -> std::conjunction<std::negation<decltype(implicit_test<T>(0))>,
+        std::is_default_constructible<T>>;
+template <typename T, typename...>
+auto explicit_test(...) noexcept -> std::false_type;
+
+template <typename TTarget, typename... TArgs>
+using is_explicit = decltype(explicit_test<TTarget, TArgs...>(0));
+} // namespace constructible
+} // namespace details
+
+template <typename TTarget, typename... TArgs>
+inline constexpr bool is_explicit_constructible_v =
+    details::constructible::is_explicit<TTarget, TArgs...>::value;
+
 namespace support {
 
 struct double_move_tracker {

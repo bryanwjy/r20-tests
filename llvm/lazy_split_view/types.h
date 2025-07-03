@@ -13,10 +13,10 @@
 #define TEST_STD_RANGES_RANGE_ADAPTORS_RANGE_LAZY_SPLIT_TYPES_H
 
 #include "../test_iterators.h"
+#include "rxx/lazy_split_view.h"
 
 #include <concepts>
 #include <cstddef>
-#include <ranges>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -237,26 +237,26 @@ static_assert(rxx::ranges::details::tiny_range<ForwardTinyView>);
 // Aliases
 
 using SplitViewCopyable =
-    std::ranges::lazy_split_view<CopyableView, CopyableView>;
+    rxx::ranges::lazy_split_view<CopyableView, CopyableView>;
 using OuterIterCopyable = std::ranges::iterator_t<SplitViewCopyable>;
 using ValueTypeCopyable = OuterIterCopyable::value_type;
 using InnerIterCopyable = std::ranges::iterator_t<ValueTypeCopyable>;
 using BaseIterCopyable = std::ranges::iterator_t<CopyableView>;
 
-using SplitViewForward = std::ranges::lazy_split_view<ForwardView, ForwardView>;
+using SplitViewForward = rxx::ranges::lazy_split_view<ForwardView, ForwardView>;
 using OuterIterForward = std::ranges::iterator_t<SplitViewForward>;
 using ValueTypeForward = OuterIterForward::value_type;
 using InnerIterForward = std::ranges::iterator_t<ValueTypeForward>;
 using BaseIterForward = std::ranges::iterator_t<ForwardView>;
 
-using SplitViewInput = std::ranges::lazy_split_view<InputView, ForwardTinyView>;
+using SplitViewInput = rxx::ranges::lazy_split_view<InputView, ForwardTinyView>;
 using OuterIterInput = std::ranges::iterator_t<SplitViewInput>;
 using ValueTypeInput = OuterIterInput::value_type;
 using InnerIterInput = std::ranges::iterator_t<ValueTypeInput>;
 using BaseIterInput = std::ranges::iterator_t<InputView>;
 
 using SplitViewDiff =
-    std::ranges::lazy_split_view<ForwardDiffView, ForwardDiffView>;
+    rxx::ranges::lazy_split_view<ForwardDiffView, ForwardDiffView>;
 using OuterIterConst = decltype(std::declval<SplitViewDiff const>().begin());
 using OuterIterNonConst = decltype(std::declval<SplitViewDiff>().begin());
 static_assert(!std::same_as<OuterIterConst, OuterIterNonConst>);
