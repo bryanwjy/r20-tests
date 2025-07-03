@@ -16,6 +16,8 @@ TEST_OBJECTS := $(addsuffix .o, $(TEST_SRCS:$(TEST_ROOT)/%=%))
 CXX_FLAGS := -std=c++20 -O1 -I$(RXX_PATH)
 LINKER_FLAGS := 
 
+DEPENDENCIES := $(TEST_OBJECTS:.o=.d)
+
 PASS_OBJECTS := $(filter-out %.compile.pass.cpp.o,$(TEST_OBJECTS))
 PASS_EXES := $(patsubst %.cpp.o,%,$(PASS_OBJECTS))
 
