@@ -29,32 +29,30 @@
 #include <ranges>
 #include <utility>
 
-#define VERIFY assert
-
 namespace ranges = std::ranges;
 namespace views = std::views;
 
 constexpr bool test01() {
     auto v1 = std::array{1, 2} | rxx::views::slide(1);
     auto const i0 = v1.begin(), i1 = v1.begin() + 1;
-    VERIFY(i0 + 1 - 1 == i0);
-    VERIFY(i0 < i1);
-    VERIFY(i1 < v1.end());
-    VERIFY(i1 - i0 == 1);
-    VERIFY(i0 - i1 == -1);
-    VERIFY(v1.end() - i1 == 1);
-    VERIFY(i1 - v1.end() == -1);
-    VERIFY(ranges::equal(std::move(v1) | rxx::views::join, (int[]){1, 2}));
+    assert(i0 + 1 - 1 == i0);
+    assert(i0 < i1);
+    assert(i1 < v1.end());
+    assert(i1 - i0 == 1);
+    assert(i0 - i1 == -1);
+    assert(v1.end() - i1 == 1);
+    assert(i1 - v1.end() == -1);
+    assert(ranges::equal(std::move(v1) | rxx::views::join, (int[]){1, 2}));
 
     int x[] = {1, 2, 3, 4};
     auto v2 = x | rxx::views::slide(2);
     auto i2 = v2.begin();
     i2 += 2;
     i2 -= -1;
-    VERIFY(i2 == v2.end());
-    VERIFY(ranges::size(v2) == 3);
-    VERIFY(ranges::size(std::as_const(v2)) == 3);
-    VERIFY(ranges::equal(v2,
+    assert(i2 == v2.end());
+    assert(ranges::size(v2) == 3);
+    assert(ranges::size(std::as_const(v2)) == 3);
+    assert(ranges::equal(v2,
         (std::initializer_list<int>[]){
             {1, 2},
             {2, 3},
@@ -64,22 +62,22 @@ constexpr bool test01() {
 
     int y[] = {1, 2, 3, 4, 5};
     auto const v3 = y | rxx::views::slide(3);
-    VERIFY(ranges::size(v3) == 3);
+    assert(ranges::size(v3) == 3);
     for (unsigned i = 0; i < ranges::size(x); i++) {
-        VERIFY(&v3[i][0] == &y[i] + 0);
-        VERIFY(&v3[i][1] == &y[i] + 1);
-        VERIFY(&v3[i][2] == &y[i] + 2);
+        assert(&v3[i][0] == &y[i] + 0);
+        assert(&v3[i][1] == &y[i] + 1);
+        assert(&v3[i][2] == &y[i] + 2);
     }
 
     // LWG 3848 - slide_view etc missing base accessor
     static_assert(sizeof(decltype(v3.base())) > 0);
 
     auto const v5 = y | rxx::views::slide(5);
-    VERIFY(ranges::size(v5) == 1);
-    VERIFY(ranges::equal(v5 | rxx::views::join, y));
+    assert(ranges::size(v5) == 1);
+    assert(ranges::equal(v5 | rxx::views::join, y));
 
     auto const v6 = y | rxx::views::slide(6);
-    VERIFY(ranges::empty(v6));
+    assert(ranges::empty(v6));
 
     return true;
 }
@@ -109,16 +107,16 @@ constexpr bool test03() {
     static_assert(ranges::forward_range<ty>);
     static_assert(ranges::common_range<ty>);
     static_assert(!ranges::sized_range<ty>);
-    VERIFY(v.begin() == v.begin());
-    VERIFY(v.begin() != v.end());
-    VERIFY(ranges::next(v.begin(), 3) == v.end());
+    assert(v.begin() == v.begin());
+    assert(v.begin() != v.end());
+    assert(ranges::next(v.begin(), 3) == v.end());
     auto it = v.begin();
     ++it;
     it++;
-    VERIFY(ranges::next(it) == v.end());
+    assert(ranges::next(it) == v.end());
     it--;
     --it;
-    VERIFY(it == v.begin());
+    assert(it == v.begin());
 
     return true;
 }

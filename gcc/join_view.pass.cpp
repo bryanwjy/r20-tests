@@ -28,8 +28,6 @@
 #include <string_view>
 #include <vector>
 
-#define VERIFY assert
-
 namespace ranges = std::ranges;
 namespace views = std::ranges::views;
 
@@ -37,7 +35,7 @@ void test01() {
     using namespace std::literals;
     std::string_view cs[] = {"the", "quick", "brown", "fox"};
     auto v = cs | rxx::views::join;
-    VERIFY(ranges::equal(v, "thequickbrownfox"sv));
+    assert(ranges::equal(v, "thequickbrownfox"sv));
     using R = decltype(v);
     static_assert(ranges::bidirectional_range<R>);
     static_assert(ranges::bidirectional_range<R const>);
@@ -49,7 +47,7 @@ void test02() {
     auto v = (views::iota(0, 4) | views::transform([](int i) {
         return views::iota(0, i);
     }) | rxx::views::join);
-    VERIFY(ranges::equal(v, (int[]){0, 0, 1, 0, 1, 2}));
+    assert(ranges::equal(v, (int[]){0, 0, 1, 0, 1, 2}));
     using R = decltype(v);
     static_assert(ranges::input_range<R>);
     static_assert(!ranges::range<R const>);
@@ -61,7 +59,7 @@ void test03() {
     auto v = (views::iota(0, 4) |
         views::transform([](int i) { return views::iota(0, i); }) |
         views::filter([](auto) { return true; }) | rxx::views::join);
-    VERIFY(ranges::equal(v, (int[]){0, 0, 1, 0, 1, 2}));
+    assert(ranges::equal(v, (int[]){0, 0, 1, 0, 1, 2}));
     using R = decltype(v);
     static_assert(ranges::input_range<R>);
     static_assert(!ranges::range<R const>);
@@ -73,7 +71,7 @@ void test04() {
     auto v = (views::iota(0, 4) |
         views::transform([](int i) { return views::iota(0, i); }));
     auto v2 = ranges::ref_view{v};
-    VERIFY(ranges::equal(v2 | rxx::views::join, (int[]){0, 0, 1, 0, 1, 2}));
+    assert(ranges::equal(v2 | rxx::views::join, (int[]){0, 0, 1, 0, 1, 2}));
     using R = decltype(v2);
     static_assert(ranges::random_access_range<R>);
     static_assert(ranges::range<R const>);
@@ -89,11 +87,11 @@ void test05() {
     auto v = x | rxx::views::join | rxx::views::lazy_split(' ');
 
     auto i = v.begin();
-    VERIFY(ranges::equal(*i++, "the"sv));
-    VERIFY(ranges::equal(*i++, "quick"sv));
-    VERIFY(ranges::equal(*i++, "brown"sv));
-    VERIFY(ranges::equal(*i++, "fox"sv));
-    VERIFY(i == v.end());
+    assert(ranges::equal(*i++, "the"sv));
+    assert(ranges::equal(*i++, "quick"sv));
+    assert(ranges::equal(*i++, "brown"sv));
+    assert(ranges::equal(*i++, "fox"sv));
+    assert(i == v.end());
 }
 
 void test06() {
@@ -141,7 +139,7 @@ void test08() {
         std::in_place, std::in_place, 5};
     auto v = s | rxx::views::join;
     auto i = v.begin();
-    VERIFY(i->a == 5);
+    assert(i->a == 5);
 }
 
 template <auto join = rxx::views::join>
@@ -158,7 +156,7 @@ void test10() {
     auto v = views::single(0) |
         views::transform([](auto const& s) { return views::single(s); }) |
         rxx::views::join;
-    VERIFY(ranges::next(v.begin()) == v.end());
+    assert(ranges::next(v.begin()) == v.end());
 }
 
 void test11() {
@@ -169,7 +167,7 @@ void test11() {
             {n, -n}
         };
     }) | rxx::views::join;
-    VERIFY(ranges::equal(v, (int[]){1, -1, 2, -2, 3, -3}));
+    assert(ranges::equal(v, (int[]){1, -1, 2, -2, 3, -3}));
 
     struct S {
         S() = default;
@@ -210,7 +208,7 @@ void test14() {
     using inner = ranges::range_reference_t<decltype(v)>;
     static_assert(ranges::input_range<inner> && !ranges::forward_range<inner> &&
         !std::default_initializable<ranges::iterator_t<inner>>);
-    VERIFY(ranges::equal(v | rxx::views::join, (int[]){1, 2, 3}));
+    assert(ranges::equal(v | rxx::views::join, (int[]){1, 2, 3}));
 }
 
 int main() {

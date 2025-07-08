@@ -29,8 +29,6 @@
 #include <sstream>
 #include <vector>
 
-#define VERIFY assert
-
 namespace ranges = std::ranges;
 namespace views = std::views;
 
@@ -39,29 +37,29 @@ constexpr bool test01() {
     auto v = x | rxx::views::chunk_by(ranges::less_equal{});
     static_assert(ranges::bidirectional_range<decltype(v)> &&
         ranges::common_range<decltype(v)>);
-    VERIFY(ranges::equal(v,
+    assert(ranges::equal(v,
         (std::initializer_list<int>[]){
             {1, 2, 2, 3},
             {0, 4, 5},
             {2}
     },
         ranges::equal));
-    VERIFY(ranges::equal(v | views::reverse,
+    assert(ranges::equal(v | views::reverse,
         (std::initializer_list<int>[]){
             {2},
             {0, 4, 5},
             {1, 2, 2, 3}
     },
         ranges::equal));
-    VERIFY(ranges::equal(v | rxx::views::join, x));
+    assert(ranges::equal(v | rxx::views::join, x));
     auto i = v.begin();
     auto j = i;
     j++;
-    VERIFY(i == i && i != v.end());
-    VERIFY(j == j && j != v.end());
-    VERIFY(j != i);
+    assert(i == i && i != v.end());
+    assert(j == j && j != v.end());
+    assert(j != i);
     j--;
-    VERIFY(j == i);
+    assert(j == i);
 
     return true;
 }
@@ -72,12 +70,12 @@ void test02() {
     auto v = rx | rxx::views::chunk_by(ranges::equal_to{});
     static_assert(!ranges::bidirectional_range<decltype(v)> &&
         !ranges::common_range<decltype(v)>);
-    VERIFY(
+    assert(
         ranges::equal(v, x | views::transform(views::single), ranges::equal));
     auto i = v.begin();
-    VERIFY(i != v.end());
+    assert(i != v.end());
     ranges::advance(i, 3);
-    VERIFY(i == v.end());
+    assert(i == v.end());
 }
 
 void test03() {
@@ -90,9 +88,9 @@ constexpr bool test04() {
     using namespace std::literals;
     std::string_view s = "hello";
     auto r = s | rxx::views::chunk_by(std::less{});
-    VERIFY(ranges::equal(
+    assert(ranges::equal(
         r, (std::string_view[]){"h"sv, "el"sv, "lo"sv}, ranges::equal));
-    VERIFY(ranges::equal(r | views::reverse,
+    assert(ranges::equal(r | views::reverse,
         (std::string_view[]){"lo"sv, "el"sv, "h"sv}, ranges::equal));
 
     return true;
@@ -102,7 +100,7 @@ void test05() {
     // PR libstdc++/109474
     std::vector<bool> v = {true, false, true, true, false, false};
     auto r = v | rxx::views::chunk_by(std::equal_to{});
-    VERIFY(ranges::equal(r,
+    assert(ranges::equal(r,
         (std::initializer_list<bool>[]){
             {true},
             {false},
@@ -110,7 +108,7 @@ void test05() {
             {false, false}
     },
         ranges::equal));
-    VERIFY(ranges::equal(r | views::reverse,
+    assert(ranges::equal(r | views::reverse,
         (std::initializer_list<bool>[]){
             {false, false},
             {true, true},

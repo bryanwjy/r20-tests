@@ -29,8 +29,6 @@
 #include <string_view>
 #include <vector>
 
-#define VERIFY assert
-
 namespace ranges = std::ranges;
 namespace views = std::ranges::views;
 using namespace std::literals;
@@ -38,16 +36,16 @@ using namespace std::literals;
 constexpr bool test01() {
     std::string_view rs[] = {"hello", "world"};
     auto v = rs | rxx::views::join_with(' ');
-    VERIFY(ranges::equal(v | views::split(' '), rs, ranges::equal));
+    assert(ranges::equal(v | views::split(' '), rs, ranges::equal));
     auto i = v.begin(), j = v.begin();
-    VERIFY(i == j);
+    assert(i == j);
     ++i;
     i++;
-    VERIFY(i != j);
-    VERIFY(*i == 'l');
+    assert(i != j);
+    assert(*i == 'l');
     --i;
     i--;
-    VERIFY(*i == 'h');
+    assert(*i == 'h');
     return true;
 }
 
@@ -55,14 +53,14 @@ constexpr bool test02() {
     std::string_view rs[] = {"the", "quick", "brown", "fox"};
     auto v = rs | views::transform([](auto x) { return x; }) |
         views::filter([](auto) { return true; });
-    VERIFY(ranges::equal(
+    assert(ranges::equal(
         v | rxx::views::join_with(views::empty<char>), "thequickbrownfox"sv));
-    VERIFY(
+    assert(
         ranges::equal(v | rxx::views::join_with('-'), "the-quick-brown-fox"sv));
-    VERIFY(ranges::equal(
+    assert(ranges::equal(
         v | rxx::views::join_with("--"sv), "the--quick--brown--fox"sv));
-    VERIFY(ranges::empty(views::empty<int[3]> | rxx::views::join_with(0)));
-    VERIFY(ranges::equal(
+    assert(ranges::empty(views::empty<int[3]> | rxx::views::join_with(0)));
+    assert(ranges::equal(
         views::single(std::array{42}) | rxx::views::join_with(0), (int[]){42}));
     return true;
 }
@@ -98,12 +96,12 @@ constexpr bool test03() {
 constexpr bool test04() {
     std::string rs[] = {"a", "", "b", "", "c"};
     auto v = rs | rxx::views::join_with(' ');
-    VERIFY(ranges::equal(v, "a  b  c"sv));
+    assert(ranges::equal(v, "a  b  c"sv));
     auto i = v.begin();
     auto j = ranges::next(i, 3);
     ranges::iter_swap(i, j);
     *j = ranges::iter_move(i);
-    VERIFY(ranges::equal(v, "b  b  c"sv));
+    assert(ranges::equal(v, "b  b  c"sv));
     return true;
 }
 

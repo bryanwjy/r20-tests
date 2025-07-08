@@ -34,8 +34,6 @@
 #include <utility>
 #include <vector>
 
-#define VERIFY assert
-
 using rxx::tests::forward_iterator_wrapper;
 using rxx::tests::input_iterator_wrapper;
 using rxx::tests::test_range;
@@ -52,22 +50,22 @@ void test01() {
         rxx::views::lazy_split(
             views::all(p)); // views::all is needed here after P2281.
     auto i = v.begin();
-    VERIFY(ranges::equal(*i++, "the"sv));
-    VERIFY(ranges::equal(*i++, "quick"sv));
-    VERIFY(ranges::equal(*i++, "brown"sv));
-    VERIFY(ranges::equal(*i++, "fox"sv));
-    VERIFY(i == v.end());
+    assert(ranges::equal(*i++, "the"sv));
+    assert(ranges::equal(*i++, "quick"sv));
+    assert(ranges::equal(*i++, "brown"sv));
+    assert(ranges::equal(*i++, "fox"sv));
+    assert(i == v.end());
 }
 
 void test02() {
     auto x = "the quick brown fox"sv;
     auto v = x | rxx::views::lazy_split(' ');
     auto i = v.begin();
-    VERIFY(ranges::equal(*i++, "the"sv));
-    VERIFY(ranges::equal(*i++, "quick"sv));
-    VERIFY(ranges::equal(*i++, "brown"sv));
-    VERIFY(ranges::equal(*i++, "fox"sv));
-    VERIFY(i == v.end());
+    assert(ranges::equal(*i++, "the"sv));
+    assert(ranges::equal(*i++, "quick"sv));
+    assert(ranges::equal(*i++, "brown"sv));
+    assert(ranges::equal(*i++, "fox"sv));
+    assert(i == v.end());
 }
 
 void test03() {
@@ -75,11 +73,11 @@ void test03() {
     test_range<char, forward_iterator_wrapper> rx(x, x + sizeof(x) - 1);
     auto v = rx | rxx::views::lazy_split(' ');
     auto i = v.begin();
-    VERIFY(ranges::equal(*i++, "the"sv));
-    VERIFY(ranges::equal(*i++, "quick"sv));
-    VERIFY(ranges::equal(*i++, "brown"sv));
-    VERIFY(ranges::equal(*i++, "fox"sv));
-    VERIFY(i == v.end());
+    assert(ranges::equal(*i++, "the"sv));
+    assert(ranges::equal(*i++, "quick"sv));
+    assert(ranges::equal(*i++, "brown"sv));
+    assert(ranges::equal(*i++, "fox"sv));
+    assert(i == v.end());
 }
 
 void test04() {
@@ -92,11 +90,11 @@ void test04() {
         rxx::views::lazy_split(
             views::all(p)); // views::all is needed here after P2281.
     auto i = v.begin();
-    VERIFY(ranges::equal(*i++, "the"sv));
-    VERIFY(ranges::equal(*i++, "quick"sv));
-    VERIFY(ranges::equal(*i++, "brown"sv));
-    VERIFY(ranges::equal(*i++, "fox"sv));
-    VERIFY(i == v.end());
+    assert(ranges::equal(*i++, "the"sv));
+    assert(ranges::equal(*i++, "quick"sv));
+    assert(ranges::equal(*i++, "brown"sv));
+    assert(ranges::equal(*i++, "fox"sv));
+    assert(i == v.end());
 }
 
 void test05() {
@@ -110,7 +108,7 @@ void test05() {
         views::common;
     std::vector<std::string> words(rng.begin(), rng.end());
     auto not_space_p = [](char c) { return c != ' '; };
-    VERIFY(ranges::equal(
+    assert(ranges::equal(
         words | rxx::views::join, str | views::filter(not_space_p)));
 }
 
@@ -142,15 +140,15 @@ void test08() {
     test_range<char, input_iterator_wrapper> rx(x, x + sizeof(x) - 1);
     auto v = rx | rxx::views::lazy_split(' ');
     auto i = v.begin();
-    VERIFY(ranges::equal(*i, "the"sv));
+    assert(ranges::equal(*i, "the"sv));
     ++i;
-    VERIFY(ranges::equal(*i, "quick"sv));
+    assert(ranges::equal(*i, "quick"sv));
     ++i;
-    VERIFY(ranges::equal(*i, "brown"sv));
+    assert(ranges::equal(*i, "brown"sv));
     ++i;
-    VERIFY(ranges::equal(*i, "fox"sv));
+    assert(ranges::equal(*i, "fox"sv));
     ++i;
-    VERIFY(i == v.end());
+    assert(i == v.end());
 }
 
 template <auto lazy_split = rxx::views::lazy_split>
@@ -193,16 +191,16 @@ void test10() {
     };
     auto v =
         "xxyx"sv | rxx::views::lazy_split("xy"sv) | views::transform(to_string);
-    VERIFY(ranges::equal(v, (std::string_view[]){"x", "x"}));
+    assert(ranges::equal(v, (std::string_view[]){"x", "x"}));
 }
 
 void test11() {
     // LWG 3478
     auto v = rxx::views::lazy_split("text"sv, "text"sv);
     auto i = v.begin();
-    VERIFY(ranges::empty(*i++));
-    VERIFY(ranges::empty(*i++));
-    VERIFY(i == v.end());
+    assert(ranges::empty(*i++));
+    assert(ranges::empty(*i++));
+    assert(i == v.end());
 
     static_assert(
         ranges::distance(rxx::views::lazy_split(" text "sv, ' ')) == 3);
@@ -224,9 +222,9 @@ constexpr bool test12() {
     auto r = views::single(0) | rxx::views::lazy_split(0);
     auto i = r.begin();
     ++i;
-    VERIFY(i != r.end());
+    assert(i != r.end());
     decltype(std::as_const(r).begin()) j = i;
-    VERIFY(j != r.end());
+    assert(j != r.end());
 
     return true;
 }
