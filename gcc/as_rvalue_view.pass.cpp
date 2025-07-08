@@ -19,70 +19,71 @@
 // <http://www.gnu.org/licenses/>.
 
 #include "rxx/as_rvalue_view.h"
+
 #include "test_iterators.h"
+
 #include <algorithm>
 #include <cassert>
 #include <memory>
 #include <optional>
 #include <utility>
 
-#define VERIFY assert
-
 namespace ranges = std::ranges;
 namespace views = std::views;
 
-template <typename T> struct MoveOnly {
-  constexpr MoveOnly(auto &&...args)
-      : val{std::in_place, std::forward<decltype(args)>(args)...} {}
-  constexpr MoveOnly(MoveOnly const &) = delete;
-  constexpr MoveOnly &operator=(MoveOnly const &) = delete;
-  constexpr MoveOnly(MoveOnly &&other) : val{std::move(other.val)} {
-    other.val.reset();
-  }
-  constexpr MoveOnly &operator=(MoveOnly &&other) {
-    val = std::move(other.val);
-    other.val.reset();
-    return *this;
-  }
+template <typename T>
+struct MoveOnly {
+    constexpr MoveOnly(auto&&... args)
+        : val{std::in_place, std::forward<decltype(args)>(args)...} {}
+    constexpr MoveOnly(MoveOnly const&) = delete;
+    constexpr MoveOnly& operator=(MoveOnly const&) = delete;
+    constexpr MoveOnly(MoveOnly&& other) : val{std::move(other.val)} {
+        other.val.reset();
+    }
+    constexpr MoveOnly& operator=(MoveOnly&& other) {
+        val = std::move(other.val);
+        other.val.reset();
+        return *this;
+    }
 
-  constexpr T *get() const noexcept { return val ? &*val : nullptr; }
-  constexpr T &operator*() const noexcept { return *val; }
+    constexpr T* get() const noexcept { return val ? &*val : nullptr; }
+    constexpr T& operator*() const noexcept { return *val; }
 
-  mutable std::optional<T> val;
+    mutable std::optional<T> val;
 };
 
 template <typename T, typename... Args>
-  requires(!std::is_array_v<T>)
-constexpr auto MakeMoveOnly(Args &&...args) {
-  return MoveOnly<T>{std::forward<Args>(args)...};
+requires (!std::is_array_v<T>)
+constexpr auto MakeMoveOnly(Args&&... args) {
+    return MoveOnly<T>{std::forward<Args>(args)...};
 }
 
 constexpr bool test01() {
 
-  MoveOnly<int> a[3] = {MakeMoveOnly<int>(1), MakeMoveOnly<int>(2),
-                        MakeMoveOnly<int>(3)};
-  MoveOnly<int> b[3];
-  auto v = a | rxx::views::as_rvalue;
-  ranges::copy(v, b);
-  VERIFY(ranges::all_of(a, [](auto &p) { return p.get() == nullptr; }));
-  VERIFY(ranges::equal(b | views::transform([](auto &p) { return *p; }),
-                       (int[]){1, 2, 3}));
+    MoveOnly<int> a[3] = {
+        MakeMoveOnly<int>(1), MakeMoveOnly<int>(2), MakeMoveOnly<int>(3)};
+    MoveOnly<int> b[3];
+    auto v = a | rxx::views::as_rvalue;
+    ranges::copy(v, b);
+    assert(ranges::all_of(a, [](auto& p) { return p.get() == nullptr; }));
+    assert(ranges::equal(
+        b | views::transform([](auto& p) { return *p; }), (int[]){1, 2, 3}));
 
-  return true;
+    return true;
 }
 
 void test02() {
-  MoveOnly<int> x = MakeMoveOnly<int>(42);
-  MoveOnly<int> y;
-  rxx::tests::test_input_range<MoveOnly<int>> rx(&x, &x + 1);
-  auto v = rx | rxx::views::as_rvalue;
-  static_assert(!ranges::common_range<decltype(v)>);
-  ranges::copy(v, &y);
-  VERIFY(x.get() == nullptr);
-  VERIFY(*y == 42);
+    MoveOnly<int> x = MakeMoveOnly<int>(42);
+    MoveOnly<int> y;
+    rxx::tests::test_input_range<MoveOnly<int>> rx(&x, &x + 1);
+    auto v = rx | rxx::views::as_rvalue;
+    static_assert(!ranges::common_range<decltype(v)>);
+    ranges::copy(v, &y);
+    assert(x.get() == nullptr);
+    assert(*y == 42);
 }
 
 int main() {
-  static_assert(test01());
-  test02();
+    static_assert(test01());
+    test02();
 }

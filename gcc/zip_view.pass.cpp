@@ -27,7 +27,6 @@
 #include <string_view>
 #include <utility>
 #include <vector>
-#define VERIFY assert
 
 namespace ranges = std::ranges;
 namespace views = std::ranges::views;
@@ -38,37 +37,37 @@ constexpr bool test01() {
 
     auto z1 = rxx::views::zip(std::array{1, 2});
     auto const i0 = z1.begin(), i1 = z1.begin() + 1;
-    VERIFY(i0 + 1 - 1 == i0);
-    VERIFY(i0 < i1);
-    VERIFY(i1 < z1.end());
-    VERIFY(i1 - i0 == 1);
-    VERIFY(i0 - i1 == -1);
-    VERIFY(z1.end() - i1 == 1);
-    VERIFY(i1 - z1.end() == -1);
+    assert(i0 + 1 - 1 == i0);
+    assert(i0 < i1);
+    assert(i1 < z1.end());
+    assert(i1 - i0 == 1);
+    assert(i0 - i1 == -1);
+    assert(z1.end() - i1 == 1);
+    assert(i1 - z1.end() == -1);
     ranges::iter_swap(i0, i1);
-    VERIFY(ranges::equal(std::move(z1) | views::keys, (int[]){2, 1}));
+    assert(ranges::equal(std::move(z1) | views::keys, (int[]){2, 1}));
 
     auto z2 = rxx::views::zip(std::array{1, 2}, std::array{3, 4, 5});
     auto i2 = z2.begin();
     i2 += 1;
     i2 -= -1;
-    VERIFY(i2 == z2.end());
-    VERIFY(ranges::size(z2) == 2);
-    VERIFY(ranges::size(std::as_const(z2)) == 2);
-    VERIFY(std::get<0>(z2[0]) == 1 && std::get<1>(z2[0]) == 3);
-    VERIFY(std::get<0>(z2[1]) == 2 && std::get<1>(z2[1]) == 4);
+    assert(i2 == z2.end());
+    assert(ranges::size(z2) == 2);
+    assert(ranges::size(std::as_const(z2)) == 2);
+    assert(std::get<0>(z2[0]) == 1 && std::get<1>(z2[0]) == 3);
+    assert(std::get<0>(z2[1]) == 2 && std::get<1>(z2[1]) == 4);
     for (auto const [x, y] : z2) {
-        VERIFY(y - x == 2);
+        assert(y - x == 2);
         std::swap(x, y);
     }
 
     int x[2] = {1, 2}, y[2] = {3, 4}, z[2] = {5, 6};
     auto const z3 = rxx::views::zip(x, y, z);
-    VERIFY(ranges::size(z3) == 2);
+    assert(ranges::size(z3) == 2);
     for (int i = 0; i < ranges::size(x); i++) {
-        VERIFY(&std::get<0>(z3[i]) == &x[i]);
-        VERIFY(&std::get<1>(z3[i]) == &y[i]);
-        VERIFY(&std::get<2>(z3[i]) == &z[i]);
+        assert(&std::get<0>(z3[i]) == &x[i]);
+        assert(&std::get<1>(z3[i]) == &y[i]);
+        assert(&std::get<2>(z3[i]) == &z[i]);
     }
 
     return true;
@@ -103,15 +102,15 @@ constexpr bool test03() {
     static_assert(ranges::forward_range<ty>);
     static_assert(!ranges::common_range<ty>);
     static_assert(!ranges::sized_range<ty>);
-    VERIFY(z.begin() == z.begin());
-    VERIFY(z.begin() != z.end());
-    VERIFY(ranges::next(z.begin(), 3) == z.end());
+    assert(z.begin() == z.begin());
+    assert(z.begin() != z.end());
+    assert(ranges::next(z.begin(), 3) == z.end());
     auto it = z.begin();
     ++it;
     it++;
     it--;
     --it;
-    VERIFY(it == z.begin());
+    assert(it == z.begin());
 
     return true;
 }
@@ -125,8 +124,8 @@ constexpr bool test04() {
 #endif
     auto i = r.begin();
     auto s = r.end();
-    VERIFY(s - i == 1);
-    VERIFY(i + 1 - i == 1);
+    assert(s - i == 1);
+    assert(i + 1 - i == 1);
 
     return true;
 }
