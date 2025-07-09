@@ -37,8 +37,13 @@ compile: $(TEST_OBJECTS)
 print:
 	@echo $(TEST_OBJECTS)
 
-$(PASS_EXES):%: $(OUTPUT_DIR)/%
-	@$< && echo "\033[0;34mTEST\033[0m $@: \033[0;32mSUCCESS\033[0m" || { echo "Test $@: \033[0;31mFAILED\033[0m"; exit 1; }
+$(PASS_EXES):%: $(OUTPUT_DIR)/%.crc
+	@
+
+$(OUTPUT_DIR)/%.crc: $(OUTPUT_DIR)/%
+	@$< && echo "\033[0;34mTEST\033[0m $(@:.crc=): \033[0;32mSUCCESS\033[0m" && \
+	cksum $< > $<.crc || \
+	{ echo "Test $@: \033[0;31mFAILED\033[0m" && rm -f $<.crc; exit 1; }
 
 $(OUTPUT_DIR)/%.pass: $(INTERMEDIATE_DIR)/%.pass.cpp.o makefile
 	@mkdir -p '$(@D)'
