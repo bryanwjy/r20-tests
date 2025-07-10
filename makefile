@@ -13,7 +13,7 @@ LLVM_DIR := $(TEST_ROOT)/llvm
 
 TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) -name '*.pass.cpp')
 TEST_OBJECTS := $(addsuffix .o, $(TEST_SRCS:$(TEST_ROOT)/%=%))
-CXX_FLAGS := -std=c++20 -O1 -I$(RXX_PATH)
+CXX_FLAGS := -std=c++20 -O1 -I$(RXX_PATH) -ftemplate-backtrace-limit=0
 LINKER_FLAGS := 
 
 DEPENDENCIES := $(TEST_OBJECTS:.o=.d)
