@@ -26,6 +26,9 @@
 #include <type_traits>
 #include <utility>
 
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
+
 struct ElementWithCounting {
     int* times_copied = nullptr;
     int* times_moved = nullptr;
@@ -105,13 +108,13 @@ static_assert(std::is_copy_constructible_v<StrView>);
 // SFINAE tests.
 
 static_assert(
-    is_explicit_constructible_v<rxx::ranges::lazy_split_view<StrView, StrView>,
+    is_explicit_constructible_v<xranges::lazy_split_view<StrView, StrView>,
         StrView, std::ranges::range_value_t<StrView>>,
     "This constructor must be explicit");
 
 constexpr bool test() {
     {
-        using V = rxx::ranges::lazy_split_view<StrView, StrView>;
+        using V = xranges::lazy_split_view<StrView, StrView>;
 
         // Calling the constructor with `(std::string, range_value_t)`.
         {
@@ -136,7 +139,7 @@ constexpr bool test() {
     {
         using Range = RangeWithCounting;
         using Element = ElementWithCounting;
-        using Pattern = std::ranges::single_view<Element>;
+        using Pattern = xranges::single_view<Element>;
 
         // Arguments are lvalues.
         {
@@ -147,7 +150,7 @@ constexpr bool test() {
             Range range(range_copied, range_moved);
             Element element(element_copied, element_moved);
 
-            rxx::ranges::lazy_split_view<View, Pattern> v(range, element);
+            xranges::lazy_split_view<View, Pattern> v(range, element);
             assert(range_copied == 0); // `ref_view` does neither copy...
             assert(range_moved == 0);  // ...nor move the element.
             assert(element_copied ==
@@ -165,7 +168,7 @@ constexpr bool test() {
 
             int range_copied = 0, range_moved = 0, element_copied = 0,
                 element_moved = 0;
-            rxx::ranges::lazy_split_view<View, Pattern> v(
+            xranges::lazy_split_view<View, Pattern> v(
                 Range(range_copied, range_moved),
                 Element(element_copied, element_moved));
             assert(range_copied == 0);
