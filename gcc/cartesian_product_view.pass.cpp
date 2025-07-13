@@ -182,8 +182,9 @@ void test04() {
 }
 
 void test05() {
-#if 0 && __SIZEOF_INT128__
-  auto r = views::iota(__int128(0), __int128(5));
+    // libc++ does not support this
+#if RXX_LIBSTDCXX
+    auto r = views::iota(__int128(0), __int128(5));
 #else
     auto r = views::iota(0ll, 5ll);
 #endif
