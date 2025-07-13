@@ -49,7 +49,7 @@ constexpr bool test() {
         int buffer[8] = {1, 2, 3, 4, 5, 6, 7, 8};
         std::same_as<xranges::zip_view<SizedRandomAccessView>> decltype(auto)
             v = xviews::zip(SizedRandomAccessView{buffer});
-        assert(std::ranges::size(v) == 8);
+        assert(xranges::size(v) == 8);
         static_assert(std::is_same_v<xranges::range_reference_t<decltype(v)>,
             std::tuple<int&>>);
     }

@@ -34,7 +34,7 @@ int main(int, char**) {
             std::vector{4, 5, 6},
             std::array{7},
         };
-        assert(std::ranges::size(v) == 1);
+        assert(xranges::size(v) == 1);
         assert(*v.begin() == std::make_tuple(1, 4, 7));
     }
     {
