@@ -9,6 +9,7 @@
 #ifndef LIBCXX_TEST_SUPPORT_TEST_RANGE_H
 #define LIBCXX_TEST_SUPPORT_TEST_RANGE_H
 
+#include "rxx/concepts.h"
 #include "test_iterators.h"
 
 #include <concepts>
@@ -16,6 +17,9 @@
 #include <iterator>
 #include <ranges>
 #include <type_traits>
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 struct sentinel {
     bool operator==(std::input_or_output_iterator auto const&) const;

@@ -12,6 +12,8 @@
 #ifndef SUPPORT_TEST_ITERATORS_H
 #define SUPPORT_TEST_ITERATORS_H
 
+#include "rxx/access.h"
+#include "rxx/concepts.h"
 #include "type_algorithms.h"
 
 #include <cassert>
@@ -22,6 +24,9 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 namespace details {
 namespace constructible {
@@ -2060,30 +2065,30 @@ struct ProxySentinel {
 template <class BaseSent>
 ProxySentinel(BaseSent) -> ProxySentinel<BaseSent>;
 
-template <std::ranges::input_range Base>
-requires std::ranges::view<Base>
+template <xranges::input_range Base>
+requires xranges::view<Base>
 struct ProxyRange {
     Base base_;
 
-    constexpr auto begin() { return ProxyIterator{std::ranges::begin(base_)}; }
+    constexpr auto begin() { return ProxyIterator{xranges::begin(base_)}; }
 
-    constexpr auto end() { return ProxySentinel{std::ranges::end(base_)}; }
+    constexpr auto end() { return ProxySentinel{xranges::end(base_)}; }
 
     constexpr auto begin() const
-    requires std::ranges::input_range<Base const>
+    requires xranges::input_range<Base const>
     {
-        return ProxyIterator{std::ranges::begin(base_)};
+        return ProxyIterator{xranges::begin(base_)};
     }
 
     constexpr auto end() const
-    requires std::ranges::input_range<Base const>
+    requires xranges::input_range<Base const>
     {
-        return ProxySentinel{std::ranges::end(base_)};
+        return ProxySentinel{xranges::end(base_)};
     }
 };
 
-template <std::ranges::input_range R>
-requires std::ranges::viewable_range<R&&>
+template <xranges::input_range R>
+requires xranges::viewable_range<R&&>
 ProxyRange(R&&) -> ProxyRange<std::views::all_t<R&&>>;
 
 namespace util {

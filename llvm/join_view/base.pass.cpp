@@ -14,6 +14,7 @@
 // constexpr V base() const& requires copy_constructible<V>;
 // constexpr V base() &&;
 
+#include "../static_asserts.h"
 #include "rxx/join_view.h"
 #include "types.h"
 

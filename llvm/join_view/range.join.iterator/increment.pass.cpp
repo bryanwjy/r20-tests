@@ -17,6 +17,7 @@
 //            requires ref-is-glvalue && forward_range<Base> &&
 //                     forward_range<range_reference_t<Base>>;
 
+#include "../../static_asserts.h"
 #include "../types.h"
 #include "rxx/join_view.h"
 

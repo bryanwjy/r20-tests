@@ -13,8 +13,9 @@
 
 // xviews::join
 
+#include "../static_asserts.h"
+#include "../test_range.h"
 #include "rxx/join_view.h"
-#include "test_range.h"
 #include "types.h"
 
 #include <cassert>
