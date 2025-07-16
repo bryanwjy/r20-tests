@@ -1,3 +1,6 @@
+// Copyright 2025 Bryan Wong
+// Adapted from LLVM testsuite
+
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
