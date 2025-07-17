@@ -11,19 +11,27 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// std::ranges::end
+// rxx::ranges::end
 
-#include <ranges>
+#include "../static_asserts.h"
+#include "../test_iterators.h"
+#include "rxx/access.h"
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 struct NonBorrowedRange {
-  int* begin() const;
-  int* end() const;
+    int* begin() const;
+    int* end() const;
 };
 static_assert(!std::ranges::enable_borrowed_range<NonBorrowedRange>);
 
-// Verify that if the expression is an rvalue and `enable_borrowed_range` is false, `ranges::end` is ill-formed.
+// Verify that if the expression is an rvalue and `enable_borrowed_range` is
+// false, `ranges::end` is ill-formed.
 void test() {
-  std::ranges::end(NonBorrowedRange());
-  // expected-error-re@-1 {{{{call to deleted function call operator in type 'const (std::ranges::)?__end::__fn'}}}}
-  // expected-error@-2  {{attempt to use a deleted function}}
+    xranges::end(NonBorrowedRange());
+    // clang-format off
+    // expected-error-re@-1 {{{{call to deleted function call operator in type 'const (rxx::ranges::)?details::end_t'}}}}
+    // expected-error@-2  {{attempt to use a deleted function}}
+    // clang-format on
 }

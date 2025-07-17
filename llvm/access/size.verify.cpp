@@ -11,14 +11,21 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// std::ranges::size
+// rxx::ranges::size
 
-#include <ranges>
+#include "../static_asserts.h"
+#include "../test_iterators.h"
+#include "rxx/access.h"
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 extern int arr[];
 
 // Verify that for an array of unknown bound `ranges::size` is ill-formed.
 void test() {
-  std::ranges::size(arr);
-  // expected-error-re@-1 {{{{no matching function for call to object of type 'const (std::ranges::)?__size::__fn'}}}}
+    xranges::size(arr);
+    // clang-format off
+    // expected-error-re@-1 {{{{no matching function for call to object of type 'const (std::ranges::)?details::size_func_t'}}}}
+    // clang-format on
 }

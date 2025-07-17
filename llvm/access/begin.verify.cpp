@@ -11,7 +11,7 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// std::ranges::begin
+// rxx::ranges::begin
 
 #include "../static_asserts.h"
 #include "../test_iterators.h"
@@ -30,7 +30,8 @@ static_assert(!xranges::enable_borrowed_range<NonBorrowedRange>);
 // false, `ranges::begin` is ill-formed.
 void test() {
     xranges::begin(NonBorrowedRange());
-    // expected-error-re@-1 {{{{call to deleted function call operator in type
-    // 'const (std::ranges::)?__begin::__fn'}}}} expected-error@-2  {{attempt to
-    // use a deleted function}}
+    // clang-format off
+    // expected-error-re@-1 {{{{call to deleted function call operator in type 'const (rxx::ranges::)?details::begin_t'}}}}
+    // expected-error@-2  {{attempt to use a deleted function}}
+    // clang-format on
 }

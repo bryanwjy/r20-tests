@@ -11,14 +11,21 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// std::ranges::empty
+// rxx::ranges::empty
 
-#include <ranges>
+#include "../static_asserts.h"
+#include "../test_iterators.h"
+#include "rxx/access.h"
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 extern int arr[];
 
 // Verify that for an array of unknown bound `ranges::empty` is ill-formed.
 void test() {
-  std::ranges::empty(arr);
-  // expected-error-re@-1 {{{{no matching function for call to object of type 'const (std::ranges::)?__empty::__fn'}}}}
+    xranges::empty(arr);
+    // clang-format off
+    // expected-error-re@-1 {{{{no matching function for call to object of type 'const (rxx::ranges::)?details::empty_t'}}}}
+    // clang-format on
 }
