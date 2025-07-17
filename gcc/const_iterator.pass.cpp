@@ -39,17 +39,7 @@ namespace xranges = rxx::ranges;
 
 template <class Iter, bool Const>
 void test01() {
-    if constexpr (std::is_pointer_v<Iter>) {
-        static_assert(std::same_as<rxx::const_iterator<Iter>,
-            std::remove_pointer_t<Iter> const*>);
-        static_assert(std::same_as<rxx::const_sentinel<Iter>,
-            std::remove_pointer_t<Iter> const*>);
-    } else if constexpr (requires { typename Iter::const_iterator_for; }) {
-        static_assert(std::same_as<rxx::const_iterator<Iter>,
-            typename Iter::const_iterator_for>);
-        static_assert(std::same_as<rxx::const_sentinel<Iter>,
-            typename Iter::const_iterator_for>);
-    } else if constexpr (Const) {
+    if constexpr (Const) {
         static_assert(std::same_as<rxx::const_iterator<Iter>, Iter>);
         static_assert(std::same_as<rxx::const_sentinel<Iter>, Iter>);
         static_assert(std::same_as<rxx::iter_const_reference_t<Iter>,
@@ -75,35 +65,7 @@ void test01() {
 
 template <class Range, bool Const>
 void test02() {
-    if constexpr (std::is_pointer_v<xranges::iterator_t<Range>>) {
-        using Iter = xranges::iterator_t<Range>;
-        using ConstPtr =
-            std::remove_pointer_t<xranges::iterator_t<Range>> const*;
-
-        static_assert(std::same_as<xranges::const_iterator_t<Range>, ConstPtr>);
-        if constexpr (xranges::common_range<Range>) {
-            static_assert(
-                std::same_as<xranges::const_sentinel_t<Range>, ConstPtr>);
-        }
-        if constexpr (std::is_const_v<std::remove_reference_t<
-                          std::iter_reference_t<Iter>>>) {
-            static_assert(std::same_as<Iter, ConstPtr>);
-        } else {
-            using Value = std::remove_reference_t<std::iter_reference_t<Iter>>;
-            static_assert(
-                std::same_as<std::add_pointer_t<Value const>, ConstPtr>);
-        }
-    } else if constexpr (requires {
-                             typename xranges::iterator_t<
-                                 Range>::const_iterator_for;
-                         }) {
-        using Iter = typename xranges::iterator_t<Range>::const_iterator_for;
-        static_assert(std::same_as<xranges::const_iterator_t<Range>, Iter>);
-        if constexpr (xranges::common_range<Range>) {
-            static_assert(std::same_as<xranges::const_sentinel_t<Range>, Iter>);
-        }
-        // TODO
-    } else if constexpr (Const) {
+    if constexpr (Const) {
         static_assert(xranges::constant_range<Range>);
         static_assert(std::same_as<xranges::const_iterator_t<Range>,
             xranges::iterator_t<Range>>);

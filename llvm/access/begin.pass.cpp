@@ -100,7 +100,8 @@ constexpr bool testReturnTypes() {
         } x;
 
         ASSERT_SAME_TYPE(decltype(xranges::begin(x)), char*);
-        ASSERT_SAME_TYPE(decltype(xranges::cbegin(x)), short const*);
+        ASSERT_SAME_TYPE(
+            decltype(xranges::cbegin(x)), rxx::basic_const_iterator<short*>);
     }
     return true;
 }

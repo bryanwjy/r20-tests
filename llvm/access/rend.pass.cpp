@@ -583,7 +583,7 @@ static_assert(
         int*>);
 static_assert(
     std::same_as<std::invoke_result_t<RangeCREndT, MemberBeginAndRBegin&>,
-        int const*>);
+        rxx::basic_const_iterator<int*>>);
 
 constexpr bool testBeginEnd() {
     MemberBeginEnd a{};

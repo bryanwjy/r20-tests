@@ -105,7 +105,8 @@ constexpr bool testReturnTypes() {
             short*& end() const;
         } x;
         ASSERT_SAME_TYPE(decltype(xranges::rbegin(x)), char*);
-        ASSERT_SAME_TYPE(decltype(xranges::crbegin(x)), short const*);
+        ASSERT_SAME_TYPE(
+            decltype(xranges::crbegin(x)), rxx::basic_const_iterator<short*>);
     }
     return true;
 }
@@ -563,7 +564,7 @@ static_assert(
         int*>);
 static_assert(
     std::same_as<std::invoke_result_t<RangeCRBeginT, MemberBeginAndRBegin&>,
-        int const*>);
+        rxx::basic_const_iterator<int*>>);
 
 constexpr bool testBeginEnd() {
     MemberBeginEnd a{};
