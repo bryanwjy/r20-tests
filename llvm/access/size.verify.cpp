@@ -26,6 +26,6 @@ extern int arr[];
 void test() {
     xranges::size(arr);
     // clang-format off
-    // expected-error-re@-1 {{{{no matching function for call to object of type 'const (std::ranges::)?details::size_func_t'}}}}
+    // expected-error-re@-1 {{{{no matching function for call to object of type 'const (rxx::ranges::)?details::size_func_t'}}}}
     // clang-format on
 }
