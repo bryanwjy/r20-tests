@@ -21,6 +21,9 @@
 #include <cassert>
 #include <utility>
 
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
+
 using RangeRBeginT = decltype(xranges::rbegin);
 using RangeCRBeginT = decltype(xranges::crbegin);
 
@@ -62,6 +65,9 @@ static_assert(!std::is_invocable_v<RangeCRBeginT, Incomplete const (&)[10]>);
 struct RBeginMember {
     int x;
     constexpr int const* rbegin() const { return &x; }
+    constexpr int const* rend() const { return &x - 1; }
+    constexpr int const* begin() const { return &x; }
+    constexpr int const* end() const { return &x + 1; }
 };
 
 // Ensure that we can't call with rvalues with borrowing disabled.
@@ -93,9 +99,13 @@ constexpr bool testReturnTypes() {
         struct Different {
             char*& rbegin();
             short*& rbegin() const;
+            char*& begin();
+            short*& begin() const;
+            char*& end();
+            short*& end() const;
         } x;
         ASSERT_SAME_TYPE(decltype(xranges::rbegin(x)), char*);
-        ASSERT_SAME_TYPE(decltype(xranges::crbegin(x)), short*);
+        ASSERT_SAME_TYPE(decltype(xranges::crbegin(x)), short const*);
     }
     return true;
 }
@@ -148,6 +158,10 @@ static_assert(!std::is_invocable_v<RangeCRBeginT, NonConstRBeginMember const&>);
 
 struct EnabledBorrowingRBeginMember {
     constexpr int* rbegin() const { return globalBuff; }
+    constexpr int* begin() const { return globalBuff; }
+    constexpr int* end() const {
+        return globalBuff + xranges::size(globalBuff);
+    }
 };
 template <>
 inline constexpr bool
@@ -156,6 +170,8 @@ inline constexpr bool
 struct RBeginMemberFunction {
     int x;
     constexpr int const* rbegin() const { return &x; }
+    constexpr int const* begin() const { return &x; }
+    constexpr int const* end() const { return &x + 1; }
     friend int* rbegin(RBeginMemberFunction const&);
 };
 
@@ -163,6 +179,8 @@ struct EmptyPtrRBeginMember {
     struct Empty {};
     Empty x;
     constexpr Empty const* rbegin() const { return &x; }
+    constexpr Empty const* begin() const { return &x; }
+    constexpr Empty const* end() const { return &x + 1; }
 };
 
 constexpr bool testRBeginMember() {
@@ -198,6 +216,14 @@ struct RBeginFunction {
     friend constexpr int const* rbegin(RBeginFunction const& bf) {
         return &bf.x;
     }
+
+    friend constexpr int const* begin(RBeginFunction const& bf) {
+        return &bf.x;
+    }
+
+    friend constexpr int const* end(RBeginFunction const& bf) {
+        return &bf.x + 1;
+    }
 };
 static_assert(std::is_invocable_v<RangeRBeginT, RBeginFunction const&>);
 static_assert(!std::is_invocable_v<RangeRBeginT, RBeginFunction&&>);
@@ -208,12 +234,16 @@ static_assert(std::is_invocable_v<RangeCRBeginT, RBeginFunction&>);
 
 struct RBeginFunctionReturnsInt {
     friend int rbegin(RBeginFunctionReturnsInt const&);
+    friend int begin(RBeginFunctionReturnsInt const&);
+    friend int end(RBeginFunctionReturnsInt const&);
 };
 static_assert(
     !std::is_invocable_v<RangeRBeginT, RBeginFunctionReturnsInt const&>);
 
 struct RBeginFunctionReturnsVoidPtr {
     friend void* rbegin(RBeginFunctionReturnsVoidPtr const&);
+    friend void* begin(RBeginFunctionReturnsVoidPtr const&);
+    friend void* end(RBeginFunctionReturnsVoidPtr const&);
 };
 static_assert(
     !std::is_invocable_v<RangeRBeginT, RBeginFunctionReturnsVoidPtr const&>);
@@ -221,6 +251,8 @@ static_assert(
 struct RBeginFunctionReturnsEmpty {
     struct Empty {};
     friend Empty rbegin(RBeginFunctionReturnsEmpty const&);
+    friend Empty begin(RBeginFunctionReturnsEmpty const&);
+    friend Empty end(RBeginFunctionReturnsEmpty const&);
 };
 static_assert(
     !std::is_invocable_v<RangeRBeginT, RBeginFunctionReturnsEmpty const&>);
@@ -230,6 +262,8 @@ struct RBeginFunctionReturnsPtrConvertible {
         operator int*() const;
     };
     friend iterator rbegin(RBeginFunctionReturnsPtrConvertible const&);
+    friend iterator begin(RBeginFunctionReturnsPtrConvertible const&);
+    friend iterator end(RBeginFunctionReturnsPtrConvertible const&);
 };
 static_assert(!std::is_invocable_v<RangeRBeginT,
               RBeginFunctionReturnsPtrConvertible const&>);
@@ -238,12 +272,23 @@ struct RBeginFunctionByValue {
     friend constexpr int* rbegin(RBeginFunctionByValue) {
         return globalBuff + 1;
     }
+
+    friend constexpr int* begin(RBeginFunctionByValue) {
+        return globalBuff + 1;
+    }
+    friend constexpr int* end(RBeginFunctionByValue) { return globalBuff + 2; }
 };
 static_assert(!std::is_invocable_v<RangeCRBeginT, RBeginFunctionByValue>);
 
 struct RBeginFunctionEnabledBorrowing {
     friend constexpr int* rbegin(RBeginFunctionEnabledBorrowing) {
         return globalBuff + 2;
+    }
+    friend constexpr int* begin(RBeginFunctionEnabledBorrowing) {
+        return globalBuff + 2;
+    }
+    friend constexpr int* end(RBeginFunctionEnabledBorrowing) {
+        return globalBuff + 3;
     }
 };
 template <>
@@ -257,6 +302,13 @@ struct RBeginFunctionReturnsEmptyPtr {
         RBeginFunctionReturnsEmptyPtr const& bf) {
         return &bf.x;
     }
+    friend constexpr Empty const* begin(
+        RBeginFunctionReturnsEmptyPtr const& bf) {
+        return &bf.x;
+    }
+    friend constexpr Empty const* end(RBeginFunctionReturnsEmptyPtr const& bf) {
+        return &bf.x + 1;
+    }
 };
 
 struct RBeginFunctionWithDataMember {
@@ -265,6 +317,12 @@ struct RBeginFunctionWithDataMember {
     friend constexpr int const* rbegin(RBeginFunctionWithDataMember const& bf) {
         return &bf.x;
     }
+    friend constexpr int const* begin(RBeginFunctionWithDataMember const& bf) {
+        return &bf.x;
+    }
+    friend constexpr int const* end(RBeginFunctionWithDataMember const& bf) {
+        return &bf.x + 1;
+    }
 };
 
 struct RBeginFunctionWithPrivateBeginMember {
@@ -272,6 +330,16 @@ struct RBeginFunctionWithPrivateBeginMember {
     friend constexpr int const* rbegin(
         RBeginFunctionWithPrivateBeginMember const& bf) {
         return &bf.y;
+    }
+
+    friend constexpr int const* begin(
+        RBeginFunctionWithPrivateBeginMember const& bf) {
+        return &bf.y;
+    }
+
+    friend constexpr int const* end(
+        RBeginFunctionWithPrivateBeginMember const& bf) {
+        return &bf.y + 1;
     }
 
 private:
@@ -495,7 +563,7 @@ static_assert(
         int*>);
 static_assert(
     std::same_as<std::invoke_result_t<RangeCRBeginT, MemberBeginAndRBegin&>,
-        int*>);
+        int const*>);
 
 constexpr bool testBeginEnd() {
     MemberBeginEnd a{};
@@ -529,12 +597,16 @@ constexpr bool testBeginEnd() {
     return true;
 }
 
-ASSERT_NOEXCEPT(xranges::rbegin(std::declval<int (&)[10]>()));
-ASSERT_NOEXCEPT(xranges::crbegin(std::declval<int (&)[10]>()));
+// std::make_reverse_iterator not noexcept
+ASSERT_NOT_NOEXCEPT(xranges::rbegin(std::declval<int (&)[10]>()));
+ASSERT_NOT_NOEXCEPT(xranges::crbegin(std::declval<int (&)[10]>()));
 
 struct NoThrowMemberRBegin {
     ThrowingIterator<int>
     rbegin() const noexcept; // auto(t.rbegin()) doesn't throw
+
+    ThrowingIterator<int> begin() const noexcept;
+    ThrowingIterator<int> end() const noexcept;
 } ntmb;
 static_assert(noexcept(xranges::rbegin(ntmb)));
 static_assert(noexcept(xranges::crbegin(ntmb)));
@@ -543,6 +615,8 @@ struct NoThrowADLRBegin {
     friend ThrowingIterator<int> rbegin(
         NoThrowADLRBegin&) noexcept; // auto(rbegin(t)) doesn't throw
     friend ThrowingIterator<int> rbegin(NoThrowADLRBegin const&) noexcept;
+    friend ThrowingIterator<int> begin(NoThrowADLRBegin const&) noexcept;
+    friend ThrowingIterator<int> end(NoThrowADLRBegin const&) noexcept;
 } ntab;
 static_assert(noexcept(xranges::rbegin(ntab)));
 static_assert(noexcept(xranges::crbegin(ntab)));
@@ -550,12 +624,16 @@ static_assert(noexcept(xranges::crbegin(ntab)));
 struct NoThrowMemberRBeginReturnsRef {
     ThrowingIterator<int>&
     rbegin() const noexcept; // auto(t.rbegin()) may throw
+    ThrowingIterator<int>& begin() const noexcept;
+    ThrowingIterator<int>& end() const noexcept;
 } ntmbrr;
 static_assert(!noexcept(xranges::rbegin(ntmbrr)));
 static_assert(!noexcept(xranges::crbegin(ntmbrr)));
 
 struct RBeginReturnsArrayRef {
     auto rbegin() const noexcept -> int (&)[10];
+    auto begin() const noexcept -> int (&)[10];
+    auto end() const noexcept -> int*;
 } brar;
 static_assert(noexcept(xranges::rbegin(brar)));
 static_assert(noexcept(xranges::crbegin(brar)));
@@ -571,8 +649,9 @@ struct NoThrowEndThrowingBegin {
     int* begin() const;
     int* end() const noexcept;
 } ntetb;
-static_assert(noexcept(xranges::rbegin(ntetb)));
-static_assert(noexcept(xranges::crbegin(ntetb)));
+// std::make_reverse_iterator not noexcept
+static_assert(!noexcept(xranges::rbegin(ntetb)));
+static_assert(!noexcept(xranges::crbegin(ntetb)));
 
 // Test ADL-proofing.
 struct Incomplete;

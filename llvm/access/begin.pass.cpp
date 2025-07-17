@@ -83,21 +83,24 @@ static_assert(!std::is_invocable_v<RangeCBeginT, BeginMember const&&>);
 constexpr bool testReturnTypes() {
     {
         int* x[2];
-        ASSERT_SAME_TYPE(decltype(std::ranges::begin(x)), int**);
-        ASSERT_SAME_TYPE(decltype(std::ranges::cbegin(x)), int* const*);
+        ASSERT_SAME_TYPE(decltype(xranges::begin(x)), int**);
+        ASSERT_SAME_TYPE(decltype(xranges::cbegin(x)), int* const*);
     }
     {
         int x[2][2];
-        ASSERT_SAME_TYPE(decltype(std::ranges::begin(x)), int(*)[2]);
-        ASSERT_SAME_TYPE(decltype(std::ranges::cbegin(x)), int const(*)[2]);
+        ASSERT_SAME_TYPE(decltype(xranges::begin(x)), int(*)[2]);
+        ASSERT_SAME_TYPE(decltype(xranges::cbegin(x)), int const(*)[2]);
     }
     {
         struct Different {
             char*& begin();
             short*& begin() const;
+            char*& end();
+            short*& end() const;
         } x;
-        ASSERT_SAME_TYPE(decltype(std::ranges::begin(x)), char*);
-        ASSERT_SAME_TYPE(decltype(std::ranges::cbegin(x)), short*);
+
+        ASSERT_SAME_TYPE(decltype(xranges::begin(x)), char*);
+        ASSERT_SAME_TYPE(decltype(xranges::cbegin(x)), short const*);
     }
     return true;
 }
