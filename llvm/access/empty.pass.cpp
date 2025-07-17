@@ -39,10 +39,13 @@ struct Incomplete;
 static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete[]>);
 static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete (&)[]>);
 static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete (&&)[]>);
-static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete (&)[1]>);
-static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete (&&)[1]>);
-static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete const (&)[1]>);
-static_assert(!std::is_invocable_v<RangeEmptyT, Incomplete const (&&)[1]>);
+
+extern Incomplete array_of_incomplete[42];
+static_assert(!xranges::empty(array_of_incomplete));
+static_assert(!xranges::empty(std::move(array_of_incomplete)));
+static_assert(!xranges::empty(std::as_const(array_of_incomplete)));
+static_assert(!xranges::empty(
+    static_cast<Incomplete const (&&)[42]>(array_of_incomplete)));
 
 struct InputRangeWithoutSize {
     cpp17_input_iterator<int*> begin() const;

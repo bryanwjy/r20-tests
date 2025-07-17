@@ -88,7 +88,7 @@ constexpr bool testReturnTypes() {
             decltype(xranges::data(std::declval<D const&>())), short*);
         static_assert(!std::is_invocable_v<RangeDataT, D const&&>);
         ASSERT_SAME_TYPE(
-            decltype(xranges::cdata(std::declval<D&>())), char const*);
+            decltype(xranges::cdata(std::declval<D&>())), short const*);
         static_assert(!std::is_invocable_v<RangeCDataT, D&&>);
         ASSERT_SAME_TYPE(
             decltype(xranges::cdata(std::declval<D const&>())), short const*);

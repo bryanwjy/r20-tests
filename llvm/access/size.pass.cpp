@@ -35,9 +35,14 @@ static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&)[]>);
 static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&&)[]>);
 
 extern Incomplete array_of_incomplete[42];
-static_assert(!std::is_invocable_v<RangeSizeT, Incomplete[42]>);
-static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&)[42]>);
-static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&&)[42]>);
+static_assert(std::is_invocable_v<RangeSizeT, Incomplete[42]>);
+static_assert(std::is_invocable_v<RangeSizeT, Incomplete (&)[42]>);
+static_assert(std::is_invocable_v<RangeSizeT, Incomplete (&&)[42]>);
+static_assert(xranges::size(array_of_incomplete) == 42);
+static_assert(xranges::size(std::move(array_of_incomplete)) == 42);
+static_assert(xranges::size(std::as_const(array_of_incomplete)) == 42);
+static_assert(xranges::size(static_cast<Incomplete const (&&)[42]>(
+                  array_of_incomplete)) == 42);
 
 struct SizeMember {
     constexpr std::size_t size() { return 42; }
