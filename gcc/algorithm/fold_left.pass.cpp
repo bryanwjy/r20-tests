@@ -18,9 +18,9 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
+#include "../test_iterators.h"
 #include "rxx/algorithm/fold.h"
 #include "rxx/take_view.h"
-#include "test_iterators.h"
 
 #include <cassert>
 
