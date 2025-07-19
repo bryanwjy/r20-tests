@@ -14,10 +14,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "../test_iterators.h"
 #include "rxx/algorithm/fold.h"
 #include "rxx/take_view.h"
