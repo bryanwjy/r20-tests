@@ -14,7 +14,7 @@
 // constexpr View base() const& requires copy_constructible<_View>;
 // constexpr View base() &&;
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <cassert>

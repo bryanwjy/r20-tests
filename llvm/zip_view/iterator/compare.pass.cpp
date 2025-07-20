@@ -20,7 +20,7 @@
 #include "../../test_iterators.h"
 #include "../../test_range.h"
 #include "../types.h"
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 
 #include <compare>
 #include <ranges>

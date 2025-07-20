@@ -21,7 +21,7 @@
 #include "../types.h"
 
 #include "../../test_iterators.h"
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <functional>
 #include <ranges>

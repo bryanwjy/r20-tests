@@ -18,9 +18,9 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <cassert>
 #include <ranges>

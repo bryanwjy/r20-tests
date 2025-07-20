@@ -14,10 +14,8 @@
 // type_traits
 // common_reference
 
-#include "rxx/details/common_reference.h"
+#include "rxx/type_traits/common_reference.h"
 
-#include <tuple>
-#include <type_traits>
 #include <utility>
 
 template <class T>

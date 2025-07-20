@@ -18,9 +18,9 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/slide_view.h"
+#include "rxx/ranges/slide_view.h"
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 #include "test_iterators.h"
 
 #include <algorithm>

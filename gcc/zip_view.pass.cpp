@@ -18,7 +18,7 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 
 #include <algorithm>
 #include <cassert>

@@ -15,7 +15,7 @@
 
 // constexpr chunk_by_view(View, Pred);
 
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 #include "types.h"
 
 #include <algorithm>

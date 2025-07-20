@@ -9,7 +9,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "rxx/as_rvalue_view.h"
+#include "rxx/ranges/as_rvalue_view.h"
 #include <vector>
 
 static_assert(std::ranges::enable_borrowed_range<

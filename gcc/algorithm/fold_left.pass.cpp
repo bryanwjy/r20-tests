@@ -16,7 +16,7 @@
 
 #include "../test_iterators.h"
 #include "rxx/algorithm/fold.h"
-#include "rxx/take_view.h"
+#include "rxx/ranges/take_view.h"
 
 #include <cassert>
 

@@ -13,8 +13,8 @@
 
 // static constexpr bool empty() noexcept;
 
-#include "rxx/access.h"
-#include "rxx/single_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <concepts>

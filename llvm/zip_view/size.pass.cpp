@@ -15,7 +15,7 @@
 // constexpr auto size() const requires(sized_range<const Views>&&...)
 
 #include "../test_iterators.h"
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 #include "types.h"
 
 #include <cassert>

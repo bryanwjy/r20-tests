@@ -16,7 +16,7 @@
 //   requires (!forward_range<Base>)
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <type_traits>
 #include <utility>

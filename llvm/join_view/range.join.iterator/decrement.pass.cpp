@@ -21,7 +21,7 @@
 //                       common_range<range_reference_t<Base>>;
 
 #include "../types.h"
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <algorithm>
 #include <array>

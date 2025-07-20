@@ -11,7 +11,7 @@
 
 // rxx::views::as_rvalue
 
-#include "rxx/as_rvalue_view.h"
+#include "rxx/ranges/as_rvalue_view.h"
 
 #include "../test_iterators.h"
 #include <cassert>

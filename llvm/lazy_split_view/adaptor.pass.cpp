@@ -15,7 +15,7 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <array>

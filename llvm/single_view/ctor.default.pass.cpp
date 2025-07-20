@@ -13,7 +13,7 @@
 
 // single_view() requires default_initializable<T> = default;
 
-#include "rxx/single_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <ranges>

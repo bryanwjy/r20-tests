@@ -18,7 +18,7 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/zip_transform_view.h"
+#include "rxx/ranges/zip_transform_view.h"
 
 #include "test_iterators.h"
 

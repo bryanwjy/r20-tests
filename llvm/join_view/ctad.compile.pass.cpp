@@ -14,7 +14,7 @@
 // template<class R>
 //   explicit join_view(R&&) -> join_view<views::all_t<R>>;
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <ranges>
 #include <utility>

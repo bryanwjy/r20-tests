@@ -18,7 +18,7 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/join_with_view.h"
+#include "rxx/ranges/join_with_view.h"
 
 #include "test_iterators.h"
 

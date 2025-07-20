@@ -15,7 +15,7 @@
 //   single_view(T) -> single_view<T>;
 
 #include "../test_iterators.h"
-#include "rxx/single_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <concepts>

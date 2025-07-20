@@ -18,9 +18,9 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/cartesian_product_view.h"
+#include "rxx/ranges/cartesian_product_view.h"
 
-#include "rxx/repeat_view.h"
+#include "rxx/ranges/repeat_view.h"
 #include "test_iterators.h"
 
 #include <algorithm>

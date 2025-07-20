@@ -14,7 +14,7 @@
 // Test the implicitly-generated copy and move constructors since
 // `lazy_split_view` has non-trivial members.
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <cassert>

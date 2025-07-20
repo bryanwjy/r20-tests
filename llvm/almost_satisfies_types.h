@@ -12,7 +12,7 @@
 #ifndef ALMOST_SATISFIES_TYPES_H
 #define ALMOST_SATISFIES_TYPES_H
 
-#include "rxx/concepts.h"
+#include "rxx/ranges/concepts.h"
 #include "test_iterators.h"
 
 #include <functional>

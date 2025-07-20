@@ -18,9 +18,9 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/enumerate_view.h"
+#include "rxx/ranges/enumerate_view.h"
 
-#include "rxx/get_element.h"
+#include "rxx/ranges/get_element.h"
 #include "test_iterators.h"
 
 #include <algorithm>

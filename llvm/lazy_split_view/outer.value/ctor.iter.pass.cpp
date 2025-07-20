@@ -14,7 +14,7 @@
 // explicit outer-iterator::value_type::value_type(outer-iterator i)
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <cassert>
 

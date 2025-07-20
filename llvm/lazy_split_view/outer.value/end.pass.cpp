@@ -14,7 +14,7 @@
 // rxx::ranges::lazy_split_view::outer-iterator::value_type::end()
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <cassert>
 

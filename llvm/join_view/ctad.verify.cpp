@@ -17,7 +17,7 @@
 // Tests that the deduction guide is explicit.
 
 #include "../test_iterators.h"
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <ranges>
 

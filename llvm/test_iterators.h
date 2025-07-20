@@ -12,8 +12,8 @@
 #ifndef SUPPORT_TEST_ITERATORS_H
 #define SUPPORT_TEST_ITERATORS_H
 
-#include "rxx/access.h"
-#include "rxx/concepts.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/concepts.h"
 #include "type_algorithms.h"
 
 #include <cassert>

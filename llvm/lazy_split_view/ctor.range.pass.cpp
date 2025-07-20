@@ -17,7 +17,7 @@
 // constexpr lazy_split_view(Range&& r, range_value_t<Range> e); // explicit
 // since C++23
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <cassert>

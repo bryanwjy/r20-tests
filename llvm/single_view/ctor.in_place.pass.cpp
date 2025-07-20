@@ -15,7 +15,7 @@
 //   requires constructible_from<T, Args...>
 // constexpr explicit single_view(in_place_t, Args&&... args);
 
-#include "rxx/single_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <ranges>

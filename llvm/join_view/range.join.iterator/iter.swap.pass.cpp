@@ -22,7 +22,7 @@ using NonSwappableView = BufferView<copying_iterator<int*>>;
 static_assert(xranges::input_range<NonSwappableView>);
 static_assert(
     !std::indirectly_swappable<xranges::iterator_t<NonSwappableView>>);
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

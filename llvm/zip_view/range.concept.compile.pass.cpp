@@ -15,7 +15,7 @@
 //                         random_access_range, contiguous_range, common_range
 //                         sized_range
 
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 #include "types.h"
 
 #include <cassert>

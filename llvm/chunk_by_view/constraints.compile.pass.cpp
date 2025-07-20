@@ -22,7 +22,7 @@
 
 #include "../almost_satisfies_types.h"
 #include "../test_iterators.h"
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <concepts>
 #include <cstddef>

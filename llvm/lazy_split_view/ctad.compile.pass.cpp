@@ -19,7 +19,7 @@
 // lazy_split_view(R&&, range_value_t<R>) -> lazy_split_view<views::all_t<R>,
 // single_view<range_value_t<R>>>;
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <concepts>

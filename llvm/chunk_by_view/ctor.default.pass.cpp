@@ -16,7 +16,7 @@
 // chunk_by_view() requires std::default_initializable<View> &&
 //                          std::default_initializable<Pred> = default;
 
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <cassert>
 #include <cstddef>

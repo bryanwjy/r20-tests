@@ -17,7 +17,7 @@
 // template<class C, input_range R, class... Args> requires (!view<C>)
 //   constexpr C to(R&& r, Args&&... args);     // Since C++23
 
-#include "rxx/to.h"
+#include "rxx/ranges/to.h"
 
 #include "../static_asserts.h"
 #include "../test_iterators.h"

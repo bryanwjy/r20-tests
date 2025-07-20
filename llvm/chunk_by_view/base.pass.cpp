@@ -16,7 +16,7 @@
 // constexpr View base() const& requires copy_constructible<View>;
 // constexpr View base() &&;
 
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <cassert>
 #include <concepts>

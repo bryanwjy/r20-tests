@@ -15,7 +15,7 @@
 //   requires Const && convertible_to<iterator_t<View>, iterator_t<Base>>
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <string_view>
 #include <type_traits>

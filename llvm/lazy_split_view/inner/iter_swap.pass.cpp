@@ -18,7 +18,7 @@
 
 #include "../../static_asserts.h"
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <cassert>
 #include <type_traits>

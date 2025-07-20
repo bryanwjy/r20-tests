@@ -18,10 +18,10 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/chunk_view.h"
+#include "rxx/ranges/chunk_view.h"
 
-#include "rxx/join_view.h"
-#include "rxx/zip_view.h"
+#include "rxx/ranges/join_view.h"
+#include "rxx/ranges/zip_view.h"
 #include "test_iterators.h"
 
 #include <cassert>
