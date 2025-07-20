@@ -18,10 +18,10 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
+#include "../test_iterators.h"
 #include "rxx/access.h"
 #include "rxx/concepts.h"
 #include "rxx/iterator.h"
-#include "test_iterators.h"
 
 #include <array>
 #include <concepts>
