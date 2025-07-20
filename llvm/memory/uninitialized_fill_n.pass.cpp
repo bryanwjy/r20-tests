@@ -13,37 +13,41 @@
 
 // <memory>
 
-// template <nothrow-forward-iterator ForwardIterator>
-//   requires default_initializable<iter_value_t<ForwardIterator>>
-// ForwardIterator ranges::uninitialized_value_construct_n(ForwardIterator
-// first,
-//     iter_difference_t<ForwardIterator> n);
+// template <nothrow-forward-iterator ForwardIterator, class T>
+//   requires constructible_from<iter_value_t<ForwardIterator>, const T&>
+// ForwardIterator ranges::uninitialized_fill_n(ForwardIterator first,
+// iter_difference_t<ForwardIterator> n);
 
+#include "../static_asserts.h"
 #include "../test_iterators.h"
 #include "buffer.h"
 #include "counted.h"
+#include "overload_compare_iterator.h"
+#include "rxx/algorithm.h"
 #include "rxx/iterator.h"
 #include "rxx/memory.h"
 #include "rxx/ranges.h"
 
 #include <cassert>
+#include <type_traits>
 
-static_assert(
-    std::is_class_v<decltype(xranges::uninitialized_value_construct_n)>);
+static_assert(std::is_class_v<decltype(xranges::uninitialized_fill_n)>);
 
-struct NotDefaultCtrable {
-    NotDefaultCtrable() = delete;
-};
-static_assert(
-    !std::is_invocable_v<decltype(xranges::uninitialized_value_construct_n),
-        NotDefaultCtrable*, int>);
+struct NotConvertibleFromInt {};
+static_assert(!std::is_invocable_v<decltype(xranges::uninitialized_fill_n),
+              NotConvertibleFromInt*, std::size_t, int>);
 
 int main(int, char**) {
+    constexpr int value = 42;
+    Counted x(value);
+    Counted::reset();
+    auto pred = [](Counted const& e) { return e.value == value; };
+
     // An empty range -- no default constructors should be invoked.
     {
         Buffer<Counted, 1> buf;
 
-        xranges::uninitialized_value_construct_n(buf.begin(), 0);
+        xranges::uninitialized_fill_n(buf.begin(), 0, x);
         assert(Counted::current_objects == 0);
         assert(Counted::total_objects == 0);
     }
@@ -53,9 +57,10 @@ int main(int, char**) {
         constexpr int N = 5;
         Buffer<Counted, N> buf;
 
-        xranges::uninitialized_value_construct_n(buf.begin(), N);
+        xranges::uninitialized_fill_n(buf.begin(), N, x);
         assert(Counted::current_objects == N);
         assert(Counted::total_objects == N);
+        assert(std::all_of(buf.begin(), buf.end(), pred));
 
         xranges::destroy(buf.begin(), buf.end());
         Counted::reset();
@@ -64,13 +69,13 @@ int main(int, char**) {
     // Any existing values should be overwritten by value constructors.
     {
         constexpr int N = 5;
-        int buffer[N] = {42, 42, 42, 42, 42};
+        int buffer[N] = {value, value, value, value, value};
 
-        xranges::uninitialized_value_construct_n(buffer, 1);
+        xranges::uninitialized_fill_n(buffer, 1, 0);
         assert(buffer[0] == 0);
-        assert(buffer[1] == 42);
+        assert(buffer[1] == value);
 
-        xranges::uninitialized_value_construct_n(buffer, N);
+        xranges::uninitialized_fill_n(buffer, N, 0);
         assert(buffer[0] == 0);
         assert(buffer[1] == 0);
         assert(buffer[2] == 0);
@@ -79,20 +84,20 @@ int main(int, char**) {
     }
 
     // An exception is thrown while objects are being created -- the existing
-    // objects should stay valid.
+    // objects should stay valid. (iterator, sentinel) overload.
 #if RXX_WITH_EXCEPTIONS
     {
         constexpr int N = 5;
         Buffer<Counted, N> buf;
 
-        Counted::throw_on =
-            3; // When constructing the fourth object (counting from one).
+        Counted::throw_on = 3; // When constructing the fourth object.
         try {
-            xranges::uninitialized_value_construct_n(buf.begin(), N);
+            xranges::uninitialized_fill_n(buf.begin(), N, x);
         } catch (...) {}
         assert(Counted::current_objects == 0);
         assert(Counted::total_objects == 3);
-        xranges::destroy(buf.begin(), buf.begin() + Counted::total_objects);
+
+        xranges::destroy(buf.begin(), buf.begin() + 3);
         Counted::reset();
     }
 #endif // RXX_WITH_EXCEPTIONS

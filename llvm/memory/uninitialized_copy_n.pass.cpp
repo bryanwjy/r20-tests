@@ -86,7 +86,7 @@ int main(int, char**) {
 
     // An exception is thrown while objects are being created -- the existing
     // objects should stay valid. (iterator, sentinel) overload.
-#ifndef TEST_HAS_NO_EXCEPTIONS
+#if RXX_WITH_EXCEPTIONS
     {
         constexpr int M = 3;
         constexpr int N = 5;
@@ -110,7 +110,7 @@ int main(int, char**) {
     }
     Counted::reset();
 
-#endif // TEST_HAS_NO_EXCEPTIONS
+#endif // RXX_WITH_EXCEPTIONS
 
     // Conversions.
     {

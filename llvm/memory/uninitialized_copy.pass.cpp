@@ -295,7 +295,7 @@ int main(int, char**) {
         assert(out[4].value == 10);
     }
     Counted::reset();
-#endif // TEST_HAS_NO_EXCEPTIONS
+#endif // RXX_WITH_EXCEPTIONS
 
     // Conversions, (iter, sentinel) overload.
     {
