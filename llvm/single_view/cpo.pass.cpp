@@ -14,11 +14,10 @@
 // xviews::single
 
 #include "../MoveOnly.h"
-#include "rxx/ranges/single_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;

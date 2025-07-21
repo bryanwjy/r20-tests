@@ -14,9 +14,7 @@
 // single_view does not specialize enable_borrowed_range
 
 #include "../test_range.h"
-#include "rxx/ranges/single_view.h"
-
-#include <ranges>
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

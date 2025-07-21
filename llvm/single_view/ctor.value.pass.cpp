@@ -14,10 +14,9 @@
 // constexpr explicit single_view(const T& t);
 // constexpr explicit single_view(T&& t);
 
-#include "rxx/ranges/single_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;
