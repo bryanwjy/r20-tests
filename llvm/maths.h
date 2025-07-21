@@ -16,9 +16,9 @@
 #define LIBCXX_TEST_MATHS_H
 
 #include "rxx/algorithm/minmax.h"
-#include "rxx/concepts.h"
-#include "rxx/empty_view.h"
-#include "rxx/primitives.h"
+#include "rxx/ranges/concepts.h"
+#include "rxx/ranges/empty_view.h"
+#include "rxx/ranges/primitives.h"
 
 #include <cassert>
 #include <concepts>

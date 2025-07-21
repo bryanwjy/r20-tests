@@ -18,9 +18,9 @@
 #include "../test_range.h"
 #include "../type_algorithms.h"
 #include "../unwrap_container_adaptor.h"
-#include "rxx/access.h"
-#include "rxx/details/common_reference.h"
-#include "rxx/to.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/to.h"
+#include "rxx/type_traits/common_reference.h"
 
 #include <algorithm>
 #include <cassert>

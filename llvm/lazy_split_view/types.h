@@ -13,7 +13,7 @@
 #define TEST_STD_RANGES_RANGE_ADAPTORS_RANGE_LAZY_SPLIT_TYPES_H
 
 #include "../test_iterators.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <concepts>
 #include <cstddef>

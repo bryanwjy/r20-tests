@@ -17,7 +17,7 @@
 //                                         Views>>> && ...);
 
 #include "../types.h"
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 
 #include <cassert>
 #include <ranges>

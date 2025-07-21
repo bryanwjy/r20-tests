@@ -14,7 +14,7 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <concepts>
 #include <cstdint>

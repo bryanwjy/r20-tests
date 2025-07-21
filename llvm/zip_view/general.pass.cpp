@@ -15,7 +15,7 @@
 // general collection of sample algorithms and functions that try to mock
 // general usage of this view.
 
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 
 #include <array>
 #include <cassert>

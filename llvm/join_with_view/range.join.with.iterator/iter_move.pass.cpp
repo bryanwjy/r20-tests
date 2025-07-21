@@ -16,9 +16,9 @@
 // friend constexpr decltype(auto) iter_move(const iterator& x);
 
 #include "../types.h"
-#include "rxx/access.h"
-#include "rxx/join_with_view.h"
-#include "rxx/repeat_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges/repeat_view.h"
 
 #include <algorithm>
 #include <array>

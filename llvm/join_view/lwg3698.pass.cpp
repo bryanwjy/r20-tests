@@ -15,7 +15,7 @@
 // Check LWG-3698: `regex_iterator` and `join_view` don't work together very
 // well
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <algorithm>
 #include <array>

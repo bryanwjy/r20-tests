@@ -18,9 +18,9 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/to_input_view.h"
+#include "rxx/ranges/to_input_view.h"
 
-#include "test_iterators.h"
+#include "../test_iterators.h"
 
 #include <algorithm>
 #include <cassert>

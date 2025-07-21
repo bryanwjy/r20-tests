@@ -17,7 +17,7 @@
 // Note that corner cases are tested in `range.lazy.split/general.pass.cpp`.
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <algorithm>
 #include <cassert>

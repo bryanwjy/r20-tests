@@ -20,8 +20,8 @@
 //            forward_iterator<InnerIter>;
 
 #include "../types.h"
-#include "rxx/access.h"
-#include "rxx/join_with_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/join_with_view.h"
 
 #include <array>
 #include <cassert>

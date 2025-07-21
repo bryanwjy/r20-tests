@@ -14,8 +14,8 @@
 // static constexpr size_t size() noexcept;
 
 #include "../static_asserts.h"
-#include "rxx/access.h"
-#include "rxx/single_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <ranges>

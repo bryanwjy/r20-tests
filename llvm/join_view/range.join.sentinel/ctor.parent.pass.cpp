@@ -14,7 +14,7 @@
 // constexpr explicit sentinel(Parent& parent);
 
 #include "../types.h"
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <cassert>
 #include <ranges>

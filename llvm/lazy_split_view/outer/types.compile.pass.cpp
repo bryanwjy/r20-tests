@@ -18,7 +18,7 @@
 
 #include "../types.h"
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <concepts>
 #include <iterator>

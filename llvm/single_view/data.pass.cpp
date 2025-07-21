@@ -15,7 +15,7 @@
 // constexpr const T* data() const noexcept;
 
 #include "../static_asserts.h"
-#include "rxx/single_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <ranges>

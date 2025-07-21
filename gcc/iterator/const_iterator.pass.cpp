@@ -19,8 +19,8 @@
 // <http://www.gnu.org/licenses/>.
 
 #include "../test_iterators.h"
-#include "rxx/access.h"
-#include "rxx/concepts.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/concepts.h"
 #include "rxx/iterator.h"
 
 #include <array>

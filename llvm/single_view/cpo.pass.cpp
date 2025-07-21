@@ -14,7 +14,7 @@
 // xviews::single
 
 #include "../MoveOnly.h"
-#include "rxx/single_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <concepts>

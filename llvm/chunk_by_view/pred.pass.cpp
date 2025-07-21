@@ -15,7 +15,7 @@
 
 // constexpr Pred const& pred() const;
 
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <cassert>
 #include <concepts>

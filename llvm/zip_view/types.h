@@ -14,7 +14,7 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 
 #include <functional>
 #include <ranges>

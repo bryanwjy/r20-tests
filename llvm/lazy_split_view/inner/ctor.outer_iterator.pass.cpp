@@ -14,7 +14,7 @@
 // constexpr explicit inner-iterator::inner-iterator(outer-iterator<Const> i);
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 static_assert(!std::is_constructible_v<InnerIterNonConst, OuterIterConst>);
 

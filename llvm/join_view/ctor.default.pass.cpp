@@ -13,7 +13,7 @@
 
 // join_view() requires default_initializable<V> = default;
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 #include "types.h"
 
 #include <cassert>

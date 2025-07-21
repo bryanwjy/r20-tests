@@ -18,7 +18,7 @@
 // inputs, including many corner cases, with no restrictions on which member
 // functions can be called.
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <algorithm>

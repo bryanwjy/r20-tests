@@ -17,7 +17,7 @@
 // chunk_by_view(Range&&, Pred) -> chunk_by_view<views::all_t<Range>, Pred>;
 
 #include "../test_iterators.h"
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <cassert>
 #include <ranges>

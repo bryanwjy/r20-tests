@@ -17,8 +17,8 @@
 //   requires default_initializable<V> && default_initializable<Pattern> =
 //   default;
 
-#include "rxx/access.h"
-#include "rxx/join_with_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/join_with_view.h"
 
 #include <algorithm>
 #include <array>

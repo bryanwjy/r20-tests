@@ -15,8 +15,8 @@
 
 // friend constexpr void iter_swap(const iterator& x, const iterator& y);
 
-#include "rxx/access.h"
-#include "rxx/join_with_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/join_with_view.h"
 
 #include <algorithm>
 #include <array>

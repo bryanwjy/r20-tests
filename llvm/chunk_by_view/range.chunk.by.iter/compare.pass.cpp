@@ -18,7 +18,7 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/chunk_by_view.h"
+#include "rxx/ranges/chunk_by_view.h"
 
 #include <array>
 #include <cassert>

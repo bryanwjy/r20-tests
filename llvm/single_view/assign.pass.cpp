@@ -13,7 +13,7 @@
 
 // Tests that <value_> is a <copyable-box>.
 
-#include "rxx/single_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <cassert>
 #include <ranges>

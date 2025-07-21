@@ -15,7 +15,7 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 
 #include <ranges>
 

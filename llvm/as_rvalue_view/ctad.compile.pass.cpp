@@ -11,7 +11,7 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-#include "rxx/as_rvalue_view.h"
+#include "rxx/ranges/as_rvalue_view.h"
 #include <ranges>
 #include <utility>
 #include <vector>

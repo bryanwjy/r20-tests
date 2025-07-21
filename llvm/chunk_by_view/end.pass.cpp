@@ -17,8 +17,8 @@
 
 #include "../static_asserts.h"
 #include "../test_iterators.h"
-#include "rxx/chunk_by_view.h"
-#include "rxx/concepts.h"
+#include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/concepts.h"
 
 #include <cassert>
 #include <concepts>

@@ -14,7 +14,7 @@
 // template <class... Rs>
 // zip_view(Rs&&...) -> zip_view<views::all_t<Rs>...>;
 
-#include "rxx/zip_view.h"
+#include "rxx/ranges/zip_view.h"
 
 #include <cassert>
 #include <ranges>

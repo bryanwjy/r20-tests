@@ -14,9 +14,9 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/access.h"
-#include "rxx/join_with_view.h"
-#include "rxx/to.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges/to.h"
 
 #include <cstddef>
 #include <initializer_list>

@@ -17,7 +17,7 @@
 //            is_reference_v<range_reference_t<const V>> &&
 //            input_range<range_reference_t<const V>>
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 #include "types.h"
 
 #include <cassert>

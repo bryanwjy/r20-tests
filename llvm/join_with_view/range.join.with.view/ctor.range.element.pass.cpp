@@ -21,9 +21,9 @@
 #include "../../test_iterators.h"
 #include "../../test_range.h"
 #include "../types.h"
-#include "rxx/access.h"
-#include "rxx/join_with_view.h"
-#include "rxx/single_view.h"
+#include "rxx/ranges/access.h"
+#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges/single_view.h"
 
 #include <algorithm>
 #include <array>

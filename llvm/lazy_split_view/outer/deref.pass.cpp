@@ -14,7 +14,7 @@
 // constexpr outer-iterator::value-type outer-iterator::operator*() const;
 
 #include "../types.h"
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
 #include <algorithm>
 #include <cassert>

@@ -15,8 +15,8 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/drop_view.h"
-#include "rxx/repeat_view.h"
+#include "rxx/ranges/drop_view.h"
+#include "rxx/ranges/repeat_view.h"
 
 #include <array>
 #include <cassert>

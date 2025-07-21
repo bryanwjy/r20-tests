@@ -16,8 +16,8 @@
 
 #include "../test_iterators.h"
 #include "rxx/algorithm/fold.h"
-#include "rxx/concepts.h"
-#include "rxx/filter_view.h"
+#include "rxx/ranges/concepts.h"
+#include "rxx/ranges/filter_view.h"
 
 #include <cassert>
 

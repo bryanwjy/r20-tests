@@ -13,7 +13,7 @@
 
 // General tests for join_view. This file does not test anything specifically.
 
-#include "rxx/join_view.h"
+#include "rxx/ranges/join_view.h"
 #include "types.h"
 
 #include <algorithm>

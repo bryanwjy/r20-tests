@@ -12,7 +12,7 @@
 #ifndef LIBCXX_TEST_SUPPORT_TEST_RANGE_H
 #define LIBCXX_TEST_SUPPORT_TEST_RANGE_H
 
-#include "rxx/concepts.h"
+#include "rxx/ranges/concepts.h"
 #include "test_iterators.h"
 
 #include <concepts>

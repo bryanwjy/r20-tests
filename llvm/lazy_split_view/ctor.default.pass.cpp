@@ -14,7 +14,7 @@
 //  lazy_split_view() requires default_initializable<V> &&
 //  default_initializable<P> = default;
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 #include "types.h"
 
 #include <cassert>

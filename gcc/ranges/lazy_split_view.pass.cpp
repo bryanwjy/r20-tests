@@ -20,10 +20,10 @@
 
 // { dg-do run { target c++20 } }
 
-#include "rxx/lazy_split_view.h"
+#include "rxx/ranges/lazy_split_view.h"
 
-#include "rxx/join_view.h"
-#include "test_iterators.h"
+#include "../test_iterators.h"
+#include "rxx/ranges/join_view.h"
 
 #include <algorithm>
 #include <cassert>
