@@ -26,13 +26,11 @@
 //   operator-(const sentinel&, const iterator<OtherConst>&)
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/functional.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
-#include <functional>
-#include <ranges>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -151,32 +149,30 @@ constexpr bool test() {
         auto it = v.begin();
         auto st = v.end();
         assert(st - it == 5);
-        assert(st - std::ranges::next(it, 1) == 4);
+        assert(st - xranges::next(it, 1) == 4);
 
         assert(it - st == -5);
-        assert(std::ranges::next(it, 1) - st == -4);
+        assert(xranges::next(it, 1) - st == -4);
         static_assert(SentinelHasMinus<decltype(v)>);
     }
 
     {
         // shortest range
-        xranges::zip_view v(
-            std::views::iota(0, 3), ForwardSizedNonCommon(buffer1));
+        xranges::zip_view v(xviews::iota(0, 3), ForwardSizedNonCommon(buffer1));
         static_assert(!xranges::common_range<decltype(v)>);
         auto it = v.begin();
         auto st = v.end();
         assert(st - it == 3);
-        assert(st - std::ranges::next(it, 1) == 2);
+        assert(st - xranges::next(it, 1) == 2);
 
         assert(it - st == -3);
-        assert(std::ranges::next(it, 1) - st == -2);
+        assert(xranges::next(it, 1) - st == -2);
         static_assert(SentinelHasMinus<decltype(v)>);
     }
 
     {
         // underlying sentinel does not model sized_sentinel_for
-        xranges::zip_view v(
-            std::views::iota(0), SizedRandomAccessView(buffer1));
+        xranges::zip_view v(xviews::iota(0), SizedRandomAccessView(buffer1));
         static_assert(!xranges::common_range<decltype(v)>);
         static_assert(!SentinelHasMinus<decltype(v)>);
     }

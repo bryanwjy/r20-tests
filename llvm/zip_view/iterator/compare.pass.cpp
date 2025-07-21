@@ -20,10 +20,9 @@
 #include "../../test_iterators.h"
 #include "../../test_range.h"
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <compare>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -155,7 +154,7 @@ constexpr bool test() {
         // Test a new-school iterator with operator<=>; the iterator should also
         // have operator<=>.
         using It = three_way_contiguous_iterator<int*>;
-        using SubRange = std::ranges::subrange<It>;
+        using SubRange = xranges::subrange<It>;
         static_assert(std::three_way_comparable<It>);
         using R = xranges::zip_view<SubRange, SubRange>;
         static_assert(std::three_way_comparable<xranges::iterator_t<R>>);
@@ -178,7 +177,7 @@ constexpr bool test() {
         // Test an old-school iterator with no operator<=>; the transform
         // iterator shouldn't have operator<=> either.
         using It = random_access_iterator<int*>;
-        using Subrange = std::ranges::subrange<It>;
+        using Subrange = xranges::subrange<It>;
         static_assert(!std::three_way_comparable<It>);
         using R = xranges::zip_view<Subrange, Subrange>;
         static_assert(std::three_way_comparable<xranges::iterator_t<R>>);

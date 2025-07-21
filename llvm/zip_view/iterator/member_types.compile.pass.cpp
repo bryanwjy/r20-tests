@@ -15,23 +15,22 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
-#include <ranges>
 #include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 template <class T>
-struct ForwardView : std::ranges::view_base {
+struct ForwardView : xranges::view_base {
     forward_iterator<T*> begin() const;
     sentinel_wrapper<forward_iterator<T*>> end() const;
 };
 
 template <class T>
-struct InputView : std::ranges::view_base {
+struct InputView : xranges::view_base {
     cpp17_input_iterator<T*> begin() const;
     sentinel_wrapper<cpp17_input_iterator<T*>> end() const;
 };
@@ -81,7 +80,9 @@ void test() {
         static_assert(
             std::is_same_v<Iter::iterator_category, std::input_iterator_tag>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<int, int>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<int, int>>);
+        static_assert(
+            std::is_convertible_v<Iter::value_type, std::tuple<int, int>>);
         static_assert(HasIterCategory<Iter>);
     }
 
@@ -96,7 +97,9 @@ void test() {
             std::is_same_v<Iter::iterator_category, std::input_iterator_tag>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
         static_assert(
-            std::is_same_v<Iter::value_type, std::tuple<int, int, int>>);
+            std::is_same_v<Iter::value_type, rxx::tuple<int, int, int>>);
+        static_assert(
+            std::is_convertible_v<Iter::value_type, std::tuple<int, int, int>>);
         static_assert(HasIterCategory<Iter>);
     }
 
@@ -110,7 +113,8 @@ void test() {
         static_assert(
             std::is_same_v<Iter::iterator_category, std::input_iterator_tag>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<int>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<int>>);
+        static_assert(std::is_convertible_v<Iter::value_type, std::tuple<int>>);
     }
 
     {
@@ -122,7 +126,8 @@ void test() {
         static_assert(
             std::is_same_v<Iter::iterator_category, std::input_iterator_tag>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<int>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<int>>);
+        static_assert(std::is_convertible_v<Iter::value_type, std::tuple<int>>);
         static_assert(HasIterCategory<Iter>);
     }
 
@@ -138,6 +143,8 @@ void test() {
             std::is_same_v<Iter::iterator_category, std::input_iterator_tag>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
         static_assert(std::is_same_v<Iter::value_type,
+            rxx::tuple<int, rxx::tuple<int, int>>>);
+        static_assert(std::is_convertible_v<Iter::value_type,
             std::tuple<int, std::tuple<int, int>>>);
         static_assert(HasIterCategory<Iter>);
     }
@@ -150,7 +157,8 @@ void test() {
             std::is_same_v<Iter::iterator_concept, std::input_iterator_tag>);
         static_assert(!HasIterCategory<Iter>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<int>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<int>>);
+        static_assert(std::is_convertible_v<Iter::value_type, std::tuple<int>>);
     }
 
     {
@@ -175,14 +183,17 @@ void test() {
         // value_type of single view
         xranges::zip_view v{foos};
         using Iter = decltype(v.begin());
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<Foo>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<Foo>>);
+        static_assert(std::is_convertible_v<Iter::value_type, std::tuple<Foo>>);
     }
 
     {
         // value_type of multiple views with different value_type
         xranges::zip_view v{foos, bars};
         using Iter = decltype(v.begin());
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<Foo, Bar>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<Foo, Bar>>);
+        static_assert(
+            std::is_convertible_v<Iter::value_type, std::tuple<Foo, Bar>>);
     }
 
     {
@@ -196,7 +207,8 @@ void test() {
         static_assert(
             std::is_same_v<Iter::iterator_category, std::input_iterator_tag>);
         static_assert(std::is_same_v<Iter::difference_type, std::ptrdiff_t>);
-        static_assert(std::is_same_v<Iter::value_type, std::tuple<int>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<int>>);
+        static_assert(std::is_convertible_v<Iter::value_type, std::tuple<int>>);
 
         static_assert(std::is_same_v<ConstIter::iterator_concept,
             std::forward_iterator_tag>);
@@ -205,6 +217,8 @@ void test() {
         static_assert(
             std::is_same_v<ConstIter::difference_type, std::ptrdiff_t>);
         static_assert(
-            std::is_same_v<ConstIter::value_type, std::tuple<double>>);
+            std::is_same_v<ConstIter::value_type, rxx::tuple<double>>);
+        static_assert(
+            std::is_convertible_v<ConstIter::value_type, std::tuple<double>>);
     }
 }

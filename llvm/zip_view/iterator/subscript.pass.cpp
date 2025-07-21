@@ -15,10 +15,10 @@
 //        all_random_access<Const, Views...>
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
+#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -28,13 +28,15 @@ constexpr bool test() {
 
     {
         // random_access_range
-        xranges::zip_view v(SizedRandomAccessView{buffer}, std::views::iota(0));
+        xranges::zip_view v(SizedRandomAccessView{buffer}, xviews::iota(0));
         auto it = v.begin();
         assert(it[0] == *it);
         assert(it[2] == *(it + 2));
         assert(it[4] == *(it + 4));
 
-        static_assert(std::is_same_v<decltype(it[2]), std::tuple<int&, int>>);
+        static_assert(std::is_same_v<decltype(it[2]), rxx::tuple<int&, int>>);
+        static_assert(
+            std::is_convertible_v<decltype(it[2]), std::tuple<int&, int>>);
     }
 
     {
@@ -46,7 +48,9 @@ constexpr bool test() {
         assert(it[2] == *(it + 2));
         assert(it[4] == *(it + 4));
 
-        static_assert(std::is_same_v<decltype(it[2]), std::tuple<int&, int&>>);
+        static_assert(std::is_same_v<decltype(it[2]), rxx::tuple<int&, int&>>);
+        static_assert(
+            std::is_convertible_v<decltype(it[2]), std::tuple<int&, int&>>);
     }
 
     {

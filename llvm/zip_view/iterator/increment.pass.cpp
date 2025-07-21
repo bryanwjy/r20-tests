@@ -16,12 +16,10 @@
 // constexpr iterator operator++(int) requires all_forward<Const, Views...>;
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -40,30 +38,30 @@ constexpr bool test() {
     std::array b{4.1, 3.2, 4.3};
     {
         // random/contiguous
-        xranges::zip_view v(a, b, std::views::iota(0, 5));
+        xranges::zip_view v(a, b, xviews::iota(0, 5));
         auto it = v.begin();
         using Iter = decltype(it);
 
-        assert(&(std::get<0>(*it)) == &(a[0]));
-        assert(&(std::get<1>(*it)) == &(b[0]));
-        assert(std::get<2>(*it) == 0);
+        assert(&(xranges::get_element<0>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<1>(*it)) == &(b[0]));
+        assert(xranges::get_element<2>(*it) == 0);
 
         static_assert(std::is_same_v<decltype(++it), Iter&>);
 
         auto& it_ref = ++it;
         assert(&it_ref == &it);
 
-        assert(&(std::get<0>(*it)) == &(a[1]));
-        assert(&(std::get<1>(*it)) == &(b[1]));
-        assert(std::get<2>(*it) == 1);
+        assert(&(xranges::get_element<0>(*it)) == &(a[1]));
+        assert(&(xranges::get_element<1>(*it)) == &(b[1]));
+        assert(xranges::get_element<2>(*it) == 1);
 
         static_assert(std::is_same_v<decltype(it++), Iter>);
         auto original = it;
         auto copy = it++;
         assert(original == copy);
-        assert(&(std::get<0>(*it)) == &(a[2]));
-        assert(&(std::get<1>(*it)) == &(b[2]));
-        assert(std::get<2>(*it) == 2);
+        assert(&(xranges::get_element<0>(*it)) == &(a[2]));
+        assert(&(xranges::get_element<1>(*it)) == &(b[2]));
+        assert(xranges::get_element<2>(*it) == 2);
     }
 
     {
@@ -74,18 +72,18 @@ constexpr bool test() {
         auto it = v.begin();
         using Iter = decltype(it);
 
-        assert(&(std::get<0>(*it)) == &(buffer[0]));
+        assert(&(xranges::get_element<0>(*it)) == &(buffer[0]));
 
         static_assert(std::is_same_v<decltype(++it), Iter&>);
         auto& it_ref = ++it;
         assert(&it_ref == &it);
-        assert(&(std::get<0>(*it)) == &(buffer[1]));
+        assert(&(xranges::get_element<0>(*it)) == &(buffer[1]));
 
         static_assert(std::is_same_v<decltype(it++), Iter>);
         auto original = it;
         auto copy = it++;
         assert(copy == original);
-        assert(&(std::get<0>(*it)) == &(buffer[2]));
+        assert(&(xranges::get_element<0>(*it)) == &(buffer[2]));
     }
 
     {
@@ -96,18 +94,18 @@ constexpr bool test() {
         auto it = v.begin();
         using Iter = decltype(it);
 
-        assert(&(std::get<0>(*it)) == &(buffer[0]));
+        assert(&(xranges::get_element<0>(*it)) == &(buffer[0]));
 
         static_assert(std::is_same_v<decltype(++it), Iter&>);
         auto& it_ref = ++it;
         assert(&it_ref == &it);
-        assert(&(std::get<0>(*it)) == &(buffer[1]));
+        assert(&(xranges::get_element<0>(*it)) == &(buffer[1]));
 
         static_assert(std::is_same_v<decltype(it++), Iter>);
         auto original = it;
         auto copy = it++;
         assert(copy == original);
-        assert(&(std::get<0>(*it)) == &(buffer[2]));
+        assert(&(xranges::get_element<0>(*it)) == &(buffer[2]));
     }
 
     {
@@ -117,19 +115,19 @@ constexpr bool test() {
         auto it = v.begin();
         using Iter = decltype(it);
 
-        assert(&(std::get<0>(*it)) == &(a[0]));
-        assert(&(std::get<1>(*it)) == &(buffer[0]));
+        assert(&(xranges::get_element<0>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<1>(*it)) == &(buffer[0]));
 
         static_assert(std::is_same_v<decltype(++it), Iter&>);
         auto& it_ref = ++it;
         assert(&it_ref == &it);
-        assert(&(std::get<0>(*it)) == &(a[1]));
-        assert(&(std::get<1>(*it)) == &(buffer[1]));
+        assert(&(xranges::get_element<0>(*it)) == &(a[1]));
+        assert(&(xranges::get_element<1>(*it)) == &(buffer[1]));
 
         static_assert(std::is_same_v<decltype(it++), void>);
         it++;
-        assert(&(std::get<0>(*it)) == &(a[2]));
-        assert(&(std::get<1>(*it)) == &(buffer[2]));
+        assert(&(xranges::get_element<0>(*it)) == &(a[2]));
+        assert(&(xranges::get_element<1>(*it)) == &(buffer[2]));
     }
 
     return true;

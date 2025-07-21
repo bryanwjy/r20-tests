@@ -14,12 +14,11 @@
 // friend constexpr auto iter_move(const iterator& i) noexcept(see below);
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
 #include <iterator>
-#include <ranges>
 #include <tuple>
 
 namespace xranges = rxx::ranges;
@@ -36,24 +35,25 @@ constexpr bool test() {
         std::array a1{1, 2, 3, 4};
         std::array const a2{3.0, 4.0};
 
-        xranges::zip_view v(a1, a2, std::views::iota(3L));
-        assert(
-            std::ranges::iter_move(v.begin()) == std::make_tuple(1, 3.0, 3L));
+        xranges::zip_view v(a1, a2, xviews::iota(3L));
+        assert(xranges::iter_move(v.begin()) == std::make_tuple(1, 3.0, 3L));
+        static_assert(std::is_same_v<decltype(xranges::iter_move(v.begin())),
+            rxx::tuple<int&&, double const&&, long>>);
         static_assert(
-            std::is_same_v<decltype(std::ranges::iter_move(v.begin())),
+            std::is_convertible_v<decltype(xranges::iter_move(v.begin())),
                 std::tuple<int&&, double const&&, long>>);
 
         auto it = v.begin();
-        static_assert(noexcept(std::ranges::iter_move(it)));
+        static_assert(noexcept(xranges::iter_move(it)));
     }
 
     {
         // underlying iter_move may throw
-        auto throwingMoveRange = std::views::iota(0, 2) |
-            std::views::transform([](auto) noexcept { return ThrowingMove{}; });
+        auto throwingMoveRange = xviews::iota(0, 2) |
+            xviews::transform([](auto) noexcept { return ThrowingMove{}; });
         xranges::zip_view v(throwingMoveRange);
         auto it = v.begin();
-        static_assert(!noexcept(std::ranges::iter_move(it)));
+        static_assert(!noexcept(xranges::iter_move(it)));
     }
 
     {
@@ -64,12 +64,12 @@ constexpr bool test() {
         xranges::zip_view v(r1, r2);
         auto it = v.begin();
         {
-            [[maybe_unused]] auto&& i = std::ranges::iter_move(it);
+            [[maybe_unused]] auto&& i = xranges::iter_move(it);
             assert(r1.iter_move_called_times == 1);
             assert(r2.iter_move_called_times == 1);
         }
         {
-            [[maybe_unused]] auto&& i = std::ranges::iter_move(it);
+            [[maybe_unused]] auto&& i = xranges::iter_move(it);
             assert(r1.iter_move_called_times == 2);
             assert(r2.iter_move_called_times == 2);
         }

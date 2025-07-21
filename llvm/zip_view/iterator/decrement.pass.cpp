@@ -16,12 +16,10 @@
 // Views...>;
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -44,7 +42,7 @@ constexpr bool test() {
     std::array b{4.1, 3.2, 4.3};
     {
         // all random access
-        xranges::zip_view v(a, b, std::views::iota(0, 5));
+        xranges::zip_view v(a, b, xviews::iota(0, 5));
         auto it = v.end();
         using Iter = decltype(it);
 
@@ -52,22 +50,22 @@ constexpr bool test() {
         auto& it_ref = --it;
         assert(&it_ref == &it);
 
-        assert(&(std::get<0>(*it)) == &(a[2]));
-        assert(&(std::get<1>(*it)) == &(b[2]));
-        assert(std::get<2>(*it) == 2);
+        assert(&(xranges::get_element<0>(*it)) == &(a[2]));
+        assert(&(xranges::get_element<1>(*it)) == &(b[2]));
+        assert(xranges::get_element<2>(*it) == 2);
 
         static_assert(std::is_same_v<decltype(it--), Iter>);
         it--;
-        assert(&(std::get<0>(*it)) == &(a[1]));
-        assert(&(std::get<1>(*it)) == &(b[1]));
-        assert(std::get<2>(*it) == 1);
+        assert(&(xranges::get_element<0>(*it)) == &(a[1]));
+        assert(&(xranges::get_element<1>(*it)) == &(b[1]));
+        assert(xranges::get_element<2>(*it) == 1);
     }
 
     {
         // all bidi+
         int buffer[2] = {1, 2};
 
-        xranges::zip_view v(BidiCommonView{buffer}, std::views::iota(0, 5));
+        xranges::zip_view v(BidiCommonView{buffer}, xviews::iota(0, 5));
         auto it = v.begin();
         using Iter = decltype(it);
 

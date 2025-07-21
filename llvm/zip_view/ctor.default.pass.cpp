@@ -13,10 +13,9 @@
 
 // zip_view() = default;
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <type_traits>
 #include <utility>
 
@@ -25,7 +24,7 @@ namespace xviews = rxx::views;
 
 constexpr int buff[] = {1, 2, 3};
 
-struct DefaultConstructibleView : std::ranges::view_base {
+struct DefaultConstructibleView : xranges::view_base {
     constexpr DefaultConstructibleView() : begin_(buff), end_(buff + 3) {}
     constexpr int const* begin() const { return begin_; }
     constexpr int const* end() const { return end_; }
@@ -35,7 +34,7 @@ private:
     int const* end_;
 };
 
-struct NoDefaultCtrView : std::ranges::view_base {
+struct NoDefaultCtrView : xranges::view_base {
     NoDefaultCtrView() = delete;
     int* begin() const;
     int* end() const;

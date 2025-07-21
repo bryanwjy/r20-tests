@@ -17,11 +17,9 @@
 //                                         Views>>> && ...);
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

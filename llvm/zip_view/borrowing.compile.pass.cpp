@@ -15,14 +15,12 @@
 // inline constexpr bool enable_borrowed_range<zip_view<Views...>> =
 //      (enable_borrowed_range<Views> && ...);
 
-#include "rxx/ranges/zip_view.h"
-
-#include <ranges>
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct Borrowed : std::ranges::view_base {
+struct Borrowed : xranges::view_base {
     int* begin() const;
     int* end() const;
 };
@@ -30,20 +28,19 @@ struct Borrowed : std::ranges::view_base {
 template <>
 inline constexpr bool std::ranges::enable_borrowed_range<Borrowed> = true;
 
-static_assert(std::ranges::borrowed_range<Borrowed>);
+static_assert(xranges::borrowed_range<Borrowed>);
 
-struct NonBorrowed : std::ranges::view_base {
+struct NonBorrowed : xranges::view_base {
     int* begin() const;
     int* end() const;
 };
-static_assert(!std::ranges::borrowed_range<NonBorrowed>);
+static_assert(!xranges::borrowed_range<NonBorrowed>);
 
 // test borrowed_range
-static_assert(std::ranges::borrowed_range<xranges::zip_view<Borrowed>>);
+static_assert(xranges::borrowed_range<xranges::zip_view<Borrowed>>);
+static_assert(xranges::borrowed_range<xranges::zip_view<Borrowed, Borrowed>>);
 static_assert(
-    std::ranges::borrowed_range<xranges::zip_view<Borrowed, Borrowed>>);
+    !xranges::borrowed_range<xranges::zip_view<Borrowed, NonBorrowed>>);
+static_assert(!xranges::borrowed_range<xranges::zip_view<NonBorrowed>>);
 static_assert(
-    !std::ranges::borrowed_range<xranges::zip_view<Borrowed, NonBorrowed>>);
-static_assert(!std::ranges::borrowed_range<xranges::zip_view<NonBorrowed>>);
-static_assert(
-    !std::ranges::borrowed_range<xranges::zip_view<NonBorrowed, NonBorrowed>>);
+    !xranges::borrowed_range<xranges::zip_view<NonBorrowed, NonBorrowed>>);

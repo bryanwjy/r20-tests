@@ -25,12 +25,11 @@
 //                                  ...);`
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/functional.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <concepts>
-#include <functional>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

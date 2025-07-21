@@ -13,12 +13,11 @@
 
 // xviews::zip
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -31,7 +30,7 @@ static_assert(!std::is_invocable_v<decltype((xviews::zip)), int>);
 static_assert(
     std::is_invocable_v<decltype((xviews::zip)), SizedRandomAccessView>);
 static_assert(std::is_invocable_v<decltype((xviews::zip)),
-    SizedRandomAccessView, std::ranges::iota_view<int, int>>);
+    SizedRandomAccessView, xranges::iota_view<int, int>>);
 static_assert(
     !std::is_invocable_v<decltype((xviews::zip)), SizedRandomAccessView, int>);
 
@@ -39,9 +38,9 @@ constexpr bool test() {
     {
         // zip zero arguments
         auto v = xviews::zip();
-        assert(std::ranges::empty(v));
+        assert(xranges::empty(v));
         static_assert(
-            std::is_same_v<decltype(v), std::ranges::empty_view<std::tuple<>>>);
+            std::is_same_v<decltype(v), xranges::empty_view<rxx::tuple<>>>);
     }
 
     {
@@ -51,18 +50,24 @@ constexpr bool test() {
             v = xviews::zip(SizedRandomAccessView{buffer});
         assert(xranges::size(v) == 8);
         static_assert(std::is_same_v<xranges::range_reference_t<decltype(v)>,
-            std::tuple<int&>>);
+            rxx::tuple<int&>>);
+        static_assert(
+            std::is_convertible_v<xranges::range_reference_t<decltype(v)>,
+                std::tuple<int&>>);
     }
 
     {
         // zip a viewable range
         std::array a{1, 2, 3};
         std::same_as<xranges::zip_view<
-            std::ranges::ref_view<std::array<int, 3>>>> decltype(auto) v =
+            xranges::ref_view<std::array<int, 3>>>> decltype(auto) v =
             xviews::zip(a);
-        assert(&(std::get<0>(*v.begin())) == &(a[0]));
+        assert(&(xranges::get_element<0>(*v.begin())) == &(a[0]));
         static_assert(std::is_same_v<xranges::range_reference_t<decltype(v)>,
-            std::tuple<int&>>);
+            rxx::tuple<int&>>);
+        static_assert(
+            std::is_convertible_v<xranges::range_reference_t<decltype(v)>,
+                rxx::tuple<int&>>);
     }
 
     {
@@ -77,7 +82,10 @@ constexpr bool test() {
             SizedRandomAccessView>>> decltype(auto) v2 = xviews::zip(v);
 
         static_assert(std::is_same_v<xranges::range_reference_t<decltype(v2)>,
-            std::tuple<std::tuple<int&, int&>>>);
+            rxx::tuple<rxx::tuple<int&, int&>>>);
+        static_assert(
+            std::is_convertible_v<xranges::range_reference_t<decltype(v2)>,
+                std::tuple<std::tuple<int&, int&>>>);
     }
     return true;
 }

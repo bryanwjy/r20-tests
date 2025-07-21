@@ -16,10 +16,7 @@
 // exception, the iterator acquires a singular value.
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
-
-#include <ranges>
-#include <tuple>
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

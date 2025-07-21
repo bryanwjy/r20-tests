@@ -15,26 +15,24 @@
 // constexpr auto size() const requires(sized_range<const Views>&&...)
 
 #include "../test_iterators.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
-#include <ranges>
-#include <tuple>
 #include <utility>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 int buffer[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     std::size_t size_ = 0;
     constexpr View(std::size_t s) : size_(s) {}
     constexpr auto begin() const { return buffer; }
     constexpr auto end() const { return buffer + size_; }
 };
 
-struct SizedNonConst : std::ranges::view_base {
+struct SizedNonConst : xranges::view_base {
     using iterator = forward_iterator<int*>;
     std::size_t size_ = 0;
     constexpr SizedNonConst(std::size_t s) : size_(s) {}
@@ -43,7 +41,7 @@ struct SizedNonConst : std::ranges::view_base {
     constexpr std::size_t size() { return size_; }
 };
 
-struct StrangeSizeView : std::ranges::view_base {
+struct StrangeSizeView : xranges::view_base {
     constexpr auto begin() const { return buffer; }
     constexpr auto end() const { return buffer + 8; }
 
@@ -68,7 +66,7 @@ constexpr bool test() {
 
     {
         // multiple ranges different types
-        xranges::zip_view v(std::views::iota(0, 500), View(3));
+        xranges::zip_view v(xviews::iota(0, 500), View(3));
         assert(v.size() == 3);
         assert(std::as_const(v).size() == 3);
     }

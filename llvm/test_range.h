@@ -12,13 +12,12 @@
 #ifndef LIBCXX_TEST_SUPPORT_TEST_RANGE_H
 #define LIBCXX_TEST_SUPPORT_TEST_RANGE_H
 
-#include "rxx/ranges/concepts.h"
+#include "rxx/functional.h"
+#include "rxx/iterator.h"
+#include "rxx/ranges.h"
 #include "test_iterators.h"
 
 #include <concepts>
-#include <functional>
-#include <iterator>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
@@ -62,7 +61,7 @@ struct test_non_const_common_range {
 
 template <template <class...> class I, class T = int>
 requires std::input_or_output_iterator<I<T*>>
-struct test_view : std::ranges::view_base {
+struct test_view : xranges::view_base {
     I<T*> begin();
     I<T const*> begin() const;
     sentinel end();
@@ -81,16 +80,16 @@ inline constexpr bool std::ranges::enable_borrowed_range<BorrowedRange<T>> =
 static_assert(!xranges::view<BorrowedRange<>>);
 static_assert(xranges::borrowed_range<BorrowedRange<>>);
 
-using BorrowedView = std::ranges::empty_view<int>;
+using BorrowedView = xranges::empty_view<int>;
 static_assert(xranges::view<BorrowedView>);
 static_assert(xranges::borrowed_range<BorrowedView>);
 
-using NonBorrowedView = std::ranges::single_view<int>;
+using NonBorrowedView = xranges::single_view<int>;
 static_assert(xranges::view<NonBorrowedView>);
 static_assert(!xranges::borrowed_range<NonBorrowedView>);
 
 template <class Range>
-concept simple_view = xranges::view<Range> && std::ranges::range<Range const> &&
+concept simple_view = xranges::view<Range> && xranges::range<Range const> &&
     std::same_as<xranges::iterator_t<Range>,
         xranges::iterator_t<Range const>> &&
     std::same_as<xranges::sentinel_t<Range>, xranges::sentinel_t<Range const>>;

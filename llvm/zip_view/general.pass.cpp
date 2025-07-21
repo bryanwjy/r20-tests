@@ -15,13 +15,11 @@
 // general collection of sample algorithms and functions that try to mock
 // general usage of this view.
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <string>
-#include <tuple>
 #include <vector>
 
 namespace xranges = rxx::ranges;
@@ -43,16 +41,16 @@ int main(int, char**) {
         std::array a{"abc"s, "def"s, "gh"s};
         auto view = xviews::zip(v, a);
         auto it = view.begin();
-        assert(&(std::get<0>(*it)) == &(v[0]));
-        assert(&(std::get<1>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<0>(*it)) == &(v[0]));
+        assert(&(xranges::get_element<1>(*it)) == &(a[0]));
 
         ++it;
-        assert(&(std::get<0>(*it)) == &(v[1]));
-        assert(&(std::get<1>(*it)) == &(a[1]));
+        assert(&(xranges::get_element<0>(*it)) == &(v[1]));
+        assert(&(xranges::get_element<1>(*it)) == &(a[1]));
 
         ++it;
-        assert(&(std::get<0>(*it)) == &(v[2]));
-        assert(&(std::get<1>(*it)) == &(a[2]));
+        assert(&(xranges::get_element<0>(*it)) == &(v[2]));
+        assert(&(xranges::get_element<1>(*it)) == &(a[2]));
 
         ++it;
         assert(it == view.end());

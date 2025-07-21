@@ -13,11 +13,8 @@
 
 // constexpr explicit zip_view(Views...)
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
-
-#include <ranges>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -42,7 +39,7 @@ static_assert(!implicitly_constructible_from<
               xranges::zip_view<SimpleCommon, SimpleCommon>, SimpleCommon,
               SimpleCommon>);
 
-struct MoveAwareView : std::ranges::view_base {
+struct MoveAwareView : xranges::view_base {
     int moves = 0;
     constexpr MoveAwareView() = default;
     constexpr MoveAwareView(MoveAwareView&& other) : moves(other.moves + 1) {
@@ -72,8 +69,8 @@ constexpr bool test() {
 
     {
         // constructor from views
-        xranges::zip_view v(SizedRandomAccessView{buffer}, std::views::iota(0),
-            std::ranges::single_view(2.));
+        xranges::zip_view v(SizedRandomAccessView{buffer}, xviews::iota(0),
+            xranges::single_view(2.));
         auto [i, j, k] = *v.begin();
         assert(i == 1);
         assert(j == 0);

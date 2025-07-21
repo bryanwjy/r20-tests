@@ -14,10 +14,7 @@
 // iterator() = default;
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
-
-#include <ranges>
-#include <tuple>
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -37,12 +34,12 @@ struct PODIter {
     friend constexpr bool operator==(PODIter const&, PODIter const&) = default;
 };
 
-struct IterDefaultCtrView : std::ranges::view_base {
+struct IterDefaultCtrView : xranges::view_base {
     PODIter begin() const;
     PODIter end() const;
 };
 
-struct IterNoDefaultCtrView : std::ranges::view_base {
+struct IterNoDefaultCtrView : xranges::view_base {
     cpp20_input_iterator<int*> begin() const;
     sentinel_wrapper<cpp20_input_iterator<int*>> end() const;
 };
