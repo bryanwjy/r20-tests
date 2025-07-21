@@ -15,11 +15,10 @@
 //   single_view(T) -> single_view<T>;
 
 #include "../test_iterators.h"
-#include "rxx/ranges/single_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

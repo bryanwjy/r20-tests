@@ -15,13 +15,11 @@
 
 // friend constexpr void iter_swap(const iterator& x, const iterator& y);
 
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <span>
 #include <string>
 #include <string_view>

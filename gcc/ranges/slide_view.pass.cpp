@@ -14,26 +14,24 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/slide_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/filter_view.h"
 #include "rxx/ranges/join_view.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace ranges = std::ranges;
 namespace views = std::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 constexpr bool test01() {
-    auto v1 = std::array{1, 2} | rxx::views::slide(1);
+    auto v1 = std::array{1, 2} | xviews::slide(1);
     auto const i0 = v1.begin(), i1 = v1.begin() + 1;
     assert(i0 + 1 - 1 == i0);
     assert(i0 < i1);
@@ -42,28 +40,28 @@ constexpr bool test01() {
     assert(i0 - i1 == -1);
     assert(v1.end() - i1 == 1);
     assert(i1 - v1.end() == -1);
-    assert(ranges::equal(std::move(v1) | rxx::views::join, (int[]){1, 2}));
+    assert(xranges::equal(std::move(v1) | xviews::join, (int[]){1, 2}));
 
     int x[] = {1, 2, 3, 4};
-    auto v2 = x | rxx::views::slide(2);
+    auto v2 = x | xviews::slide(2);
     auto i2 = v2.begin();
     i2 += 2;
     i2 -= -1;
     assert(i2 == v2.end());
-    assert(ranges::size(v2) == 3);
-    assert(ranges::size(std::as_const(v2)) == 3);
-    assert(ranges::equal(v2,
+    assert(xranges::size(v2) == 3);
+    assert(xranges::size(std::as_const(v2)) == 3);
+    assert(xranges::equal(v2,
         (std::initializer_list<int>[]){
             {1, 2},
             {2, 3},
             {3, 4}
     },
-        ranges::equal));
+        xranges::equal));
 
     int y[] = {1, 2, 3, 4, 5};
-    auto const v3 = y | rxx::views::slide(3);
-    assert(ranges::size(v3) == 3);
-    for (unsigned i = 0; i < ranges::size(x); i++) {
+    auto const v3 = y | xviews::slide(3);
+    assert(xranges::size(v3) == 3);
+    for (unsigned i = 0; i < xranges::size(x); i++) {
         assert(&v3[i][0] == &y[i] + 0);
         assert(&v3[i][1] == &y[i] + 1);
         assert(&v3[i][2] == &y[i] + 2);
@@ -72,12 +70,12 @@ constexpr bool test01() {
     // LWG 3848 - slide_view etc missing base accessor
     static_assert(sizeof(decltype(v3.base())) > 0);
 
-    auto const v5 = y | rxx::views::slide(5);
-    assert(ranges::size(v5) == 1);
-    assert(ranges::equal(v5 | rxx::views::join, y));
+    auto const v5 = y | xviews::slide(5);
+    assert(xranges::size(v5) == 1);
+    assert(xranges::equal(v5 | xviews::join, y));
 
-    auto const v6 = y | rxx::views::slide(6);
-    assert(ranges::empty(v6));
+    auto const v6 = y | xviews::slide(6);
+    assert(xranges::empty(v6));
 
     return true;
 }
@@ -87,33 +85,33 @@ constexpr bool test02() {
     using rxx::tests::test_input_range;
     using rxx::tests::test_random_access_range;
 
-    using ty1 = rxx::ranges::slide_view<views::all_t<test_forward_range<int>>>;
-    static_assert(ranges::forward_range<ty1>);
-    static_assert(!ranges::bidirectional_range<ty1>);
-    static_assert(!ranges::sized_range<ty1>);
+    using ty1 = xranges::slide_view<xviews::all_t<test_forward_range<int>>>;
+    static_assert(xranges::forward_range<ty1>);
+    static_assert(!xranges::bidirectional_range<ty1>);
+    static_assert(!xranges::sized_range<ty1>);
 
     using ty2 =
-        rxx::ranges::slide_view<views::all_t<test_random_access_range<int>>>;
-    static_assert(ranges::random_access_range<ty2>);
-    static_assert(ranges::sized_range<ty2>);
+        xranges::slide_view<xviews::all_t<test_random_access_range<int>>>;
+    static_assert(xranges::random_access_range<ty2>);
+    static_assert(xranges::sized_range<ty2>);
 
     return true;
 }
 
 constexpr bool test03() {
-    auto v = views::iota(0, 4) | views::filter([](auto) { return true; }) |
-        rxx::views::slide(2);
+    auto v = xviews::iota(0, 4) | xviews::filter([](auto) { return true; }) |
+        xviews::slide(2);
     using ty = decltype(v);
-    static_assert(ranges::forward_range<ty>);
-    static_assert(ranges::common_range<ty>);
-    static_assert(!ranges::sized_range<ty>);
+    static_assert(xranges::forward_range<ty>);
+    static_assert(xranges::common_range<ty>);
+    static_assert(!xranges::sized_range<ty>);
     assert(v.begin() == v.begin());
     assert(v.begin() != v.end());
-    assert(ranges::next(v.begin(), 3) == v.end());
+    assert(xranges::next(v.begin(), 3) == v.end());
     auto it = v.begin();
     ++it;
     it++;
-    assert(ranges::next(it) == v.end());
+    assert(xranges::next(it) == v.end());
     it--;
     --it;
     assert(it == v.begin());

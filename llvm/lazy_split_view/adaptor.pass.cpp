@@ -11,11 +11,11 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// rxx::views::lazy_split
+// xviews::lazy_split
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <array>
@@ -24,7 +24,7 @@
 #include <string_view>
 #include <utility>
 
-struct SomeView : std::ranges::view_base {
+struct SomeView : xranges::view_base {
     std::string_view const* v_;
     constexpr SomeView(std::string_view const& v) : v_(&v) {}
     constexpr auto begin() const { return v_->begin(); }
@@ -33,43 +33,42 @@ struct SomeView : std::ranges::view_base {
 
 struct NotAView {};
 
-static_assert(!std::is_invocable_v<decltype(rxx::views::lazy_split)>);
+static_assert(!std::is_invocable_v<decltype(xviews::lazy_split)>);
 static_assert(
-    !std::is_invocable_v<decltype(rxx::views::lazy_split), SomeView, NotAView>);
+    !std::is_invocable_v<decltype(xviews::lazy_split), SomeView, NotAView>);
 static_assert(
-    !std::is_invocable_v<decltype(rxx::views::lazy_split), NotAView, SomeView>);
+    !std::is_invocable_v<decltype(xviews::lazy_split), NotAView, SomeView>);
 static_assert(
-    std::is_invocable_v<decltype(rxx::views::lazy_split), SomeView, SomeView>);
+    std::is_invocable_v<decltype(xviews::lazy_split), SomeView, SomeView>);
 
 // Regression test for #75002, views::lazy_split shouldn't be a range adaptor
 // closure
-static_assert(!CanBePiped<SomeView&, decltype(rxx::views::lazy_split)>);
-static_assert(!CanBePiped<char (&)[10], decltype(rxx::views::lazy_split)>);
-static_assert(!CanBePiped<char (&&)[10], decltype(rxx::views::lazy_split)>);
-static_assert(!CanBePiped<NotAView, decltype(rxx::views::lazy_split)>);
+static_assert(!CanBePiped<SomeView&, decltype(xviews::lazy_split)>);
+static_assert(!CanBePiped<char (&)[10], decltype(xviews::lazy_split)>);
+static_assert(!CanBePiped<char (&&)[10], decltype(xviews::lazy_split)>);
+static_assert(!CanBePiped<NotAView, decltype(xviews::lazy_split)>);
 
-static_assert(CanBePiped<SomeView&, decltype(rxx::views::lazy_split('x'))>);
-static_assert(CanBePiped<char (&)[10], decltype(rxx::views::lazy_split('x'))>);
-static_assert(
-    !CanBePiped<char (&&)[10], decltype(rxx::views::lazy_split('x'))>);
-static_assert(!CanBePiped<NotAView, decltype(rxx::views::lazy_split('x'))>);
+static_assert(CanBePiped<SomeView&, decltype(xviews::lazy_split('x'))>);
+static_assert(CanBePiped<char (&)[10], decltype(xviews::lazy_split('x'))>);
+static_assert(!CanBePiped<char (&&)[10], decltype(xviews::lazy_split('x'))>);
+static_assert(!CanBePiped<NotAView, decltype(xviews::lazy_split('x'))>);
 
-static_assert(std::same_as<decltype(rxx::views::lazy_split),
-    decltype(rxx::ranges::views::lazy_split)>);
+static_assert(std::same_as<decltype(xviews::lazy_split),
+    decltype(xranges::views::lazy_split)>);
 
 constexpr bool test() {
     std::string_view input = "abc";
     std::string_view sep = "a";
 
-    // Test that `rxx::views::lazy_split` is a range adaptor.
+    // Test that `xviews::lazy_split` is a range adaptor.
 
     // Test `views::lazy_split(input, sep)`.
     {
         SomeView view(input);
 
-        using Result = rxx::ranges::lazy_split_view<SomeView, std::string_view>;
+        using Result = xranges::lazy_split_view<SomeView, std::string_view>;
         std::same_as<Result> decltype(auto) result =
-            rxx::views::lazy_split(view, sep);
+            xviews::lazy_split(view, sep);
         assert(result.base().begin() == input.begin());
         assert(result.base().end() == input.end());
     }
@@ -78,9 +77,9 @@ constexpr bool test() {
     {
         SomeView view(input);
 
-        using Result = rxx::ranges::lazy_split_view<SomeView, std::string_view>;
+        using Result = xranges::lazy_split_view<SomeView, std::string_view>;
         std::same_as<Result> decltype(auto) result =
-            rxx::views::lazy_split(sep)(view);
+            xviews::lazy_split(sep)(view);
         assert(result.base().begin() == input.begin());
         assert(result.base().end() == input.end());
     }
@@ -89,9 +88,9 @@ constexpr bool test() {
     {
         SomeView view(input);
 
-        using Result = rxx::ranges::lazy_split_view<SomeView, std::string_view>;
+        using Result = xranges::lazy_split_view<SomeView, std::string_view>;
         std::same_as<Result> decltype(auto) result =
-            view | rxx::views::lazy_split(sep);
+            view | xviews::lazy_split(sep);
         assert(result.base().begin() == input.begin());
         assert(result.base().end() == input.end());
     }
@@ -100,11 +99,10 @@ constexpr bool test() {
     {
         SomeView view(input);
         auto f = [](char c) { return c; };
-        auto partial = std::views::transform(f) | rxx::views::lazy_split(sep);
+        auto partial = xviews::transform(f) | xviews::lazy_split(sep);
 
-        using Result = rxx::ranges::lazy_split_view<
-            std::ranges::transform_view<SomeView, decltype(f)>,
-            std::string_view>;
+        using Result = xranges::lazy_split_view<
+            xranges::transform_view<SomeView, decltype(f)>, std::string_view>;
         std::same_as<Result> decltype(auto) result = partial(view);
         assert(result.base().base().begin() == input.begin());
         assert(result.base().base().end() == input.end());
@@ -114,24 +112,23 @@ constexpr bool test() {
     {
         SomeView view(input);
         auto f = [](auto v) { return v; };
-        auto partial = rxx::views::lazy_split(sep) | std::views::transform(f);
+        auto partial = xviews::lazy_split(sep) | xviews::transform(f);
 
-        using Result = std::ranges::transform_view<
-            rxx::ranges::lazy_split_view<SomeView, std::string_view>,
-            decltype(f)>;
+        using Result = xranges::transform_view<
+            xranges::lazy_split_view<SomeView, std::string_view>, decltype(f)>;
         std::same_as<Result> decltype(auto) result = partial(view);
         assert(result.base().base().begin() == input.begin());
         assert(result.base().base().end() == input.end());
     }
 
-    // Test that one can call `rxx::views::lazy_split` with arbitrary stuff, as
+    // Test that one can call `xviews::lazy_split` with arbitrary stuff, as
     // long as we don't try to actually complete the call by passing it a range.
     //
     // That makes no sense and we can't do anything with the result, but it's
     // valid.
     {
         struct X {};
-        [[maybe_unused]] auto partial = rxx::views::lazy_split(X{});
+        [[maybe_unused]] auto partial = xviews::lazy_split(X{});
     }
 
     return true;

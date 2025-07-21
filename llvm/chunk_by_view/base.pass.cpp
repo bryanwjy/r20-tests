@@ -17,16 +17,16 @@
 // constexpr View base() &&;
 
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
 #include <concepts>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     constexpr explicit Range(int* b, int* e) : begin_(b), end_(e) {}
     constexpr Range(Range const& other)
         : begin_(other.begin_)
@@ -47,14 +47,14 @@ struct Range : std::ranges::view_base {
     bool wasMoveInitialized = false;
 };
 
-static_assert(std::ranges::view<Range>);
-static_assert(std::ranges::forward_range<Range>);
+static_assert(xranges::view<Range>);
+static_assert(xranges::forward_range<Range>);
 
 struct Pred {
     bool operator()(int, int) const;
 };
 
-struct NonCopyableRange : std::ranges::view_base {
+struct NonCopyableRange : xranges::view_base {
     explicit NonCopyableRange(int*, int*);
     NonCopyableRange(NonCopyableRange const&) = delete;
     NonCopyableRange(NonCopyableRange&&) = default;

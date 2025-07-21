@@ -12,8 +12,8 @@
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 // UNSUPPORTED: msvc
 
-// std::ranges::end
-// std::ranges::cend
+// xranges::end
+// xranges::cend
 //   Test the fix for https://llvm.org/PR54100
 
 #include "../static_asserts.h"

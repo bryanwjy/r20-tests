@@ -18,7 +18,7 @@
 
 #include "../../static_asserts.h"
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <type_traits>
@@ -74,7 +74,7 @@ struct MaybeNoexceptIterator {
 };
 
 template <bool IsNoexcept = false>
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     int* iter_swaps = nullptr;
 
     constexpr View() = default;
@@ -196,7 +196,7 @@ constexpr bool test() {
     {
         int iter_swap_invocations = 0;
         adl::View<> input(iter_swap_invocations);
-        rxx::ranges::lazy_split_view<adl::View<>, adl::View<>> v(
+        xranges::lazy_split_view<adl::View<>, adl::View<>> v(
             input, adl::View<>());
 
         auto segment = *v.begin();
@@ -209,12 +209,11 @@ constexpr bool test() {
     {
         {
             using ThrowingSplitView =
-                rxx::ranges::lazy_split_view<adl::View<false>,
-                    adl::View<false>>;
+                xranges::lazy_split_view<adl::View<false>, adl::View<false>>;
             using ThrowingValueType =
-                std::ranges::iterator_t<ThrowingSplitView>::value_type;
-            using ThrowingIter = std::ranges::iterator_t<ThrowingValueType>;
-            ASSERT_NOT_NOEXCEPT(std::ranges::iter_swap(
+                xranges::iterator_t<ThrowingSplitView>::value_type;
+            using ThrowingIter = xranges::iterator_t<ThrowingValueType>;
+            ASSERT_NOT_NOEXCEPT(xranges::iter_swap(
                 std::declval<adl::MaybeNoexceptIterator<false>>(),
                 std::declval<adl::MaybeNoexceptIterator<false>>()));
             ASSERT_NOT_NOEXCEPT(iter_swap(
@@ -223,11 +222,11 @@ constexpr bool test() {
 
         {
             using NoexceptSplitView =
-                rxx::ranges::lazy_split_view<adl::View<true>, adl::View<true>>;
+                xranges::lazy_split_view<adl::View<true>, adl::View<true>>;
             using NoexceptValueType =
-                std::ranges::iterator_t<NoexceptSplitView>::value_type;
-            using NoexceptIter = std::ranges::iterator_t<NoexceptValueType>;
-            ASSERT_NOEXCEPT(std::ranges::iter_swap(
+                xranges::iterator_t<NoexceptSplitView>::value_type;
+            using NoexceptIter = xranges::iterator_t<NoexceptValueType>;
+            ASSERT_NOEXCEPT(xranges::iter_swap(
                 std::declval<adl::MaybeNoexceptIterator<true>>(),
                 std::declval<adl::MaybeNoexceptIterator<true>>()));
             ASSERT_NOEXCEPT(iter_swap(

@@ -17,7 +17,7 @@
 // Note that corner cases are tested in `range.lazy.split/general.pass.cpp`.
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <algorithm>
 #include <cassert>
@@ -32,23 +32,23 @@ constexpr bool test() {
         // ++i
         {
             auto i = v.begin();
-            assert(std::ranges::equal(*i, "abc"s));
+            assert(xranges::equal(*i, "abc"s));
 
             decltype(auto) i2 = ++i;
             static_assert(std::is_lvalue_reference_v<decltype(i2)>);
             assert(&i2 == &i);
-            assert(std::ranges::equal(*i2, "def"s));
+            assert(xranges::equal(*i2, "def"s));
         }
 
         // i++
         {
             auto i = v.begin();
-            assert(std::ranges::equal(*i, "abc"s));
+            assert(xranges::equal(*i, "abc"s));
 
             decltype(auto) i2 = i++;
             static_assert(!std::is_reference_v<decltype(i2)>);
-            assert(std::ranges::equal(*i2, "abc"s));
-            assert(std::ranges::equal(*i, "def"s));
+            assert(xranges::equal(*i2, "abc"s));
+            assert(xranges::equal(*i, "def"s));
         }
     }
 
@@ -59,22 +59,22 @@ constexpr bool test() {
         // ++i
         {
             auto i = v.begin();
-            assert(std::ranges::equal(*i, "abc"s));
+            assert(xranges::equal(*i, "abc"s));
 
             decltype(auto) i2 = ++i;
             static_assert(std::is_lvalue_reference_v<decltype(i2)>);
             assert(&i2 == &i);
-            assert(std::ranges::equal(*i2, "def"s));
+            assert(xranges::equal(*i2, "def"s));
         }
 
         // i++
         {
             auto i = v.begin();
-            assert(std::ranges::equal(*i, "abc"s));
+            assert(xranges::equal(*i, "abc"s));
 
             static_assert(std::is_void_v<decltype(i++)>);
             i++;
-            assert(std::ranges::equal(*i, "def"s));
+            assert(xranges::equal(*i, "def"s));
         }
     }
 

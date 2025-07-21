@@ -15,11 +15,9 @@
 
 // class join_with_view : public view_interface<join_with_view<V, Pattern>>
 
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <concepts>
-#include <ranges>
 #include <string>
 #include <vector>
 

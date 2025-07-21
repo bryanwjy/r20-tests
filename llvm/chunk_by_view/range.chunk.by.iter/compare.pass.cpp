@@ -18,13 +18,13 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/chunk_by_view.h"
 
 #include <array>
 #include <cassert>
 #include <concepts>
 #include <functional>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;
@@ -33,13 +33,12 @@ namespace xviews = rxx::views;
 template <class Iter, class Sent = sentinel_wrapper<Iter>>
 constexpr void test() {
     using Underlying = View<Iter, Sent>;
-    using ChunkByView =
-        xranges::chunk_by_view<Underlying, std::ranges::less_equal>;
+    using ChunkByView = xranges::chunk_by_view<Underlying, xranges::less_equal>;
     using ChunkByIterator = xranges::iterator_t<ChunkByView>;
 
     auto make_chunk_by_view = [](auto& arr) {
         View view{Iter(arr.data()), Sent(Iter(arr.data() + arr.size()))};
-        return ChunkByView(std::move(view), std::ranges::less_equal{});
+        return ChunkByView(std::move(view), xranges::less_equal{});
     };
 
     // Test operator==

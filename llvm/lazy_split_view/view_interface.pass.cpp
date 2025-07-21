@@ -11,9 +11,9 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// class rxx::ranges::lazy_split_view;
+// class xranges::lazy_split_view;
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
@@ -23,7 +23,7 @@
 
 using V = SplitViewForward;
 
-static_assert(std::is_base_of_v<std::ranges::view_interface<SplitViewForward>,
+static_assert(std::is_base_of_v<xranges::view_interface<SplitViewForward>,
     SplitViewForward>);
 
 constexpr bool test() {
@@ -32,7 +32,7 @@ constexpr bool test() {
     // empty()
     {
         {
-            rxx::ranges::lazy_split_view v("abc def", " ");
+            xranges::lazy_split_view v("abc def", " ");
             assert(!v.empty());
         }
 
@@ -40,7 +40,7 @@ constexpr bool test() {
             // Note: an empty string literal would still produce a non-empty
             // output because the terminating zero is treated as a separate
             // character; hence the use of `string_view`.
-            rxx::ranges::lazy_split_view v(""sv, "");
+            xranges::lazy_split_view v(""sv, "");
             assert(v.empty());
         }
     }
@@ -48,7 +48,7 @@ constexpr bool test() {
     // operator bool()
     {
         {
-            rxx::ranges::lazy_split_view v("abc", "");
+            xranges::lazy_split_view v("abc", "");
             assert(v);
         }
 
@@ -56,7 +56,7 @@ constexpr bool test() {
             // Note: an empty string literal would still produce a non-empty
             // output because the terminating zero is treated as a separate
             // character; hence the use of `string_view`.
-            rxx::ranges::lazy_split_view v(""sv, "");
+            xranges::lazy_split_view v(""sv, "");
             assert(!v);
         }
     }

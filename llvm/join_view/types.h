@@ -14,7 +14,7 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <concepts>
 #include <cstdint>
@@ -32,7 +32,7 @@ inline int globalBuffer[4][4] = {
 };
 
 template <template <class...> class Iter>
-struct ChildViewBase : std::ranges::view_base {
+struct ChildViewBase : xranges::view_base {
     int* ptr_;
 
     using iterator = Iter<int*>;
@@ -63,7 +63,7 @@ inline ChildView globalChildren[4] = {
 };
 
 template <class T, template <class...> class Iter = cpp17_input_iterator>
-struct ParentView : std::ranges::view_base {
+struct ParentView : xranges::view_base {
     T* ptr_;
     unsigned size_;
 
@@ -96,7 +96,7 @@ ParentView(T*) -> ParentView<T>;
 template <class T>
 using ForwardParentView = ParentView<T, forward_iterator>;
 
-struct CopyableChild : std::ranges::view_base {
+struct CopyableChild : xranges::view_base {
     int* ptr_;
     unsigned size_;
 
@@ -118,7 +118,7 @@ struct CopyableChild : std::ranges::view_base {
 };
 
 template <template <class...> class Iter>
-struct CopyableParentTemplate : std::ranges::view_base {
+struct CopyableParentTemplate : xranges::view_base {
     CopyableChild* ptr_;
 
     using iterator = Iter<CopyableChild*>;
@@ -168,7 +168,7 @@ struct InputValueIter {
 };
 
 template <class T>
-struct ValueView : std::ranges::view_base {
+struct ValueView : xranges::view_base {
     InputValueIter<T> ptr_;
 
     using sentinel = sentinel_wrapper<InputValueIter<T>>;
@@ -196,7 +196,7 @@ struct ValueView : std::ranges::view_base {
 
 template <class Iter, class Sent = Iter, class NonConstIter = Iter,
     class NonConstSent = Sent>
-struct BufferView : std::ranges::view_base {
+struct BufferView : xranges::view_base {
 
     using T = std::iter_value_t<Iter>;
     T* data_;
@@ -404,9 +404,9 @@ struct move_swap_aware_iter {
     // This is a proxy-like iterator where `reference` is a prvalue, and
     // `reference` and `value_type` are distinct types (similar to
     // `zip_view::iterator`).
-    using value_type = std::pair<int, int>;
-    using reference = std::pair<int&, int&>;
-    using rvalue_reference = std::pair<int&&, int&&>;
+    using value_type = rxx::tuple<int, int>;
+    using reference = rxx::tuple<int&, int&>;
+    using rvalue_reference = rxx::tuple<int&&, int&&>;
 
     using difference_type = std::intptr_t;
     using iterator_concept = std::input_iterator_tag;
@@ -484,11 +484,11 @@ private:
 };
 
 using StashingRange =
-    std::ranges::subrange<StashingIterator, std::default_sentinel_t>;
+    xranges::subrange<StashingIterator, std::default_sentinel_t>;
 static_assert(xranges::input_range<StashingRange>);
 static_assert(!xranges::forward_range<StashingRange>);
 
-class ConstNonJoinableRange : public std::ranges::view_base {
+class ConstNonJoinableRange : public xranges::view_base {
 public:
     constexpr StashingIterator begin() { return {}; }
     constexpr std::default_sentinel_t end() { return {}; }

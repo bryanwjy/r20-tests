@@ -14,12 +14,11 @@
 // constexpr auto begin() requires (!(simple-view<Views> && ...));
 // constexpr auto begin() const requires (range<const Views> && ...);
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
 #include <concepts>
-#include <ranges>
 #include <tuple>
 #include <utility>
 
@@ -44,7 +43,7 @@ concept HasOnlyNonConstBegin = HasBegin<T> && !HasConstBegin<T>;
 template <class T>
 concept HasOnlyConstBegin = HasConstBegin<T> && !HasConstAndNonConstBegin<T>;
 
-struct NoConstBeginView : std::ranges::view_base {
+struct NoConstBeginView : xranges::view_base {
     int* begin();
     int* end();
 };
@@ -53,18 +52,18 @@ constexpr bool test() {
     int buffer[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     {
         // all underlying iterators should be at the begin position
-        xranges::zip_view v(SizedRandomAccessView{buffer}, std::views::iota(0),
-            std::ranges::single_view(2.));
-        std::same_as<std::tuple<int&, int, double&>> decltype(auto) val =
+        xranges::zip_view v(SizedRandomAccessView{buffer}, xviews::iota(0),
+            xranges::single_view(2.));
+        std::same_as<rxx::tuple<int&, int, double&>> decltype(auto) val =
             *v.begin();
         assert(val == std::make_tuple(1, 0, 2.0));
-        assert(&(std::get<0>(val)) == &buffer[0]);
+        assert(&(xranges::get_element<0>(val)) == &buffer[0]);
     }
 
     {
         // with empty range
         xranges::zip_view v(
-            SizedRandomAccessView{buffer}, std::ranges::empty_view<int>());
+            SizedRandomAccessView{buffer}, xranges::empty_view<int>());
         assert(v.begin() == v.end());
     }
 

@@ -17,13 +17,11 @@
 //   constexpr auto to(R&& r, Args&&... args);  // Since C++23
 
 #include "container.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/to.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -105,7 +103,7 @@ constexpr bool test() {
                 xranges::to<ContainerWithDirectCtr>(in);
 
             assert(result.ctr_choice == CtrChoice::DirectCtr);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert((in | xranges::to<ContainerWithDirectCtr>()) == result);
         }
 
@@ -114,7 +112,7 @@ constexpr bool test() {
                 xranges::to<ContainerWithDirectCtr>(in, arg1, arg2);
 
             assert(result.ctr_choice == CtrChoice::DirectCtr);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert(result.extra_arg1 == arg1);
             assert(result.extra_arg2 == arg2);
             assert((in | xranges::to<ContainerWithDirectCtr>(arg1, arg2)) ==
@@ -130,7 +128,7 @@ constexpr bool test() {
                 xranges::to<ContainerWithFromRangeT>(in);
 
             assert(result.ctr_choice == CtrChoice::FromRangeT);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert((in | xranges::to<ContainerWithFromRangeT>()) == result);
         }
 
@@ -139,7 +137,7 @@ constexpr bool test() {
                 xranges::to<ContainerWithFromRangeT>(in, arg1, arg2);
 
             assert(result.ctr_choice == CtrChoice::FromRangeT);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert(result.extra_arg1 == arg1);
             assert(result.extra_arg2 == arg2);
             assert((in | xranges::to<ContainerWithFromRangeT>(arg1, arg2)) ==
@@ -154,7 +152,7 @@ constexpr bool test() {
                 xranges::to<ContainerWithBeginEndPair>(in);
 
             assert(result.ctr_choice == CtrChoice::BeginEndPair);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert((in | xranges::to<ContainerWithBeginEndPair>()) == result);
         }
 
@@ -163,7 +161,7 @@ constexpr bool test() {
                 xranges::to<ContainerWithBeginEndPair>(in, arg1, arg2);
 
             assert(result.ctr_choice == CtrChoice::BeginEndPair);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert(result.extra_arg1 == arg1);
             assert(result.extra_arg2 == arg2);
             assert((in | xranges::to<ContainerWithBeginEndPair>(arg1, arg2)) ==

@@ -13,10 +13,9 @@
 
 // sentinel() = default;
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <tuple>
 
 namespace xranges = rxx::ranges;
@@ -28,7 +27,7 @@ struct PODSentinel {
     friend constexpr bool operator==(int*, PODSentinel const& s) { return s.b; }
 };
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     int* begin() const;
     PODSentinel end();
 };

@@ -19,7 +19,7 @@
 // lazy_split_view(R&&, range_value_t<R>) -> lazy_split_view<views::all_t<R>,
 // single_view<range_value_t<R>>>;
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <concepts>
@@ -33,7 +33,7 @@ struct ForwardRange {
     forward_iterator<char const*> begin() const;
     forward_iterator<char const*> end() const;
 };
-static_assert(std::ranges::forward_range<ForwardRange>);
+static_assert(xranges::forward_range<ForwardRange>);
 
 struct InputRange {
     cpp20_input_iterator<char const*> begin() const;
@@ -56,19 +56,19 @@ constexpr void test() {
 constexpr void testCtad() {
     // (Range, Pattern)
     test<ForwardView, ForwardView, ForwardView, ForwardView>();
-    test<ForwardRange, ForwardRange, std::ranges::views::all_t<ForwardRange>,
-        std::ranges::views::all_t<ForwardRange>>();
+    test<ForwardRange, ForwardRange, xranges::views::all_t<ForwardRange>,
+        xranges::views::all_t<ForwardRange>>();
 
     // (Range, RangeElement)
-    test<ForwardRange, char, std::ranges::views::all_t<ForwardRange>,
+    test<ForwardRange, char, xranges::views::all_t<ForwardRange>,
         xranges::single_view<char>>();
-    test<InputRange, char, std::ranges::views::all_t<InputRange>,
+    test<InputRange, char, xranges::views::all_t<InputRange>,
         xranges::single_view<char>>();
 
     // (Range, RangeElement) with implicit conversion.
-    test<ForwardRange, bool, std::ranges::views::all_t<ForwardRange>,
+    test<ForwardRange, bool, xranges::views::all_t<ForwardRange>,
         xranges::single_view<char>>();
-    test<InputRange, bool, std::ranges::views::all_t<InputRange>,
+    test<InputRange, bool, xranges::views::all_t<InputRange>,
         xranges::single_view<char>>();
 
     // Note: CTAD from (InputRange, ForwardTinyRange) doesn't work -- the

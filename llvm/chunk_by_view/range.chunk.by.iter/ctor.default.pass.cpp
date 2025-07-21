@@ -17,11 +17,11 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/chunk_by_view.h"
 
 #include <cassert>
 #include <functional>
-#include <ranges>
 #include <type_traits>
 #include <utility>
 
@@ -31,7 +31,7 @@ template <class Iterator, bool IsNoexcept>
 constexpr void testDefaultConstructible() {
     // Make sure the iterator is default constructible.
     using ChunkByView =
-        xranges::chunk_by_view<View<Iterator>, std::ranges::less_equal>;
+        xranges::chunk_by_view<View<Iterator>, xranges::less_equal>;
     using ChunkByIterator = xranges::iterator_t<ChunkByView>;
     ChunkByIterator i{};
     ChunkByIterator j;

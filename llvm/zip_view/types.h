@@ -14,16 +14,14 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/zip_view.h"
-
-#include <functional>
-#include <ranges>
+#include "rxx/functional.h"
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 template <class T>
-struct BufferView : std::ranges::view_base {
+struct BufferView : xranges::view_base {
     T* buffer_;
     std::size_t size_;
 

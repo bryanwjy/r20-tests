@@ -17,7 +17,7 @@
 //             is_reference_v<range_reference_t<const V>> &&
 //             input_range<range_reference_t<const V>>;
 
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <algorithm>
@@ -27,18 +27,18 @@
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
-struct NonSimpleParentView : std::ranges::view_base {
+struct NonSimpleParentView : xranges::view_base {
     ChildView* begin() { return nullptr; }
     ChildView const* begin() const;
     ChildView const* end() const;
 };
 
-struct SimpleParentView : std::ranges::view_base {
+struct SimpleParentView : xranges::view_base {
     ChildView const* begin() const;
     ChildView const* end() const;
 };
 
-struct ConstNotRange : std::ranges::view_base {
+struct ConstNotRange : xranges::view_base {
     ChildView const* begin();
     ChildView const* end();
 };
@@ -147,8 +147,8 @@ constexpr bool test() {
 
     // !is_reference_v<range_reference_t<const V>>
     {
-        auto innerRValueRange = std::views::iota(0, 5) |
-            std::views::transform([](int) { return ChildView{}; });
+        auto innerRValueRange = xviews::iota(0, 5) |
+            xviews::transform([](int) { return ChildView{}; });
         static_assert(
             !std::is_reference_v<
                 xranges::range_reference_t<const decltype(innerRValueRange)>>);
@@ -174,8 +174,8 @@ constexpr bool test() {
     // work together very well)
     {
         xranges::join_view<StashingRange> jv;
-        assert(std::ranges::equal(std::views::counted(jv.begin(), 10),
-            std::string_view{"aababcabcd"}));
+        assert(xranges::equal(
+            xviews::counted(jv.begin(), 10), std::string_view{"aababcabcd"}));
     }
 
     // LWG3700: The `const begin` of the `join_view` family does not require
@@ -187,11 +187,11 @@ constexpr bool test() {
 
     // Check example from LWG3700
     {
-        auto r = std::views::iota(0, 5) | std::views::split(1);
-        auto s = std::views::single(r);
+        auto r = xviews::iota(0, 5) | xviews::split(1);
+        auto s = xviews::single(r);
         auto j = s | xviews::join;
         auto f = j.front();
-        assert(std::ranges::equal(f, std::views::single(0)));
+        assert(xranges::equal(f, xviews::single(0)));
     }
 
     return true;

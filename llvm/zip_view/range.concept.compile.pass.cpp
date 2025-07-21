@@ -15,13 +15,11 @@
 //                         random_access_range, contiguous_range, common_range
 //                         sized_range
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
 #include <concepts>
-#include <ranges>
-#include <tuple>
 #include <utility>
 
 namespace xranges = rxx::ranges;
@@ -339,11 +337,11 @@ void testConceptTuple() {
 using OutputIter = cpp17_output_iterator<int*>;
 static_assert(std::output_iterator<OutputIter, int>);
 
-struct OutputView : std::ranges::view_base {
+struct OutputView : xranges::view_base {
     OutputIter begin() const;
     sentinel_wrapper<OutputIter> end() const;
 };
-static_assert(std::ranges::output_range<OutputView, int>);
+static_assert(xranges::output_range<OutputView, int>);
 static_assert(!xranges::input_range<OutputView>);
 
 template <class... Ts>

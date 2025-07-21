@@ -12,15 +12,13 @@
 #ifndef SUPPORT_TEST_ITERATORS_H
 #define SUPPORT_TEST_ITERATORS_H
 
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/concepts.h"
+#include "rxx/iterator.h"
+#include "rxx/ranges.h"
 #include "type_algorithms.h"
 
 #include <cassert>
 #include <concepts>
 #include <cstdint>
-#include <iterator>
-#include <ranges>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -1195,7 +1193,7 @@ cpp20_output_iterator(It) -> cpp20_output_iterator<It>;
 
 static_assert(std::output_iterator<cpp20_output_iterator<int*>, int>);
 
-// An `input_iterator` that can be used in a `std::ranges::common_range`
+// An `input_iterator` that can be used in a `xranges::common_range`
 template <class Base>
 struct common_input_iterator {
     Base it_;
@@ -1885,7 +1883,7 @@ struct ProxyIterator : ProxyIteratorBase<Base> {
     // it will likely result in a copy rather than a move
     friend constexpr Proxy<std::iter_rvalue_reference_t<Base>> iter_move(
         ProxyIterator const& p) noexcept {
-        return {std::ranges::iter_move(p.base_)};
+        return {xranges::iter_move(p.base_)};
     }
 
     // Specialization of iter_swap
@@ -1893,7 +1891,7 @@ struct ProxyIterator : ProxyIteratorBase<Base> {
     // prvalues and std::swap takes non-const lvalue references
     friend constexpr void iter_swap(
         ProxyIterator const& x, ProxyIterator const& y) noexcept {
-        std::ranges::iter_swap(x.base_, y.base_);
+        xranges::iter_swap(x.base_, y.base_);
     }
 
     // to satisfy input_iterator

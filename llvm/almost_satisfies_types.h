@@ -12,12 +12,13 @@
 #ifndef ALMOST_SATISFIES_TYPES_H
 #define ALMOST_SATISFIES_TYPES_H
 
-#include "rxx/ranges/concepts.h"
+#include "rxx/functional.h"
+#include "rxx/iterator.h"
+#include "rxx/ranges.h"
 #include "test_iterators.h"
 
-#include <functional>
-#include <iterator>
-#include <ranges>
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 template <class T, class U = sentinel_wrapper<T>>
 class UncheckedRange {
@@ -26,7 +27,7 @@ public:
     U end();
 };
 
-static_assert(rxx::ranges::contiguous_range<UncheckedRange<int*, int*>>);
+static_assert(xranges::contiguous_range<UncheckedRange<int*, int*>>);
 
 // almost an input_iterator
 template <class T>
@@ -51,7 +52,7 @@ using InputRangeNotDerivedFrom = UncheckedRange<InputIteratorNotDerivedFrom>;
 static_assert(std::input_or_output_iterator<InputIteratorNotDerivedFrom>);
 static_assert(std::indirectly_readable<InputIteratorNotDerivedFrom>);
 static_assert(!std::input_iterator<InputIteratorNotDerivedFrom>);
-static_assert(!rxx::ranges::input_range<InputRangeNotDerivedFrom>);
+static_assert(!xranges::input_range<InputRangeNotDerivedFrom>);
 
 class InputIteratorNotIndirectlyReadable {
 public:
@@ -70,7 +71,7 @@ static_assert(
     std::input_or_output_iterator<InputIteratorNotIndirectlyReadable>);
 static_assert(!std::indirectly_readable<InputIteratorNotIndirectlyReadable>);
 static_assert(!std::input_iterator<InputIteratorNotIndirectlyReadable>);
-static_assert(!rxx::ranges::input_range<InputRangeNotIndirectlyReadable>);
+static_assert(!xranges::input_range<InputRangeNotIndirectlyReadable>);
 
 class InputIteratorNotInputOrOutputIterator {
 public:
@@ -90,7 +91,7 @@ static_assert(
     !std::input_or_output_iterator<InputIteratorNotInputOrOutputIterator>);
 static_assert(std::indirectly_readable<InputIteratorNotInputOrOutputIterator>);
 static_assert(!std::input_iterator<InputIteratorNotInputOrOutputIterator>);
-static_assert(!rxx::ranges::input_range<InputRangeNotInputOrOutputIterator>);
+static_assert(!xranges::input_range<InputRangeNotInputOrOutputIterator>);
 
 // almost an indirect_unary_predicate
 class IndirectUnaryPredicateNotCopyConstructible {
@@ -245,8 +246,7 @@ using BidirectionalRangeNotSentinelWeaklyEqualityComparableWith =
 static_assert(std::forward_iterator<BidirectionalIteratorNotDerivedFrom>);
 static_assert(
     !std::bidirectional_iterator<BidirectionalIteratorNotDerivedFrom>);
-static_assert(
-    !rxx::ranges::bidirectional_range<BidirectionalRangeNotDerivedFrom>);
+static_assert(!xranges::bidirectional_range<BidirectionalRangeNotDerivedFrom>);
 
 class BidirectionalIteratorNotDecrementable {
 public:
@@ -269,7 +269,7 @@ static_assert(std::forward_iterator<BidirectionalIteratorNotDecrementable>);
 static_assert(
     !std::bidirectional_iterator<BidirectionalIteratorNotDecrementable>);
 static_assert(
-    !rxx::ranges::bidirectional_range<BidirectionalRangeNotDecrementable>);
+    !xranges::bidirectional_range<BidirectionalRangeNotDecrementable>);
 
 class PermutableNotForwardIterator {
 public:
@@ -333,8 +333,7 @@ static_assert(
     std::indirectly_writable<OutputIteratorNotInputOrOutputIterator, int>);
 static_assert(
     !std::output_iterator<OutputIteratorNotInputOrOutputIterator, int>);
-static_assert(
-    !rxx::ranges::output_range<OutputRangeNotInputOrOutputIterator, int>);
+static_assert(!xranges::output_range<OutputRangeNotInputOrOutputIterator, int>);
 
 class OutputIteratorNotIndirectlyWritable {
 public:
@@ -354,8 +353,7 @@ static_assert(
 static_assert(
     !std::indirectly_writable<OutputIteratorNotIndirectlyWritable, int>);
 static_assert(!std::output_iterator<OutputIteratorNotIndirectlyWritable, int>);
-static_assert(
-    !rxx::ranges::output_range<OutputIteratorNotIndirectlyWritable, int>);
+static_assert(!xranges::output_range<OutputIteratorNotIndirectlyWritable, int>);
 
 class IndirectBinaryPredicateNotIndirectlyReadable {
 public:
@@ -371,7 +369,7 @@ using InputRangeIndirectBinaryPredicateNotIndirectlyReadable =
     UncheckedRange<cpp20_input_iterator<int*>,
         IndirectBinaryPredicateNotIndirectlyReadable>;
 
-static_assert(!std::indirect_binary_predicate<std::ranges::equal_to,
+static_assert(!std::indirect_binary_predicate<xranges::equal_to,
               IndirectBinaryPredicateNotIndirectlyReadable, int*>);
 
 class RandomAccessIteratorNotDerivedFrom {

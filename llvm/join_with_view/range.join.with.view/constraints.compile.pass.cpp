@@ -20,11 +20,9 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <cstddef>
-#include <ranges>
 #include <vector>
 
 namespace xranges = rxx::ranges;

@@ -21,9 +21,10 @@
 //                       common_range<range_reference_t<Base>>;
 
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
+#include "rxx/ranges/transform_view.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
 #include <ranges>
@@ -122,7 +123,7 @@ constexpr bool test() {
     {
         // basic type checking
         xranges::join_view jv(buffer);
-        auto iter1 = std::ranges::next(jv.begin(), 4);
+        auto iter1 = xranges::next(jv.begin(), 4);
         using iterator = decltype(iter1);
 
         decltype(auto) iter2 = --iter1;
@@ -174,13 +175,13 @@ constexpr bool test() {
             {3, 4},
             {5, 6}
         };
-        auto r = vec | std::views::transform([](auto& x) -> auto&& {
-            return std::move(x);
-        }) | xviews::join;
+        auto r = vec |
+            xviews::transform([](auto& x) -> auto&& { return std::move(x); }) |
+            xviews::join;
         auto e = --r.end();
         assert(*e == 6);
-        assert(std::ranges::equal(
-            std::views::reverse(r), std::array{6, 5, 4, 3, 2, 1}));
+        assert(
+            xranges::equal(xviews::reverse(r), std::array{6, 5, 4, 3, 2, 1}));
     }
 
     return true;

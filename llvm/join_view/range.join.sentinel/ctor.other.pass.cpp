@@ -17,7 +17,7 @@
 
 #include "../../test_range.h"
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <ranges>
@@ -75,7 +75,7 @@ constexpr bool test() {
         auto sent1 = jv.end();
         xranges::sentinel_t<const decltype(jv)> sent2 = sent1;
         assert(std::as_const(jv).begin() != sent2);
-        assert(std::ranges::next(std::as_const(jv).begin(), 12) == sent2);
+        assert(xranges::next(std::as_const(jv).begin(), 12) == sent2);
 
         // We cannot create a non-const sentinel from a const sentinel.
         static_assert(

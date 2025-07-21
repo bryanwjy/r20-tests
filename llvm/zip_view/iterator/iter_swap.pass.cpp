@@ -17,11 +17,10 @@
 //   ...);
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -40,7 +39,7 @@ constexpr bool test() {
         auto iter1 = v.begin();
         auto iter2 = ++v.begin();
 
-        std::ranges::iter_swap(iter1, iter2);
+        xranges::iter_swap(iter1, iter2);
 
         assert(a1[0] == 2);
         assert(a1[1] == 1);
@@ -55,7 +54,7 @@ constexpr bool test() {
         assert(&x2 == &a1[1]);
         assert(&y2 == &a2[1]);
 
-        static_assert(noexcept(std::ranges::iter_swap(iter1, iter2)));
+        static_assert(noexcept(xranges::iter_swap(iter1, iter2)));
     }
 
     {
@@ -64,7 +63,7 @@ constexpr bool test() {
         xranges::zip_view v(iterSwapMayThrow);
         auto iter1 = v.begin();
         auto iter2 = ++v.begin();
-        static_assert(!noexcept(std::ranges::iter_swap(iter1, iter2)));
+        static_assert(!noexcept(xranges::iter_swap(iter1, iter2)));
     }
 
     {
@@ -75,13 +74,13 @@ constexpr bool test() {
 
         xranges::zip_view v{r1, r2};
         auto it1 = v.begin();
-        auto it2 = std::ranges::next(it1, 3);
+        auto it2 = xranges::next(it1, 3);
 
-        std::ranges::iter_swap(it1, it2);
+        xranges::iter_swap(it1, it2);
         assert(r1.iter_swap_called_times == 2);
         assert(r2.iter_swap_called_times == 2);
 
-        std::ranges::iter_swap(it1, it2);
+        xranges::iter_swap(it1, it2);
         assert(r1.iter_swap_called_times == 4);
         assert(r2.iter_swap_called_times == 4);
     }

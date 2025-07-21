@@ -14,6 +14,7 @@
 
 #include "../static_asserts.h"
 #include "../test_iterators.h"
+#include "rxx/ranges/view_base.h"
 
 #include <iterator>
 #include <utility>
@@ -45,7 +46,7 @@ enum class IsConst : bool {
 
 template <std::forward_iterator Iter,
     std::sentinel_for<Iter> Sent = sentinel_wrapper<Iter>>
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     constexpr explicit View(Iter b, Sent e) : begin_(b), end_(e) {}
     constexpr Iter begin() { return begin_; }
     constexpr Sent end() { return end_; }

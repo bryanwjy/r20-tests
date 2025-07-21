@@ -14,11 +14,8 @@
 // constexpr auto end() requires(!(simple-view<Views> && ...))
 // constexpr auto end() const requires(range<const Views>&&...)
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
-
-#include <ranges>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -171,7 +168,7 @@ constexpr bool test() {
         // test ID 11
         xranges::zip_view v{InputCommonView(buffer1)};
         static_assert(xranges::common_range<decltype(v)>);
-        assert(std::ranges::next(v.begin(), 5) == v.end());
+        assert(xranges::next(v.begin(), 5) == v.end());
         static_assert(std::is_same_v<decltype(v.end()),
             decltype(std::as_const(v).end())>);
     }
@@ -255,7 +252,7 @@ constexpr bool test() {
         // test ID 21
         xranges::zip_view v{InputNonCommonView(buffer1)};
         static_assert(!xranges::common_range<decltype(v)>);
-        assert(std::ranges::next(v.begin(), 5) == v.end());
+        assert(xranges::next(v.begin(), 5) == v.end());
         static_assert(std::is_same_v<decltype(v.end()),
             decltype(std::as_const(v).end())>);
     }
@@ -357,7 +354,7 @@ constexpr bool test() {
         // test ID 33
         xranges::zip_view v{NonSimpleInputCommonView(buffer1)};
         static_assert(xranges::common_range<decltype(v)>);
-        assert(std::ranges::next(v.begin(), 5) == v.end());
+        assert(xranges::next(v.begin(), 5) == v.end());
         static_assert(!std::is_same_v<decltype(v.end()),
                       decltype(std::as_const(v).end())>);
     }
@@ -442,7 +439,7 @@ constexpr bool test() {
         // test ID 43
         xranges::zip_view v{NonSimpleInputNonCommonView(buffer1)};
         static_assert(!xranges::common_range<decltype(v)>);
-        assert(std::ranges::next(v.begin(), 5) == v.end());
+        assert(xranges::next(v.begin(), 5) == v.end());
         static_assert(!std::is_same_v<decltype(v.end()),
                       decltype(std::as_const(v).end())>);
     }
@@ -458,7 +455,7 @@ constexpr bool test() {
     {
         // end should go to the minimum length when zip is common and
         // random_access sized
-        xranges::zip_view v(std::views::iota(0, 4), std::views::iota(0, 8));
+        xranges::zip_view v(xviews::iota(0, 4), xviews::iota(0, 8));
         auto it = --(v.end());
         auto [x, y] = *it;
         assert(x == 3);

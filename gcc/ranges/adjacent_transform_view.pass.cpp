@@ -14,15 +14,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/adjacent_transform_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/empty_view.h"
+#include "rxx/ranges/filter_view.h"
+#include "rxx/ranges/iota_view.h"
 
-#include <algorithm>
 #include <cassert>
 #include <ranges>
 #include <utility>
@@ -35,7 +34,7 @@ namespace xviews = rxx::views;
 constexpr bool test01() {
     auto v1 =
         std::array{1, 2, 3} | xviews::adjacent_transform<1>(std::identity{});
-    assert(ranges::equal(v1, (int[]){1, 2, 3}));
+    assert(xranges::equal(v1, (int[]){1, 2, 3}));
     auto const i0 = v1.begin(), i1 = v1.begin() + 1;
     assert(i0 + 1 - 1 == i0);
     assert(i0 < i1);
@@ -44,8 +43,8 @@ constexpr bool test01() {
     assert(i0 - i1 == -1);
     assert(v1.end() - i1 == 2);
     assert(i1 - v1.end() == -2);
-    ranges::iter_swap(i0, i1);
-    assert(ranges::equal(std::move(v1), (int[]){2, 1, 3}));
+    xranges::iter_swap(i0, i1);
+    assert(xranges::equal(std::move(v1), (int[]){2, 1, 3}));
 
     auto v2 = std::array{1, -1, 2, -2} |
         xviews::pairwise_transform(std::multiplies{});
@@ -55,28 +54,28 @@ constexpr bool test01() {
     assert(i2 == v2.end());
     assert(xranges::size(v2) == 3);
     assert(xranges::size(std::as_const(v2)) == 3);
-    assert(ranges::equal(v2, (int[]){-1, -2, -4}));
+    assert(xranges::equal(v2, (int[]){-1, -2, -4}));
 
     int y[] = {1, 2, 3, 4, 5, 6};
     auto v3 = y | xviews::adjacent_transform<3>([](auto... xs) {
-        return ranges::max({xs...});
+        return xranges::max({xs...});
     });
     assert(xranges::size(v3) == 4);
-    assert(ranges::equal(v3, (int[]){3, 4, 5, 6}));
+    assert(xranges::equal(v3, (int[]){3, 4, 5, 6}));
 
     // LWG 3848 - adjacent_transform_view etc missing base accessor
     (void)v3.base();
 
     auto const v6 =
         y | xviews::adjacent_transform<6>([](auto...) { return 0; });
-    assert(ranges::equal(v6, (int[]){0}));
+    assert(xranges::equal(v6, (int[]){0}));
 
     auto const v7 =
         y | xviews::adjacent_transform<7>([](auto...) { return 0; });
-    assert(ranges::empty(v7));
+    assert(xranges::empty(v7));
 
     auto const v0 = y | xviews::adjacent_transform<0>([] { return 0; });
-    assert(ranges::empty(v0));
+    assert(xranges::empty(v0));
 
     return true;
 }
@@ -87,14 +86,14 @@ constexpr bool test02() {
     using rxx::tests::test_random_access_range;
 
     using ty1 =
-        xranges::adjacent_transform_view<views::all_t<test_forward_range<int>>,
+        xranges::adjacent_transform_view<xviews::all_t<test_forward_range<int>>,
             std::plus<>, 2>;
-    static_assert(ranges::forward_range<ty1>);
+    static_assert(xranges::forward_range<ty1>);
     static_assert(!xranges::bidirectional_range<ty1>);
     static_assert(!xranges::sized_range<ty1>);
 
     using ty2 = xranges::adjacent_transform_view<
-        views::all_t<test_random_access_range<int>>,
+        xviews::all_t<test_random_access_range<int>>,
         decltype([](int, int, int) { return 0; }), 3>;
     static_assert(xranges::random_access_range<ty2>);
     static_assert(xranges::sized_range<ty2>);
@@ -103,7 +102,7 @@ constexpr bool test02() {
 }
 
 constexpr bool test03() {
-    auto v = views::iota(0, 4) | views::filter([](auto) { return true; }) |
+    auto v = xviews::iota(0, 4) | xviews::filter([](auto) { return true; }) |
         xviews::pairwise_transform(std::plus{});
     using ty = decltype(v);
     static_assert(xranges::forward_range<ty>);
@@ -111,11 +110,11 @@ constexpr bool test03() {
     static_assert(!xranges::sized_range<ty>);
     assert(v.begin() == v.begin());
     assert(v.begin() != v.end());
-    assert(ranges::next(v.begin(), 3) == v.end());
+    assert(xranges::next(v.begin(), 3) == v.end());
     auto it = v.begin();
     ++it;
     it++;
-    assert(ranges::next(it) == v.end());
+    assert(xranges::next(it) == v.end());
     it--;
     --it;
     assert(it == v.begin());

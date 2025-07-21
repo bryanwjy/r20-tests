@@ -14,11 +14,10 @@
 // constexpr auto operator*() const;
 
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <tuple>
 
 namespace xranges = rxx::ranges;
@@ -31,15 +30,16 @@ constexpr bool test() {
         // single range
         xranges::zip_view v(a);
         auto it = v.begin();
-        assert(&(std::get<0>(*it)) == &(a[0]));
-        static_assert(std::is_same_v<decltype(*it), std::tuple<int&>>);
+        assert(&(xranges::get_element<0>(*it)) == &(a[0]));
+        static_assert(std::is_same_v<decltype(*it), rxx::tuple<int&>>);
+        static_assert(std::is_convertible_v<decltype(*it), rxx::tuple<int&>>);
     }
 
     {
         // operator* is const
         xranges::zip_view v(a);
         auto const it = v.begin();
-        assert(&(std::get<0>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<0>(*it)) == &(a[0]));
     }
 
     {
@@ -49,7 +49,9 @@ constexpr bool test() {
         auto [x, y] = *it;
         assert(&x == &(a[0]));
         assert(&y == &(b[0]));
-        static_assert(std::is_same_v<decltype(*it), std::tuple<int&, double&>>);
+        static_assert(std::is_same_v<decltype(*it), rxx::tuple<int&, double&>>);
+        static_assert(
+            std::is_convertible_v<decltype(*it), rxx::tuple<int&, double&>>);
 
         x = 5;
         y = 0.1;
@@ -59,23 +61,27 @@ constexpr bool test() {
 
     {
         // underlying range with prvalue range_reference_t
-        xranges::zip_view v(a, b, std::views::iota(0, 5));
+        xranges::zip_view v(a, b, xviews::iota(0, 5));
         auto it = v.begin();
-        assert(&(std::get<0>(*it)) == &(a[0]));
-        assert(&(std::get<1>(*it)) == &(b[0]));
-        assert(std::get<2>(*it) == 0);
+        assert(&(xranges::get_element<0>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<1>(*it)) == &(b[0]));
+        assert(xranges::get_element<2>(*it) == 0);
         static_assert(
-            std::is_same_v<decltype(*it), std::tuple<int&, double&, int>>);
+            std::is_same_v<decltype(*it), rxx::tuple<int&, double&, int>>);
+        static_assert(std::is_convertible_v<decltype(*it),
+            std::tuple<int&, double&, int>>);
     }
 
     {
         // const-correctness
         xranges::zip_view v(a, std::as_const(a));
         auto it = v.begin();
-        assert(&(std::get<0>(*it)) == &(a[0]));
-        assert(&(std::get<1>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<0>(*it)) == &(a[0]));
+        assert(&(xranges::get_element<1>(*it)) == &(a[0]));
         static_assert(
-            std::is_same_v<decltype(*it), std::tuple<int&, int const&>>);
+            std::is_same_v<decltype(*it), rxx::tuple<int&, int const&>>);
+        static_assert(
+            std::is_convertible_v<decltype(*it), std::tuple<int&, int const&>>);
     }
     return true;
 }

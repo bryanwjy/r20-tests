@@ -22,12 +22,9 @@
 #include "../../test_comparisons.h"
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
-#include "rxx/ranges/single_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <type_traits>
 #include <utility>
 #include <vector>

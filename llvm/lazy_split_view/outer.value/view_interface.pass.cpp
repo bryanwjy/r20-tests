@@ -11,19 +11,19 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// class rxx::ranges::lazy_split_view::outer-iterator::value_type;
+// class xranges::lazy_split_view::outer-iterator::value_type;
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
 
 using V = ValueTypeForward;
-static_assert(std::ranges::forward_range<V>);
-static_assert(std::ranges::view<V>);
+static_assert(xranges::forward_range<V>);
+static_assert(xranges::view<V>);
 
-static_assert(std::is_base_of_v<std::ranges::view_interface<ValueTypeForward>,
+static_assert(std::is_base_of_v<xranges::view_interface<ValueTypeForward>,
     ValueTypeForward>);
 
 constexpr bool test() {

@@ -17,7 +17,7 @@
 // constexpr lazy_split_view(Range&& r, range_value_t<Range> e); // explicit
 // since C++23
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
@@ -79,17 +79,17 @@ struct RangeWithCounting {
     constexpr RangeWithCounting& operator=(RangeWithCounting&&) = default;
     constexpr bool operator==(RangeWithCounting const&) const { return true; }
 };
-static_assert(std::ranges::forward_range<RangeWithCounting>);
-static_assert(!std::ranges::view<RangeWithCounting>);
+static_assert(xranges::forward_range<RangeWithCounting>);
+static_assert(!xranges::view<RangeWithCounting>);
 
-struct StrView : std::ranges::view_base {
+struct StrView : xranges::view_base {
     std::string_view buffer_;
     constexpr explicit StrView() = default;
     constexpr StrView(char const* ptr) : buffer_(ptr) {}
     // Intentionally don't forward to range constructor for std::string_view
     // since this test needs to work on C++20 as well and the range constructor
     // is only for C++23 and later.
-    template <std::ranges::range R>
+    template <xranges::range R>
     constexpr StrView(R&& r) : buffer_(r.begin(), r.end()) {}
     constexpr std::string_view::const_iterator begin() const {
         return buffer_.begin();
@@ -101,15 +101,15 @@ struct StrView : std::ranges::view_base {
         return buffer_ == rhs.buffer_;
     }
 };
-static_assert(std::ranges::random_access_range<StrView>);
-static_assert(std::ranges::view<StrView>);
+static_assert(xranges::random_access_range<StrView>);
+static_assert(xranges::view<StrView>);
 static_assert(std::is_copy_constructible_v<StrView>);
 
 // SFINAE tests.
 
 static_assert(
     is_explicit_constructible_v<xranges::lazy_split_view<StrView, StrView>,
-        StrView, std::ranges::range_value_t<StrView>>,
+        StrView, xranges::range_value_t<StrView>>,
     "This constructor must be explicit");
 
 constexpr bool test() {
@@ -143,7 +143,7 @@ constexpr bool test() {
 
         // Arguments are lvalues.
         {
-            using View = std::ranges::ref_view<Range>;
+            using View = xranges::ref_view<Range>;
 
             int range_copied = 0, range_moved = 0, element_copied = 0,
                 element_moved = 0;
@@ -164,7 +164,7 @@ constexpr bool test() {
 
         // Arguments are rvalues.
         {
-            using View = std::ranges::owning_view<Range>;
+            using View = xranges::owning_view<Range>;
 
             int range_copied = 0, range_moved = 0, element_copied = 0,
                 element_moved = 0;

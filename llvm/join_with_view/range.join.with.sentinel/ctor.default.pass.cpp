@@ -16,10 +16,7 @@
 // sentinel() = default;
 
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
-
-#include <ranges>
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;

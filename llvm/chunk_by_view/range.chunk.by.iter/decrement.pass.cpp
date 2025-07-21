@@ -18,13 +18,13 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/transform_view.h"
 
 #include <array>
 #include <cassert>
 #include <concepts>
-#include <functional>
-#include <ranges>
 #include <span>
 #include <type_traits>
 #include <utility>
@@ -56,8 +56,7 @@ struct TrackingPred : TrackInitialization {
 template <class Iter, IsConst Constant, class Sent = sentinel_wrapper<Iter>>
 constexpr void test() {
     using Underlying = View<Iter, Sent>;
-    using ChunkByView =
-        xranges::chunk_by_view<Underlying, std::ranges::less_equal>;
+    using ChunkByView = xranges::chunk_by_view<Underlying, xranges::less_equal>;
     using ChunkByIterator = xranges::iterator_t<ChunkByView>;
 
     static_assert(HasPostDecrement<ChunkByIterator>);
@@ -65,14 +64,14 @@ constexpr void test() {
 
     auto make_chunk_by_view = [](auto& arr) {
         View view{Iter{arr.data()}, Sent{Iter{arr.data() + arr.size()}}};
-        return ChunkByView{std::move(view), std::ranges::less_equal{}};
+        return ChunkByView{std::move(view), xranges::less_equal{}};
     };
 
     // Test with a single chunk
     {
         std::array array{0, 1, 2, 3, 4};
         ChunkByView view = make_chunk_by_view(array);
-        ChunkByIterator it = std::ranges::next(view.begin(), view.end());
+        ChunkByIterator it = xranges::next(view.begin(), view.end());
 
         std::same_as<ChunkByIterator&> decltype(auto) result = --it;
         assert(&result == &it);
@@ -83,7 +82,7 @@ constexpr void test() {
     {
         std::array array{0, 1, 2, 0, 1, 2};
         ChunkByView view = make_chunk_by_view(array);
-        ChunkByIterator it = std::ranges::next(view.begin(), view.end());
+        ChunkByIterator it = xranges::next(view.begin(), view.end());
 
         std::same_as<ChunkByIterator&> decltype(auto) result = --it;
         assert(&result == &it);
@@ -123,7 +122,7 @@ constexpr void test() {
     }
 
     // Decrement an iterator multiple times
-    if constexpr (std::ranges::common_range<Underlying>) {
+    if constexpr (xranges::common_range<Underlying>) {
         std::array array{1, 2, 1, 2, 1};
         ChunkByView view = make_chunk_by_view(array);
 
@@ -141,7 +140,7 @@ constexpr void test() {
         auto view = xviews::chunk_by(
             std::move(v), [](int& x, int& y) { return x <= y; });
 
-        auto it = std::ranges::next(view.begin());
+        auto it = xranges::next(view.begin());
         assert(base((*it).begin()) == array.data() + 3);
         --it;
         assert(base((*it).begin()) == array.data());
@@ -153,17 +152,17 @@ constexpr void test() {
         std::array array = {1, 2, 3, -3, -2, -1};
         auto v =
             View{Iter{array.data()}, Sent{Iter{array.data() + array.size()}}} |
-            std::views::transform([](int x) { return IntWrapper{x}; });
+            xviews::transform([](int x) { return IntWrapper{x}; });
         auto view = xviews::chunk_by(std::move(v), &IntWrapper::lessEqual);
 
-        auto it = std::ranges::next(view.begin());
+        auto it = xranges::next(view.begin());
         assert(base((*it).begin().base()) == array.data() + 3);
         --it;
         assert(base((*it).begin().base()) == array.data());
     }
 
     // Make sure we do not make a copy of the predicate when we decrement
-    if constexpr (std::ranges::common_range<Underlying>) {
+    if constexpr (xranges::common_range<Underlying>) {
         bool moved = false, copied = false;
         std::array array{1, 2, 1, 3};
         View v{Iter(array.data()), Sent(Iter(array.data() + array.size()))};
@@ -181,7 +180,7 @@ constexpr void test() {
     {
         std::array array{0, 1, 2, -3, -2, -1, -6, -5, -4};
         ChunkByView view = make_chunk_by_view(array);
-        ChunkByIterator it = std::ranges::next(view.begin(), view.end());
+        ChunkByIterator it = xranges::next(view.begin(), view.end());
 
         std::same_as<ChunkByIterator> decltype(auto) result = it--;
         assert(result != it);
@@ -223,7 +222,7 @@ constexpr bool tests() {
         using ForwardView = View<forward_iterator<int*>,
             sentinel_wrapper<forward_iterator<int*>>>;
         using ChunkByView =
-            xranges::chunk_by_view<ForwardView, std::ranges::less_equal>;
+            xranges::chunk_by_view<ForwardView, xranges::less_equal>;
         static_assert(!HasPreDecrement<xranges::iterator_t<ChunkByView>>);
         static_assert(!HasPostDecrement<xranges::iterator_t<ChunkByView>>);
     }

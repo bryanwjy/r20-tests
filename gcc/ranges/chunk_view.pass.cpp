@@ -14,13 +14,11 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/chunk_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/basic_istream_view.h"
 #include "rxx/ranges/join_view.h"
 #include "rxx/ranges/zip_view.h"
 
@@ -29,12 +27,14 @@
 #include <vector>
 
 namespace ranges = std::ranges;
-namespace views = rxx::views;
+namespace views = std::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3, 4, 5};
 
-    auto v2 = x | views::chunk(2);
+    auto v2 = x | xviews::chunk(2);
     auto const i0 = v2.begin(), i1 = v2.begin() + 1;
     assert(i0 + 1 - 1 == i0);
     assert(i0 < i1);
@@ -47,51 +47,51 @@ constexpr bool test01() {
     i2 += 2;
     i2 -= -1;
     assert(i2 == v2.end());
-    assert(ranges::size(v2) == 3);
-    assert(ranges::equal(v2,
+    assert(xranges::size(v2) == 3);
+    assert(xranges::equal(v2,
         (std::initializer_list<int>[]){
             {1, 2},
             {3, 4},
             {5}
     },
-        ranges::equal));
+        xranges::equal));
 
-    auto v1 = x | views::chunk(1);
-    assert(ranges::size(v1) == ranges::size(x));
-    for (auto [r, n] : views::zip(v1, x)) {
-        assert(ranges::size(r) == 1);
+    auto v1 = x | xviews::chunk(1);
+    assert(xranges::size(v1) == xranges::size(x));
+    for (auto [r, n] : xviews::zip(v1, x)) {
+        assert(xranges::size(r) == 1);
         assert(*r.begin() == n);
     }
 
-    auto v5 = x | views::chunk(5);
-    assert(ranges::size(v5) == 1);
-    assert(ranges::equal(v5[0], (int[]){1, 2, 3, 4, 5}));
+    auto v5 = x | xviews::chunk(5);
+    assert(xranges::size(v5) == 1);
+    assert(xranges::equal(v5[0], (int[]){1, 2, 3, 4, 5}));
 
-    auto v10 = x | views::chunk(10);
-    assert(ranges::size(v10) == 1);
-    assert(ranges::equal(v10[0], (int[]){1, 2, 3, 4, 5}));
+    auto v10 = x | xviews::chunk(10);
+    assert(xranges::size(v10) == 1);
+    assert(xranges::equal(v10[0], (int[]){1, 2, 3, 4, 5}));
 
     return true;
 }
 
-// std::views::join is only available on libc++19
+// xviews::join is only available on libc++19
 
 template <typename wrapper>
 void test02() {
     int x[] = {1, 2, 3, 4, 5, 6, 7, 8};
     wrapper rx(x);
-    auto v = rx | views::chunk(3);
-    auto i = ranges::begin(v);
-    assert(ranges::equal(*i, (int[]){1, 2, 3}));
+    auto v = rx | xviews::chunk(3);
+    auto i = xranges::begin(v);
+    assert(xranges::equal(*i, (int[]){1, 2, 3}));
     ++i;
-    assert(ranges::equal(*i, (int[]){4, 5, 6}));
+    assert(xranges::equal(*i, (int[]){4, 5, 6}));
     ++i;
-    assert(ranges::equal(*i, (int[]){7, 8}));
+    assert(xranges::equal(*i, (int[]){7, 8}));
     i++;
-    assert(i == ranges::end(v));
+    assert(i == xranges::end(v));
 
     for (int i = 1; i <= 10; ++i)
-        assert(ranges::equal(wrapper(x) | views::chunk(i) | views::join, x));
+        assert(xranges::equal(wrapper(x) | xviews::chunk(i) | xviews::join, x));
 }
 
 void test03() {
@@ -99,10 +99,10 @@ void test03() {
     // iter_swap
     auto ints = std::istringstream{"0 1 2 3 4"};
     std::vector<std::string> vs{"the", "quick", "brown", "fox"};
-    auto r = views::zip(vs, std::views::istream<int>(ints)) | views::chunk(2) |
-        views::join;
+    auto r = xviews::zip(vs, xviews::istream<int>(ints)) | xviews::chunk(2) |
+        xviews::join;
     std::vector<std::tuple<std::string, int>> res;
-    ranges::copy(std::move_iterator(r.begin()), std::move_sentinel(r.end()),
+    xranges::copy(std::move_iterator(r.begin()), std::move_sentinel(r.end()),
         std::back_inserter(res));
     assert(vs.front().empty());
 }

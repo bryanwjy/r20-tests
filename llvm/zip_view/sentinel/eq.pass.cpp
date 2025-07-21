@@ -19,11 +19,10 @@
 
 #include "../../test_range.h"
 #include "../types.h"
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <compare>
-#include <ranges>
 #include <tuple>
 
 using Iterator = random_access_iterator<int*>;
@@ -65,7 +64,7 @@ struct ComparableView : IntBufferView {
     }
 };
 
-struct ConstIncompatibleView : std::ranges::view_base {
+struct ConstIncompatibleView : xranges::view_base {
     cpp17_input_iterator<int*> begin();
     forward_iterator<int const*> begin() const;
     sentinel_wrapper<cpp17_input_iterator<int*>> end();

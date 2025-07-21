@@ -14,16 +14,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/enumerate_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/elements_view.h"
 #include "rxx/ranges/get_element.h"
+#include "rxx/ranges/reverse_view.h"
 
-#include <algorithm>
 #include <cassert>
 #include <memory>
 #include <ranges>
@@ -42,8 +40,8 @@ constexpr bool test01() {
     int x[] = {1, 2, 3};
     auto v = x | xviews::enumerate;
 
-    assert(ranges::equal(v | views::keys, (int[]){0, 1, 2}));
-    assert(ranges::equal(v | views::values, (int[]){1, 2, 3}));
+    assert(xranges::equal(v | xviews::keys, (int[]){0, 1, 2}));
+    assert(xranges::equal(v | xviews::values, (int[]){1, 2, 3}));
 
     auto it = v.begin();
     assert(it == it);
@@ -73,7 +71,7 @@ void test02() {
 
     if constexpr (xranges::bidirectional_range<decltype(rx)>) {
         static_assert(xranges::bidirectional_range<decltype(v)>);
-        for (auto [i, y] : v | views::reverse) {
+        for (auto [i, y] : v | xviews::reverse) {
             --j;
             assert(&y == &x[j]);
             assert(j == i);
@@ -95,7 +93,7 @@ void test02() {
             assert(v.begin() <= v.begin() + j);
             assert(v.begin() + j != v.end());
             assert(v.begin() + j - v.begin() == j);
-            assert(v.end() - (v.begin() + j) == ranges::ssize(x) - j);
+            assert(v.end() - (v.begin() + j) == xranges::ssize(x) - j);
         }
         assert(v.begin() + j == v.end());
     }

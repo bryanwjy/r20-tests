@@ -14,7 +14,7 @@
 // constexpr explicit sentinel(Parent& parent);
 
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <ranges>
@@ -35,7 +35,7 @@ constexpr bool test() {
     CopyableParent parent{children};
     xranges::join_view jv(parent);
     xranges::sentinel_t<decltype(jv)> sent(jv);
-    assert(sent == std::ranges::next(jv.begin(), 16));
+    assert(sent == xranges::next(jv.begin(), 16));
 
     return true;
 }

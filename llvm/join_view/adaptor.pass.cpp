@@ -15,11 +15,10 @@
 
 #include "../static_asserts.h"
 #include "../test_range.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
@@ -53,9 +52,9 @@ constexpr bool test() {
         // Test `views::join(v)`
         ForwardCommonInner inners[3] = {buffer1, buffer2, buffer3};
         using Result =
-            xranges::join_view<std::ranges::ref_view<ForwardCommonInner[3]>>;
+            xranges::join_view<xranges::ref_view<ForwardCommonInner[3]>>;
         std::same_as<Result> decltype(auto) v = xviews::join(inners);
-        assert(std::ranges::next(v.begin(), 9) == v.end());
+        assert(xranges::next(v.begin(), 9) == v.end());
         assert(&(*v.begin()) == buffer1);
     }
 
@@ -65,7 +64,7 @@ constexpr bool test() {
         using Result = xranges::join_view<MoveOnlyOuter>;
         std::same_as<Result> decltype(auto) v =
             xviews::join(MoveOnlyOuter{inners});
-        assert(std::ranges::next(v.begin(), 9) == v.end());
+        assert(xranges::next(v.begin(), 9) == v.end());
         assert(&(*v.begin()) == buffer1);
 
         static_assert(std::invocable<decltype(xviews::join), MoveOnlyOuter>);
@@ -90,9 +89,9 @@ constexpr bool test() {
         ForwardCommonInner inners[3] = {buffer1, buffer2, buffer3};
 
         using Result =
-            xranges::join_view<std::ranges::ref_view<ForwardCommonInner[3]>>;
+            xranges::join_view<xranges::ref_view<ForwardCommonInner[3]>>;
         std::same_as<Result> decltype(auto) v = inners | xviews::join;
-        assert(std::ranges::next(v.begin(), 9) == v.end());
+        assert(xranges::next(v.begin(), 9) == v.end());
         assert(&(*v.begin()) == buffer1);
         static_assert(CanBePiped<decltype((inners)), decltype((xviews::join))>);
     }
@@ -103,7 +102,7 @@ constexpr bool test() {
         using Result = xranges::join_view<MoveOnlyOuter>;
         std::same_as<Result> decltype(auto) v =
             MoveOnlyOuter{inners} | xviews::join;
-        assert(std::ranges::next(v.begin(), 9) == v.end());
+        assert(xranges::next(v.begin(), 9) == v.end());
         assert(&(*v.begin()) == buffer1);
 
         static_assert(CanBePiped<MoveOnlyOuter, decltype((xviews::join))>);

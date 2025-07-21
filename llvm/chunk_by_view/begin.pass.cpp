@@ -18,16 +18,16 @@
 #include "../static_asserts.h"
 #include "../test_iterators.h"
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/view_base.h"
 #include "types.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     using Iterator = forward_iterator<int*>;
     using Sentinel = sentinel_wrapper<Iterator>;
     constexpr explicit Range(int* b, int* e) : begin_(b), end_(e) {}

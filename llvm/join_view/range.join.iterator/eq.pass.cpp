@@ -16,7 +16,7 @@
 //                   equality_comparable<iterator_t<range_reference_t<Base>>>;
 
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <ranges>

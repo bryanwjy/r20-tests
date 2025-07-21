@@ -14,7 +14,7 @@
 // Test the implicitly-generated copy and move constructors since
 // `lazy_split_view` has non-trivial members.
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
@@ -26,7 +26,7 @@ constexpr bool test() {
     {
         // Forward range.
         {
-            rxx::ranges::lazy_split_view<std::string_view, std::string_view> v1(
+            xranges::lazy_split_view<std::string_view, std::string_view> v1(
                 "abc def", " ");
             auto v2 = v1;
             assert(v2.base() == v1.base());
@@ -45,7 +45,7 @@ constexpr bool test() {
         // Forward range.
         {
             std::string_view base = "abc def";
-            rxx::ranges::lazy_split_view<std::string_view, std::string_view> v1(
+            xranges::lazy_split_view<std::string_view, std::string_view> v1(
                 base, " ");
             auto v2 = std::move(v1);
             assert(v2.base() == base);

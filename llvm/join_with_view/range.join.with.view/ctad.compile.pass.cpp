@@ -23,11 +23,9 @@
 //     single_view<range_value_t<range_reference_t<R>>>>;
 
 #include "../../test_iterators.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <deque>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;

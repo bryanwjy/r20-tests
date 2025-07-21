@@ -13,10 +13,9 @@
 
 // Tests that <value_> is a <copyable-box>.
 
-#include "rxx/ranges/single_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;

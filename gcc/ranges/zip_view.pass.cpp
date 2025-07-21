@@ -14,15 +14,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/zip_view.h"
 
+#include "../test_iterators.h"
 #include "rxx/algorithm.h"
 #include "rxx/iterator.h"
 #include "rxx/ranges/elements_view.h"
+#include "rxx/ranges/filter_view.h"
 #include "rxx/ranges/get_element.h"
 #include "rxx/ranges/iota_view.h"
 #include "rxx/type_traits/common_reference.h"
@@ -36,7 +34,7 @@
 namespace ranges = std::ranges;
 namespace views = std::ranges::views;
 namespace xranges = rxx::ranges;
-namespace xviews = rxx::ranges::views;
+namespace xviews = rxx::views;
 
 constexpr bool test01() {
     static_assert(xranges::empty(xviews::zip()));
@@ -83,30 +81,29 @@ constexpr bool test01() {
 }
 
 constexpr bool test02() {
-    // using __gnu_test::test_forward_range;
-    // using __gnu_test::test_input_range;
-    // using __gnu_test::test_random_access_range;
+    using rxx::tests::test_forward_range;
+    using rxx::tests::test_input_range;
+    using rxx::tests::test_random_access_range;
 
-    // using ty1 = ranges::zip_view<views::all_t<test_forward_range<int>>,
-    //     views::all_t<test_random_access_range<int>>>;
-    // static_assert(ranges::forward_range<ty1>);
-    // static_assert(!ranges::random_access_range<ty1>);
-    // static_assert(!ranges::sized_range<ty1>);
+    using ty1 = xranges::zip_view<xviews::all_t<test_forward_range<int>>,
+        xviews::all_t<test_random_access_range<int>>>;
+    static_assert(xranges::forward_range<ty1>);
+    static_assert(!xranges::random_access_range<ty1>);
+    static_assert(!xranges::sized_range<ty1>);
 
-    // using ty2 = ranges::zip_view<views::all_t<test_forward_range<int>>,
-    //     views::all_t<test_input_range<int>>,
-    //     views::all_t<test_forward_range<int>>>;
-    // static_assert(ranges::input_range<ty2>);
-    // static_assert(!ranges::forward_range<ty2>);
-    // static_assert(!ranges::sized_range<ty2>);
+    using ty2 = xranges::zip_view<xviews::all_t<test_forward_range<int>>,
+        xviews::all_t<test_input_range<int>>,
+        xviews::all_t<test_forward_range<int>>>;
+    static_assert(xranges::input_range<ty2>);
+    static_assert(!xranges::forward_range<ty2>);
+    static_assert(!xranges::sized_range<ty2>);
 
     return true;
 }
 
 constexpr bool test03() {
     int u[] = {1, 2, 3, 4}, v[] = {4, 5, 6}, w[] = {7, 8, 9, 10};
-    auto z =
-        rxx::views::zip(u | views::filter([](auto) { return true; }), v, w);
+    auto z = xviews::zip(u | xviews::filter([](auto) { return true; }), v, w);
     using ty = decltype(z);
     static_assert(xranges::forward_range<ty>);
     static_assert(!xranges::common_range<ty>);

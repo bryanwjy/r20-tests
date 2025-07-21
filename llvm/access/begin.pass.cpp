@@ -11,8 +11,8 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// std::ranges::begin
-// std::ranges::cbegin
+// xranges::begin
+// xranges::cbegin
 
 #include "../static_asserts.h"
 #include "../test_iterators.h"
@@ -160,7 +160,7 @@ static_assert(!std::is_invocable_v<RangeCBeginT, NonConstBeginMember const&>);
 struct EnabledBorrowingBeginMember {
     constexpr int* begin() const { return &globalBuff[0]; }
     constexpr int* end() const {
-        return globalBuff + std::ranges::size(globalBuff);
+        return globalBuff + xranges::size(globalBuff);
     }
 };
 template <>

@@ -12,8 +12,11 @@
 #ifndef TEST_SUPPORT_TYPE_CLASSIFICATION_SWAPPABLE_H
 #define TEST_SUPPORT_TYPE_CLASSIFICATION_SWAPPABLE_H
 
+#include "rxx/concepts/swap.h"
+
 #include <concepts>
 
+namespace xranges = rxx::ranges;
 // `adl_swappable` indicates it's been swapped using ADL by maintaining a
 // pointer to itself that isn't a part of the exchange. This is well-formed
 // since we say that two `adl_swappable` objects are equal only if their
@@ -41,7 +44,7 @@ public:
 
     friend constexpr void swap(
         lvalue_adl_swappable& x, lvalue_adl_swappable& y) noexcept {
-        std::ranges::swap(x.value_, y.value_);
+        xranges::swap(x.value_, y.value_);
     }
 
     constexpr bool operator==(
@@ -78,7 +81,7 @@ public:
 
     friend constexpr void swap(lvalue_rvalue_adl_swappable& x,
         lvalue_rvalue_adl_swappable&& y) noexcept {
-        std::ranges::swap(x.value_, y.value_);
+        xranges::swap(x.value_, y.value_);
     }
 
     constexpr bool operator==(
@@ -115,7 +118,7 @@ public:
 
     friend constexpr void swap(rvalue_lvalue_adl_swappable&& x,
         rvalue_lvalue_adl_swappable& y) noexcept {
-        std::ranges::swap(x.value_, y.value_);
+        xranges::swap(x.value_, y.value_);
     }
 
     constexpr bool operator==(
@@ -150,7 +153,7 @@ public:
 
     friend constexpr void swap(
         rvalue_adl_swappable&& x, rvalue_adl_swappable&& y) noexcept {
-        std::ranges::swap(x.value_, y.value_);
+        xranges::swap(x.value_, y.value_);
     }
 
     constexpr bool operator==(
@@ -188,7 +191,7 @@ public:
 
     friend constexpr void swap(non_move_constructible_adl_swappable& x,
         non_move_constructible_adl_swappable& y) noexcept {
-        std::ranges::swap(x.value_, y.value_);
+        xranges::swap(x.value_, y.value_);
     }
 
     constexpr bool operator==(
@@ -221,7 +224,7 @@ public:
 
     friend constexpr void swap(non_move_assignable_adl_swappable& x,
         non_move_assignable_adl_swappable& y) noexcept {
-        std::ranges::swap(x.value_, y.value_);
+        xranges::swap(x.value_, y.value_);
     }
 
     constexpr bool operator==(
@@ -257,7 +260,7 @@ public:
 
     friend constexpr void swap(throwable_adl_swappable& X,
         throwable_adl_swappable& Y) noexcept(false) {
-        std::ranges::swap(X.value_, Y.value_);
+        xranges::swap(X.value_, Y.value_);
     }
 
     constexpr bool operator==(

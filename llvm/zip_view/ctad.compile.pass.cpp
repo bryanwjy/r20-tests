@@ -14,10 +14,9 @@
 // template <class... Rs>
 // zip_view(Rs&&...) -> zip_view<views::all_t<Rs>...>;
 
-#include "rxx/ranges/zip_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;
@@ -28,22 +27,22 @@ struct Container {
     int* end() const;
 };
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     int* begin() const;
     int* end() const;
 };
 
 void testCTAD() {
     static_assert(std::is_same_v<decltype(xranges::zip_view(Container{})),
-        xranges::zip_view<std::ranges::owning_view<Container>>>);
+        xranges::zip_view<xranges::owning_view<Container>>>);
 
     static_assert(
         std::is_same_v<decltype(xranges::zip_view(Container{}, View{})),
-            xranges::zip_view<std::ranges::owning_view<Container>, View>>);
+            xranges::zip_view<xranges::owning_view<Container>, View>>);
 
     Container c{};
     static_assert(
         std::is_same_v<decltype(xranges::zip_view(Container{}, View{}, c)),
-            xranges::zip_view<std::ranges::owning_view<Container>, View,
-                std::ranges::ref_view<Container>>>);
+            xranges::zip_view<xranges::owning_view<Container>, View,
+                xranges::ref_view<Container>>>);
 }

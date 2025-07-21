@@ -17,7 +17,7 @@
 //            is_reference_v<range_reference_t<const V>> &&
 //            input_range<range_reference_t<const V>>
 
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
@@ -52,7 +52,7 @@ concept HasConstEnd = requires(T const& t) { t.end(); };
 //
 //
 
-struct ConstNotRange : std::ranges::view_base {
+struct ConstNotRange : xranges::view_base {
     ChildView const* begin();
     ChildView const* end();
 };
@@ -72,9 +72,9 @@ constexpr bool test() {
         SimpleForwardCommonOuter<ForwardCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 16));
+            xranges::next(std::as_const(jv).begin(), 16));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(std::same_as<decltype(jv.end()),
@@ -89,9 +89,9 @@ constexpr bool test() {
         SimpleForwardCommonOuter<ForwardNonCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 12));
+        assert(jv.end() == xranges::next(jv.begin(), 12));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 12));
+            xranges::next(std::as_const(jv).begin(), 12));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(std::same_as<decltype(jv.end()),
@@ -106,9 +106,9 @@ constexpr bool test() {
         SimpleForwardCommonOuter<InputCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 12));
+        assert(jv.end() == xranges::next(jv.begin(), 12));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 12));
+            xranges::next(std::as_const(jv).begin(), 12));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(std::same_as<decltype(jv.end()),
@@ -123,7 +123,7 @@ constexpr bool test() {
         InnerRValue<SimpleForwardCommonOuter<ForwardCommonInner>> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 8));
+        assert(jv.end() == xranges::next(jv.begin(), 8));
 
         static_assert(!HasConstEnd<decltype(jv)>);
         static_assert(!xranges::common_range<decltype(jv)>);
@@ -137,9 +137,9 @@ constexpr bool test() {
         SimpleForwardNonCommonOuter<ForwardCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 16));
+            xranges::next(std::as_const(jv).begin(), 16));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(std::same_as<decltype(jv.end()),
@@ -155,7 +155,7 @@ constexpr bool test() {
         SimpleInputCommonOuter<ForwardCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
 
         static_assert(!HasConstEnd<decltype(jv)>);
         static_assert(!xranges::common_range<decltype(jv)>);
@@ -168,9 +168,9 @@ constexpr bool test() {
         NonSimpleForwardCommonOuter<ForwardCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 4));
+        assert(jv.end() == xranges::next(jv.begin(), 4));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 4));
+            xranges::next(std::as_const(jv).begin(), 4));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(!std::same_as<decltype(jv.end()),
@@ -185,9 +185,9 @@ constexpr bool test() {
         NonSimpleForwardCommonOuter<ForwardNonCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 12));
+        assert(jv.end() == xranges::next(jv.begin(), 12));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 12));
+            xranges::next(std::as_const(jv).begin(), 12));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(!std::same_as<decltype(jv.end()),
@@ -202,9 +202,9 @@ constexpr bool test() {
         NonSimpleForwardCommonOuter<InputCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 12));
+        assert(jv.end() == xranges::next(jv.begin(), 12));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 12));
+            xranges::next(std::as_const(jv).begin(), 12));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(!std::same_as<decltype(jv.end()),
@@ -220,7 +220,7 @@ constexpr bool test() {
             inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 8));
+        assert(jv.end() == xranges::next(jv.begin(), 8));
 
         static_assert(!HasConstEnd<decltype(jv)>);
         static_assert(!xranges::common_range<decltype(jv)>);
@@ -234,9 +234,9 @@ constexpr bool test() {
         NonSimpleForwardNonCommonOuter<ForwardCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
         assert(std::as_const(jv).end() ==
-            std::ranges::next(std::as_const(jv).begin(), 16));
+            xranges::next(std::as_const(jv).begin(), 16));
 
         static_assert(HasConstEnd<decltype(jv)>);
         static_assert(!std::same_as<decltype(jv.end()),
@@ -252,7 +252,7 @@ constexpr bool test() {
         NonSimpleInputCommonOuter<ForwardCommonInner> outer{inners};
 
         xranges::join_view jv(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
 
         static_assert(!HasConstEnd<decltype(jv)>);
         static_assert(!xranges::common_range<decltype(jv)>);
@@ -270,7 +270,7 @@ constexpr bool test() {
             CopyableChild(buffer[1], 0), CopyableChild(buffer[2], 1),
             CopyableChild(buffer[3], 0)};
         auto jv = xranges::join_view(ParentView(children));
-        assert(jv.end() == std::ranges::next(jv.begin(), 5));
+        assert(jv.end() == xranges::next(jv.begin(), 5));
     }
 
     // Parent is empty.
@@ -286,14 +286,14 @@ constexpr bool test() {
     {
         CopyableChild children[1] = {CopyableChild(buffer[0])};
         xranges::join_view jv(ParentView(children, 1));
-        assert(jv.end() == std::ranges::next(jv.begin(), 4));
+        assert(jv.end() == xranges::next(jv.begin(), 4));
     }
 
     // Parent and child size is one.
     {
         CopyableChild children[1] = {CopyableChild(buffer[0], 1)};
         xranges::join_view jv(ParentView(children, 1));
-        assert(jv.end() == std::ranges::next(jv.begin()));
+        assert(jv.end() == xranges::next(jv.begin()));
     }
 
     // Parent size is one child is empty
@@ -318,7 +318,7 @@ constexpr bool test() {
             CopyableChild(buffer[1], 0), CopyableChild(buffer[2], 0),
             CopyableChild(buffer[3], 0)};
         auto jv = xranges::join_view(ParentView(children));
-        assert(jv.end() == std::ranges::next(jv.begin(), 4));
+        assert(jv.end() == xranges::next(jv.begin(), 4));
     }
 
     // Last child is empty, others are not.
@@ -327,7 +327,7 @@ constexpr bool test() {
             CopyableChild(buffer[1], 4), CopyableChild(buffer[2], 4),
             CopyableChild(buffer[3], 0)};
         auto jv = xranges::join_view(ParentView(children));
-        assert(jv.end() == std::ranges::next(jv.begin(), 12));
+        assert(jv.end() == xranges::next(jv.begin(), 12));
     }
 
     // LWG3700: The `const begin` of the `join_view` family does not require

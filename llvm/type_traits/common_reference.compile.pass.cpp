@@ -16,6 +16,8 @@
 
 #include "rxx/type_traits/common_reference.h"
 
+#include "rxx/tuple.h"
+
 #include <utility>
 
 template <class T>
@@ -249,10 +251,48 @@ static_assert(
         rxx::common_reference<std::tuple<int, X2>, std::tuple<float, Z2>>>);
 static_assert(!has_type<rxx::common_reference<std::tuple<int, X2>, int, X2>>);
 
+// rxx::tuple
+
+static_assert(std::is_same_v<rxx::common_reference_t<rxx::tuple<int, int>>,
+    rxx::tuple<int, int>>);
+static_assert(std::is_same_v<
+    rxx::common_reference_t<rxx::tuple<int, long>, rxx::tuple<long, int>>,
+    rxx::tuple<long, long>>);
+static_assert(
+    std::is_same_v<rxx::common_reference_t<rxx::tuple<int&, int const&>,
+                       rxx::tuple<int const&, int>>,
+        rxx::tuple<int const&, int>>);
+static_assert(
+    std::is_same_v<rxx::common_reference_t<rxx::tuple<int&, int volatile&>,
+                       rxx::tuple<int volatile&, int>>,
+        rxx::tuple<int volatile&, int>>);
+static_assert(std::is_same_v<
+    rxx::common_reference_t<rxx::tuple<int&, int const volatile&>,
+        rxx::tuple<int const volatile&, int>>,
+    rxx::tuple<int const volatile&, int>>);
+static_assert(
+    !has_type<rxx::common_reference_t<rxx::tuple<int const&, int volatile&>,
+        rxx::tuple<int volatile&, int const&>>>);
+
+static_assert(std::is_same_v<
+    rxx::common_reference_t<rxx::tuple<int, X2>, rxx::tuple<int, Y2>>,
+    rxx::tuple<int, Z2>>);
+static_assert(std::is_same_v<
+    rxx::common_reference_t<rxx::tuple<int, X2>, rxx::tuple<int, Y2>>,
+    rxx::tuple<int, Z2>>);
+static_assert(!has_type<rxx::common_reference<rxx::tuple<int, const X2>,
+                  rxx::tuple<float, const Z2>>>);
+static_assert(
+    !has_type<
+        rxx::common_reference<rxx::tuple<int, X2>, rxx::tuple<float, Z2>>>);
+static_assert(!has_type<rxx::common_reference<rxx::tuple<int, X2>, int, X2>>);
+
+//
+
 struct A {};
 template <template <class> class TQual, template <class> class UQual>
 struct std::basic_common_reference<A, std::tuple<B>, TQual, UQual> {
-    using type = tuple<UQual<B>>;
+    using type = std::tuple<UQual<B>>;
 };
 
 static_assert(

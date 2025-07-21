@@ -16,14 +16,11 @@
 // constexpr decltype(auto) operator*() const;
 
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/as_rvalue_view.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
 #include <cstddef>
-#include <ranges>
 #include <string>
 #include <string_view>
 #include <type_traits>

@@ -14,16 +14,15 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/chunk_by_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/join_view.h"
+#include "rxx/ranges/single_view.h"
+#include "rxx/ranges/transform_view.h"
 
-#include <algorithm>
 #include <cassert>
 #include <ranges>
 #include <sstream>
@@ -31,27 +30,29 @@
 
 namespace ranges = std::ranges;
 namespace views = std::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 2, 3, 0, 4, 5, 2};
-    auto v = x | rxx::views::chunk_by(ranges::less_equal{});
-    static_assert(ranges::bidirectional_range<decltype(v)> &&
-        ranges::common_range<decltype(v)>);
-    assert(ranges::equal(v,
+    auto v = x | xviews::chunk_by(xranges::less_equal{});
+    static_assert(xranges::bidirectional_range<decltype(v)> &&
+        xranges::common_range<decltype(v)>);
+    assert(xranges::equal(v,
         (std::initializer_list<int>[]){
             {1, 2, 2, 3},
             {0, 4, 5},
             {2}
     },
-        ranges::equal));
-    assert(ranges::equal(v | views::reverse,
+        xranges::equal));
+    assert(xranges::equal(v | xviews::reverse,
         (std::initializer_list<int>[]){
             {2},
             {0, 4, 5},
             {1, 2, 2, 3}
     },
-        ranges::equal));
-    assert(ranges::equal(v | rxx::views::join, x));
+        xranges::equal));
+    assert(xranges::equal(v | xviews::join, x));
     auto i = v.begin();
     auto j = i;
     j++;
@@ -67,31 +68,31 @@ constexpr bool test01() {
 void test02() {
     int x[] = {1, 2, 3};
     rxx::tests::test_forward_range<int> rx(x);
-    auto v = rx | rxx::views::chunk_by(ranges::equal_to{});
-    static_assert(!ranges::bidirectional_range<decltype(v)> &&
-        !ranges::common_range<decltype(v)>);
-    assert(
-        ranges::equal(v, x | views::transform(views::single), ranges::equal));
+    auto v = rx | xviews::chunk_by(xranges::equal_to{});
+    static_assert(!xranges::bidirectional_range<decltype(v)> &&
+        !xranges::common_range<decltype(v)>);
+    assert(xranges::equal(
+        v, x | xviews::transform(xviews::single), xranges::equal));
     auto i = v.begin();
     assert(i != v.end());
-    ranges::advance(i, 3);
+    xranges::advance(i, 3);
     assert(i == v.end());
 }
 
 void test03() {
     // LWG 3796
-    rxx::ranges::chunk_by_view<ranges::empty_view<int>, ranges::equal_to> r;
+    xranges::chunk_by_view<xranges::empty_view<int>, xranges::equal_to> r;
 }
 
 constexpr bool test04() {
     // PR libstdc++/108291
     using namespace std::literals;
     std::string_view s = "hello";
-    auto r = s | rxx::views::chunk_by(std::less{});
-    assert(ranges::equal(
-        r, (std::string_view[]){"h"sv, "el"sv, "lo"sv}, ranges::equal));
-    assert(ranges::equal(r | views::reverse,
-        (std::string_view[]){"lo"sv, "el"sv, "h"sv}, ranges::equal));
+    auto r = s | xviews::chunk_by(std::less{});
+    assert(xranges::equal(
+        r, (std::string_view[]){"h"sv, "el"sv, "lo"sv}, xranges::equal));
+    assert(xranges::equal(r | xviews::reverse,
+        (std::string_view[]){"lo"sv, "el"sv, "h"sv}, xranges::equal));
 
     return true;
 }
@@ -99,23 +100,23 @@ constexpr bool test04() {
 void test05() {
     // PR libstdc++/109474
     std::vector<bool> v = {true, false, true, true, false, false};
-    auto r = v | rxx::views::chunk_by(std::equal_to{});
-    assert(ranges::equal(r,
+    auto r = v | xviews::chunk_by(std::equal_to{});
+    assert(xranges::equal(r,
         (std::initializer_list<bool>[]){
             {true},
             {false},
             {true, true},
             {false, false}
     },
-        ranges::equal));
-    assert(ranges::equal(r | views::reverse,
+        xranges::equal));
+    assert(xranges::equal(r | xviews::reverse,
         (std::initializer_list<bool>[]){
             {false, false},
             {true, true},
             {false},
             {true}
     },
-        ranges::equal));
+        xranges::equal));
 }
 
 int main() {

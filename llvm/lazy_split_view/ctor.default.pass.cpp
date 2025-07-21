@@ -14,48 +14,46 @@
 //  lazy_split_view() requires default_initializable<V> &&
 //  default_initializable<P> = default;
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
 
-struct ThrowingDefaultCtorForwardView : std::ranges::view_base {
+struct ThrowingDefaultCtorForwardView : xranges::view_base {
     ThrowingDefaultCtorForwardView() noexcept(false);
     forward_iterator<int*> begin() const;
     forward_iterator<int*> end() const;
 };
 
-struct NoDefaultCtorForwardView : std::ranges::view_base {
+struct NoDefaultCtorForwardView : xranges::view_base {
     NoDefaultCtorForwardView() = delete;
     forward_iterator<int*> begin() const;
     forward_iterator<int*> end() const;
 };
 
 static_assert(std::is_default_constructible_v<
-    rxx::ranges::lazy_split_view<ForwardView, ForwardView>>);
-static_assert(
-    !std::is_default_constructible_v<
-        rxx::ranges::lazy_split_view<NoDefaultCtorForwardView, ForwardView>>);
-static_assert(
-    !std::is_default_constructible_v<
-        rxx::ranges::lazy_split_view<ForwardView, NoDefaultCtorForwardView>>);
+    xranges::lazy_split_view<ForwardView, ForwardView>>);
+static_assert(!std::is_default_constructible_v<
+              xranges::lazy_split_view<NoDefaultCtorForwardView, ForwardView>>);
+static_assert(!std::is_default_constructible_v<
+              xranges::lazy_split_view<ForwardView, NoDefaultCtorForwardView>>);
 
 static_assert(std::is_nothrow_default_constructible_v<
-    rxx::ranges::lazy_split_view<ForwardView, ForwardView>>);
+    xranges::lazy_split_view<ForwardView, ForwardView>>);
 static_assert(
     !std::is_nothrow_default_constructible_v<ThrowingDefaultCtorForwardView>);
 static_assert(
-    !std::is_nothrow_default_constructible_v<rxx::ranges::lazy_split_view<
-        ThrowingDefaultCtorForwardView, ForwardView>>);
+    !std::is_nothrow_default_constructible_v<
+        xranges::lazy_split_view<ThrowingDefaultCtorForwardView, ForwardView>>);
 
 constexpr bool test() {
     {
-        rxx::ranges::lazy_split_view<CopyableView, ForwardView> v;
+        xranges::lazy_split_view<CopyableView, ForwardView> v;
         assert(v.base() == CopyableView());
     }
 
     {
-        rxx::ranges::lazy_split_view<CopyableView, ForwardView> v = {};
+        xranges::lazy_split_view<CopyableView, ForwardView> v = {};
         assert(v.base() == CopyableView());
     }
 

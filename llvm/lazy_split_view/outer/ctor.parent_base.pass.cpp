@@ -15,14 +15,14 @@
 //   requires forward_range<Base>
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <type_traits>
 #include <utility>
 
-static_assert(!std::ranges::forward_range<SplitViewInput>);
+static_assert(!xranges::forward_range<SplitViewInput>);
 static_assert(!std::is_constructible_v<OuterIterInput, SplitViewInput&,
-              std::ranges::iterator_t<InputView>>);
+              xranges::iterator_t<InputView>>);
 
 constexpr bool test() {
     ForwardView input("abc");

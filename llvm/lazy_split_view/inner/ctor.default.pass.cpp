@@ -14,7 +14,10 @@
 // constexpr inner-iterator::inner-iterator() = default;
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 constexpr bool test() {
     { [[maybe_unused]] InnerIterForward i; }

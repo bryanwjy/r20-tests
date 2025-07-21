@@ -15,20 +15,21 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
+#include "rxx/ranges/view_base.h"
 
 #include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 template <class T>
-struct ForwardView : std::ranges::view_base {
+struct ForwardView : xranges::view_base {
     forward_iterator<T*> begin() const;
     sentinel_wrapper<forward_iterator<T*>> end() const;
 };
 
 template <class T>
-struct InputView : std::ranges::view_base {
+struct InputView : xranges::view_base {
     cpp17_input_iterator<T*> begin() const;
     sentinel_wrapper<cpp17_input_iterator<T*>> end() const;
 };
@@ -46,7 +47,7 @@ struct diff_type_iter {
 };
 
 template <class T, class V = int>
-struct DiffTypeRange : std::ranges::view_base {
+struct DiffTypeRange : xranges::view_base {
     diff_type_iter<T, V> begin() const;
     diff_type_iter<T, V> end() const;
 };
@@ -127,8 +128,8 @@ void test() {
 
         using Outer = BidiCommonOuter<Inner>;
         using Iter = xranges::iterator_t<xranges::join_view<Outer>>;
-        static_assert(std::is_same_v<InnerValue, std::pair<int, int>>);
-        static_assert(std::is_same_v<Iter::value_type, std::pair<int, int>>);
+        static_assert(std::is_same_v<InnerValue, rxx::tuple<int, int>>);
+        static_assert(std::is_same_v<Iter::value_type, rxx::tuple<int, int>>);
     }
 
     {

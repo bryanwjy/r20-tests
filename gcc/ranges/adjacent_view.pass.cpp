@@ -14,17 +14,17 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// You should have received a copy of the GNU General Public License along
-// with this library; see the file COPYING3.  If not see
-// <http://www.gnu.org/licenses/>.
-
 #include "rxx/ranges/adjacent_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/elements_view.h"
+#include "rxx/ranges/filter_view.h"
+#include "rxx/ranges/iota_view.h"
+#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges/single_view.h"
 
-#include <algorithm>
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace ranges = std::ranges;
@@ -33,7 +33,7 @@ namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 constexpr bool test01() {
-    static_assert(ranges::empty(std::array{1, 2, 3} | xviews::adjacent<0>));
+    static_assert(xranges::empty(std::array{1, 2, 3} | xviews::adjacent<0>));
 
     auto v1 = std::array{1, 2} | xviews::adjacent<1>;
     auto const i0 = v1.begin(), i1 = v1.begin() + 1;
@@ -44,8 +44,8 @@ constexpr bool test01() {
     assert(i0 - i1 == -1);
     assert(v1.end() - i1 == 1);
     assert(i1 - v1.end() == -1);
-    ranges::iter_swap(i0, i1);
-    assert(ranges::equal(std::move(v1) | views::keys, (int[]){2, 1}));
+    xranges::iter_swap(i0, i1);
+    assert(xranges::equal(std::move(v1) | xviews::keys, (int[]){2, 1}));
 
     int x[] = {1, 2, 3, 4};
     auto v2 = x | xviews::pairwise;
@@ -55,8 +55,8 @@ constexpr bool test01() {
     assert(i2 == v2.end());
     assert(xranges::size(v2) == 3);
     assert(xranges::size(std::as_const(v2)) == 3);
-    assert(ranges::equal(v2 | views::keys, (int[]){1, 2, 3}));
-    assert(ranges::equal(v2 | views::values, (int[]){2, 3, 4}));
+    assert(xranges::equal(v2 | xviews::keys, (int[]){1, 2, 3}));
+    assert(xranges::equal(v2 | xviews::values, (int[]){2, 3, 4}));
 
     int y[] = {1, 2, 3, 4, 5};
     auto const v3 = y | xviews::adjacent<3>;
@@ -71,13 +71,13 @@ constexpr bool test01() {
     (void)v3.base();
 
     auto const v5 = y | xviews::adjacent<5>;
-    assert(ranges::equal(v5, views::single(std::make_tuple(1, 2, 3, 4, 5))));
+    assert(xranges::equal(v5, xviews::single(std::make_tuple(1, 2, 3, 4, 5))));
 
     auto const v6 = y | xviews::adjacent<6>;
-    assert(ranges::empty(v6));
+    assert(xranges::empty(v6));
 
     auto const v0 = y | xviews::adjacent<0>;
-    assert(ranges::empty(v0));
+    assert(xranges::empty(v0));
 
     return true;
 }
@@ -88,13 +88,13 @@ constexpr bool test02() {
     using rxx::tests::test_random_access_range;
 
     using ty1 =
-        xranges::adjacent_view<views::all_t<test_forward_range<int>>, 2>;
+        xranges::adjacent_view<xviews::all_t<test_forward_range<int>>, 2>;
     static_assert(xranges::forward_range<ty1>);
     static_assert(!xranges::bidirectional_range<ty1>);
     static_assert(!xranges::sized_range<ty1>);
 
     using ty2 =
-        xranges::adjacent_view<views::all_t<test_random_access_range<int>>, 3>;
+        xranges::adjacent_view<xviews::all_t<test_random_access_range<int>>, 3>;
     static_assert(xranges::random_access_range<ty2>);
     static_assert(xranges::sized_range<ty2>);
 
@@ -102,7 +102,7 @@ constexpr bool test02() {
 }
 
 constexpr bool test03() {
-    auto v = views::iota(0, 4) | views::filter([](auto) { return true; }) |
+    auto v = xviews::iota(0, 4) | xviews::filter([](auto) { return true; }) |
         xviews::pairwise;
     using ty = decltype(v);
     static_assert(xranges::forward_range<ty>);
@@ -110,11 +110,11 @@ constexpr bool test03() {
     static_assert(!xranges::sized_range<ty>);
     assert(v.begin() == v.begin());
     assert(v.begin() != v.end());
-    assert(ranges::next(v.begin(), 3) == v.end());
+    assert(xranges::next(v.begin(), 3) == v.end());
     auto it = v.begin();
     ++it;
     it++;
-    assert(ranges::next(it) == v.end());
+    assert(xranges::next(it) == v.end());
     it--;
     --it;
     assert(it == v.begin());
@@ -124,7 +124,7 @@ constexpr bool test03() {
 
 constexpr bool test04() {
     // PR libstdc++/106798
-    auto r = views::single(0) | views::lazy_split(0) | xviews::pairwise;
+    auto r = xviews::single(0) | xviews::lazy_split(0) | xviews::pairwise;
     decltype(xranges::cend(r)) s = r.end();
     // TODO: lazy split view has a bug
     // assert(r.begin() != s);

@@ -18,11 +18,10 @@
 #include "../test_range.h"
 #include "../type_algorithms.h"
 #include "../unwrap_container_adaptor.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/to.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 #include "rxx/type_traits/common_reference.h"
 
-#include <algorithm>
 #include <cassert>
 #include <deque>
 #include <forward_list>
@@ -63,7 +62,7 @@ void test_is_equal(std::vector<std::vector<typename From::value_type>> inputs) {
     for (auto const& in : inputs) {
         From from(in.begin(), in.end());
         std::same_as<To> decltype(auto) result = xranges::to<To>(from);
-        assert(std::ranges::equal(in, result));
+        assert(xranges::equal(in, result));
     }
 }
 
@@ -73,7 +72,7 @@ void test_is_permutation(
     for (auto const& in : inputs) {
         From from(in.begin(), in.end());
         std::same_as<To> decltype(auto) result = xranges::to<To>(in);
-        assert(std::ranges::is_permutation(in, result));
+        assert(xranges::is_permutation(in, result));
     }
 }
 
@@ -86,7 +85,7 @@ void test_is_equal_for_adaptors(
 
         UnwrapAdaptor<From> unwrap_from(std::move(from));
         UnwrapAdaptor<To> unwrap_to(std::move(result));
-        assert(std::ranges::is_permutation(
+        assert(xranges::is_permutation(
             unwrap_from.get_container(), unwrap_to.get_container()));
     }
 }

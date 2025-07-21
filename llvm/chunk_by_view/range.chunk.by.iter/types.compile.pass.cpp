@@ -21,10 +21,10 @@
 #include "../types.h"
 
 #include "../../test_iterators.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/chunk_by_view.h"
 
 #include <functional>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
@@ -35,22 +35,22 @@ struct TestValueTypeAndDifferenceType {
     constexpr void operator()() const {
         using Underlying = View<Iter>;
         using ChunkByView =
-            xranges::chunk_by_view<Underlying, std::ranges::less_equal>;
+            xranges::chunk_by_view<Underlying, xranges::less_equal>;
         using ChunkByIterator = xranges::iterator_t<ChunkByView>;
         static_assert(std::same_as<typename ChunkByIterator::value_type,
-            std::ranges::range_value_t<ChunkByView>>);
+            xranges::range_value_t<ChunkByView>>);
         static_assert(std::same_as<typename ChunkByIterator::value_type,
-            std::ranges::subrange<Iter>>);
+            xranges::subrange<Iter>>);
         static_assert(std::same_as<typename ChunkByIterator::difference_type,
-            std::ranges::range_difference_t<ChunkByView>>);
+            xranges::range_difference_t<ChunkByView>>);
         static_assert(std::same_as<typename ChunkByIterator::difference_type,
-            std::ranges::range_difference_t<Underlying>>);
+            xranges::range_difference_t<Underlying>>);
     }
 };
 
 template <class Iter>
 using ChunkByIteratorFor = xranges::iterator_t<
-    xranges::chunk_by_view<View<Iter>, std::ranges::less_equal>>;
+    xranges::chunk_by_view<View<Iter>, xranges::less_equal>>;
 
 constexpr void test() {
     // Check that value_type is range_value_t and difference_type is

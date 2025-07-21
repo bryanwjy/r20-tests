@@ -14,7 +14,7 @@
 // friend constexpr decltype(auto) iter_move(const iterator& i);
 
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <ranges>
@@ -31,13 +31,12 @@ constexpr bool test() {
 
     {
         xranges::join_view jv(buffer);
-        assert(std::ranges::iter_move(jv.begin()) == 1);
+        assert(xranges::iter_move(jv.begin()) == 1);
         static_assert(
-            std::is_same_v<decltype(std::ranges::iter_move(jv.begin())),
-                int&&>);
+            std::is_same_v<decltype(xranges::iter_move(jv.begin())), int&&>);
 
-        static_assert(noexcept(
-            std::ranges::iter_move(std::declval<decltype(jv.begin())>())));
+        static_assert(
+            noexcept(xranges::iter_move(std::declval<decltype(jv.begin())>())));
     }
 
     {
@@ -54,17 +53,17 @@ constexpr bool test() {
         assert(iter_move_called_times1 == 0);
         assert(iter_move_called_times2 == 0);
 
-        std::same_as<std::pair<int&&, int&&>> decltype(auto) x =
-            std::ranges::iter_move(it);
-        assert(std::get<0>(x) == 1);
+        std::same_as<rxx::tuple<int&&, int&&>> decltype(auto) x =
+            xranges::iter_move(it);
+        assert(xranges::get_element<0>(x) == 1);
         assert(iter_move_called_times1 == 1);
         assert(iter_move_called_times2 == 0);
 
-        auto it2 = std::ranges::next(it, 4);
+        auto it2 = xranges::next(it, 4);
 
-        std::same_as<std::pair<int&&, int&&>> decltype(auto) y =
-            std::ranges::iter_move(it2);
-        assert(std::get<0>(y) == 5);
+        std::same_as<rxx::tuple<int&&, int&&>> decltype(auto) y =
+            xranges::iter_move(it2);
+        assert(xranges::get_element<0>(y) == 5);
         assert(iter_move_called_times1 == 1);
         assert(iter_move_called_times2 == 1);
     }

@@ -15,7 +15,7 @@
 //   requires Const && convertible_to<iterator_t<View>, iterator_t<Base>>
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <string_view>
 #include <type_traits>
@@ -29,8 +29,8 @@ concept IsConstOuterIter = requires(Iter i) {
 };
 static_assert(IsConstOuterIter<OuterIterConst>);
 
-static_assert(std::convertible_to<std::ranges::iterator_t<SplitViewDiff>,
-    std::ranges::iterator_t<SplitViewDiff const>>);
+static_assert(std::convertible_to<xranges::iterator_t<SplitViewDiff>,
+    xranges::iterator_t<SplitViewDiff const>>);
 
 // outer-iterator<Const = false>
 

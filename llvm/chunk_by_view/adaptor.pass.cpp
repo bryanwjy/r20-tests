@@ -18,12 +18,13 @@
 #include "../test_iterators.h"
 #include "../test_range.h"
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/filter_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <algorithm>
 #include <cassert>
 #include <concepts>
 #include <initializer_list>
-#include <ranges>
 #include <type_traits>
 #include <utility>
 
@@ -38,7 +39,7 @@ struct NonCopyablePredicate : Pred {
     NonCopyablePredicate(NonCopyablePredicate const&) = delete;
 };
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     using Iterator = forward_iterator<int*>;
     using Sentinel = sentinel_wrapper<Iterator>;
     constexpr explicit Range(int* b, int* e) : begin_(b), end_(e) {}
@@ -58,7 +59,7 @@ constexpr void compareViews(
     auto b2 = list.begin();
     auto e2 = list.end();
     for (; b1 != e1 && b2 != e2; ++b1, ++b2) {
-        bool eq = std::ranges::equal(*b1, *b2, [](int x, int y) {
+        bool eq = xranges::equal(*b1, *b2, [](int x, int y) {
             assert(x == y);
             return true;
         });
@@ -256,9 +257,9 @@ constexpr bool test() {
             auto pred1 = [](int i) { return absoluteValue(i) < 3; };
             Pred pred2;
             using Result = xranges::chunk_by_view<
-                std::ranges::filter_view<Range, decltype(pred1)>, Pred>;
+                xranges::filter_view<Range, decltype(pred1)>, Pred>;
             std::same_as<Result> decltype(auto) result =
-                range | std::views::filter(pred1) | xviews::chunk_by(pred2);
+                range | xviews::filter(pred1) | xviews::chunk_by(pred2);
             compareViews(result,
                 {
                     {-2, -1},
@@ -269,9 +270,9 @@ constexpr bool test() {
             auto pred1 = [](int i) { return absoluteValue(i) < 3; };
             Pred pred2;
             using Result = xranges::chunk_by_view<
-                std::ranges::filter_view<Range, decltype(pred1)>, Pred>;
+                xranges::filter_view<Range, decltype(pred1)>, Pred>;
             auto const partial =
-                std::views::filter(pred1) | xviews::chunk_by(pred2);
+                xviews::filter(pred1) | xviews::chunk_by(pred2);
             std::same_as<Result> decltype(auto) result = range | partial;
             compareViews(result,
                 {

@@ -17,10 +17,10 @@
 //                          std::default_initializable<Pred> = default;
 
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
 #include <cstddef>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
@@ -28,7 +28,7 @@ namespace xviews = rxx::views;
 
 constexpr int buff[] = {-2, 1, -1, 2};
 
-struct DefaultConstructibleView : std::ranges::view_base {
+struct DefaultConstructibleView : xranges::view_base {
     DefaultConstructibleView() = default;
     constexpr int const* begin() const { return buff; }
     constexpr int const* end() const { return buff + 4; }
@@ -39,7 +39,7 @@ struct DefaultConstructiblePredicate {
     constexpr bool operator()(int x, int y) const { return x != -y; }
 };
 
-struct NoDefaultView : std::ranges::view_base {
+struct NoDefaultView : xranges::view_base {
     NoDefaultView() = delete;
     int* begin() const;
     int* end() const;
@@ -50,7 +50,7 @@ struct NoDefaultPredicate {
     constexpr bool operator()(int, int) const;
 };
 
-struct NoexceptView : std::ranges::view_base {
+struct NoexceptView : xranges::view_base {
     NoexceptView() noexcept;
     int const* begin() const;
     int const* end() const;
@@ -61,7 +61,7 @@ struct NoexceptPredicate {
     bool operator()(int, int) const;
 };
 
-struct MayThrowView : std::ranges::view_base {
+struct MayThrowView : xranges::view_base {
     MayThrowView() noexcept(false);
     int const* begin() const;
     int const* end() const;
@@ -73,7 +73,7 @@ struct MayThrowPredicate {
 };
 
 constexpr void compareRanges(
-    std::ranges::subrange<int const*> v, std::initializer_list<int> list) {
+    xranges::subrange<int const*> v, std::initializer_list<int> list) {
     assert(v.size() == list.size());
     for (size_t i = 0; i < v.size(); ++i) {
         assert(v[i] == list.begin()[i]);

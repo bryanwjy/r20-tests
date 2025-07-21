@@ -16,11 +16,9 @@
 // constexpr View base() const& requires copy_constructible<View>;
 // constexpr View base() &&;
 
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 #include <vector>
 
