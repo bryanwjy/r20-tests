@@ -13,7 +13,7 @@
 #define TEST_STD_RANGES_RANGE_ADAPTORS_RANGE_LAZY_SPLIT_TYPES_H
 
 #include "../test_iterators.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <concepts>
 #include <cstddef>
@@ -21,9 +21,12 @@
 #include <string_view>
 #include <type_traits>
 
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
+
 // CopyableView
 
-struct CopyableView : std::ranges::view_base {
+struct CopyableView : xranges::view_base {
     std::string_view view_;
     constexpr explicit CopyableView() = default;
     constexpr CopyableView(char const* ptr) : view_(ptr) {}
@@ -39,14 +42,14 @@ struct CopyableView : std::ranges::view_base {
         return view_ == rhs.view_;
     }
 };
-static_assert(std::ranges::forward_range<CopyableView>);
-static_assert(std::ranges::forward_range<CopyableView const>);
-static_assert(std::ranges::view<CopyableView>);
+static_assert(xranges::forward_range<CopyableView>);
+static_assert(xranges::forward_range<CopyableView const>);
+static_assert(xranges::view<CopyableView>);
 static_assert(std::is_copy_constructible_v<CopyableView>);
 
 // ForwardView
 
-struct ForwardView : std::ranges::view_base {
+struct ForwardView : xranges::view_base {
     std::string_view view_;
     constexpr explicit ForwardView() = default;
     constexpr ForwardView(char const* ptr) : view_(ptr) {}
@@ -61,16 +64,16 @@ struct ForwardView : std::ranges::view_base {
         return forward_iterator<std::string_view::const_iterator>(view_.end());
     }
 };
-static_assert(std::ranges::forward_range<ForwardView>);
-static_assert(std::ranges::forward_range<ForwardView const>);
-static_assert(std::ranges::view<ForwardView>);
+static_assert(xranges::forward_range<ForwardView>);
+static_assert(xranges::forward_range<ForwardView const>);
+static_assert(xranges::view<ForwardView>);
 static_assert(!std::is_copy_constructible_v<ForwardView>);
 static_assert(std::is_move_constructible_v<ForwardView>);
 
 // ForwardDiffView
 
 // Iterator types differ based on constness of this class.
-struct ForwardDiffView : std::ranges::view_base {
+struct ForwardDiffView : xranges::view_base {
     std::string buffer_;
     constexpr explicit ForwardDiffView() = default;
     constexpr ForwardDiffView(char const* ptr)
@@ -96,11 +99,11 @@ struct ForwardDiffView : std::ranges::view_base {
         return forward_iterator<char const*>(buffer_.data() + buffer_.size());
     }
 };
-static_assert(std::ranges::forward_range<ForwardView>);
-static_assert(std::ranges::forward_range<ForwardView const>);
-static_assert(std::ranges::view<ForwardView>);
-static_assert(!std::same_as<std::ranges::iterator_t<ForwardDiffView>,
-              std::ranges::iterator_t<ForwardDiffView const>>);
+static_assert(xranges::forward_range<ForwardView>);
+static_assert(xranges::forward_range<ForwardView const>);
+static_assert(xranges::view<ForwardView>);
+static_assert(!std::same_as<xranges::iterator_t<ForwardDiffView>,
+              xranges::iterator_t<ForwardDiffView const>>);
 
 // ForwardOnlyIfNonConstView
 
@@ -148,7 +151,7 @@ public:
 static_assert(!std::forward_iterator<almost_forward_iterator<int*>>);
 static_assert(std::input_iterator<almost_forward_iterator<int*>>);
 
-struct ForwardOnlyIfNonConstView : std::ranges::view_base {
+struct ForwardOnlyIfNonConstView : xranges::view_base {
     std::string_view view_;
 
     constexpr explicit ForwardOnlyIfNonConstView() = default;
@@ -176,13 +179,13 @@ struct ForwardOnlyIfNonConstView : std::ranges::view_base {
             view_.end());
     }
 };
-static_assert(std::ranges::forward_range<ForwardOnlyIfNonConstView>);
-static_assert(!std::ranges::forward_range<ForwardOnlyIfNonConstView const>);
-static_assert(std::ranges::view<ForwardOnlyIfNonConstView>);
+static_assert(xranges::forward_range<ForwardOnlyIfNonConstView>);
+static_assert(!xranges::forward_range<ForwardOnlyIfNonConstView const>);
+static_assert(xranges::view<ForwardOnlyIfNonConstView>);
 
 // InputView
 
-struct InputView : std::ranges::view_base {
+struct InputView : xranges::view_base {
     std::string buffer_;
 
     constexpr InputView() = default;
@@ -212,13 +215,13 @@ struct InputView : std::ranges::view_base {
     }
 };
 
-static_assert(std::ranges::input_range<InputView>);
-static_assert(std::ranges::input_range<InputView const>);
-static_assert(std::ranges::view<InputView>);
+static_assert(xranges::input_range<InputView>);
+static_assert(xranges::input_range<InputView const>);
+static_assert(xranges::view<InputView>);
 
 // ForwardTinyView
 
-struct ForwardTinyView : std::ranges::view_base {
+struct ForwardTinyView : xranges::view_base {
     char c_[1] = {};
     constexpr ForwardTinyView() = default;
     constexpr ForwardTinyView(char c) { *c_ = c; }
@@ -230,33 +233,32 @@ struct ForwardTinyView : std::ranges::view_base {
     }
     constexpr static std::size_t size() { return 1; }
 };
-static_assert(std::ranges::forward_range<ForwardTinyView>);
-static_assert(std::ranges::view<ForwardTinyView>);
-static_assert(rxx::ranges::details::tiny_range<ForwardTinyView>);
+static_assert(xranges::forward_range<ForwardTinyView>);
+static_assert(xranges::view<ForwardTinyView>);
+static_assert(xranges::details::tiny_range<ForwardTinyView>);
 
 // Aliases
 
-using SplitViewCopyable =
-    rxx::ranges::lazy_split_view<CopyableView, CopyableView>;
-using OuterIterCopyable = std::ranges::iterator_t<SplitViewCopyable>;
+using SplitViewCopyable = xranges::lazy_split_view<CopyableView, CopyableView>;
+using OuterIterCopyable = xranges::iterator_t<SplitViewCopyable>;
 using ValueTypeCopyable = OuterIterCopyable::value_type;
-using InnerIterCopyable = std::ranges::iterator_t<ValueTypeCopyable>;
-using BaseIterCopyable = std::ranges::iterator_t<CopyableView>;
+using InnerIterCopyable = xranges::iterator_t<ValueTypeCopyable>;
+using BaseIterCopyable = xranges::iterator_t<CopyableView>;
 
-using SplitViewForward = rxx::ranges::lazy_split_view<ForwardView, ForwardView>;
-using OuterIterForward = std::ranges::iterator_t<SplitViewForward>;
+using SplitViewForward = xranges::lazy_split_view<ForwardView, ForwardView>;
+using OuterIterForward = xranges::iterator_t<SplitViewForward>;
 using ValueTypeForward = OuterIterForward::value_type;
-using InnerIterForward = std::ranges::iterator_t<ValueTypeForward>;
-using BaseIterForward = std::ranges::iterator_t<ForwardView>;
+using InnerIterForward = xranges::iterator_t<ValueTypeForward>;
+using BaseIterForward = xranges::iterator_t<ForwardView>;
 
-using SplitViewInput = rxx::ranges::lazy_split_view<InputView, ForwardTinyView>;
-using OuterIterInput = std::ranges::iterator_t<SplitViewInput>;
+using SplitViewInput = xranges::lazy_split_view<InputView, ForwardTinyView>;
+using OuterIterInput = xranges::iterator_t<SplitViewInput>;
 using ValueTypeInput = OuterIterInput::value_type;
-using InnerIterInput = std::ranges::iterator_t<ValueTypeInput>;
-using BaseIterInput = std::ranges::iterator_t<InputView>;
+using InnerIterInput = xranges::iterator_t<ValueTypeInput>;
+using BaseIterInput = xranges::iterator_t<InputView>;
 
 using SplitViewDiff =
-    rxx::ranges::lazy_split_view<ForwardDiffView, ForwardDiffView>;
+    xranges::lazy_split_view<ForwardDiffView, ForwardDiffView>;
 using OuterIterConst = decltype(std::declval<SplitViewDiff const>().begin());
 using OuterIterNonConst = decltype(std::declval<SplitViewDiff>().begin());
 static_assert(!std::same_as<OuterIterConst, OuterIterNonConst>);

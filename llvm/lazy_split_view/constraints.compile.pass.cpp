@@ -22,7 +22,7 @@
 // class lazy_split_view;
 
 #include "../test_iterators.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <functional>
@@ -31,23 +31,23 @@ struct ForwardRange {
     forward_iterator<int*> begin() const;
     forward_iterator<int*> end() const;
 };
-static_assert(std::ranges::forward_range<ForwardRange>);
+static_assert(xranges::forward_range<ForwardRange>);
 
 template <class View, class Pattern>
 concept CanInstantiate =
-    requires { typename rxx::ranges::lazy_split_view<View, Pattern>; };
+    requires { typename xranges::lazy_split_view<View, Pattern>; };
 
 // All constraints satisfied (`View` and `Pattern` are forward views).
 namespace test1 {
 
 using View = ForwardView;
 using Pattern = ForwardView;
-static_assert(std::ranges::forward_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::forward_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(CanInstantiate<View, Pattern>);
 
 } // namespace test1
@@ -58,12 +58,12 @@ namespace test2 {
 
 using View = InputView;
 using Pattern = ForwardTinyView;
-static_assert(std::ranges::input_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(CanInstantiate<View, Pattern>);
 
 } // namespace test2
@@ -85,19 +85,19 @@ struct AlmostInputIterator {
 static_assert(std::input_or_output_iterator<AlmostInputIterator>);
 static_assert(!std::input_iterator<AlmostInputIterator>);
 
-struct NonInputView : std::ranges::view_base {
+struct NonInputView : xranges::view_base {
     AlmostInputIterator begin() const;
     AlmostInputIterator end() const;
 };
 
 using View = NonInputView;
 using Pattern = ForwardTinyView;
-static_assert(!std::ranges::input_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(!xranges::input_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test3
@@ -107,12 +107,12 @@ namespace test4 {
 
 using View = ForwardRange;
 using Pattern = ForwardView;
-static_assert(std::ranges::input_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(!std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(!xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test4
@@ -122,12 +122,12 @@ namespace test5 {
 
 using View = ForwardView;
 using Pattern = InputView;
-static_assert(std::ranges::input_range<View>);
-static_assert(!std::ranges::forward_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(!xranges::forward_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test5
@@ -136,19 +136,19 @@ static_assert(!CanInstantiate<View, Pattern>);
 namespace test6 {
 
 struct Empty {};
-struct IntForwardView : std::ranges::view_base {
+struct IntForwardView : xranges::view_base {
     constexpr forward_iterator<Empty*> begin() const { return {}; }
     constexpr forward_iterator<Empty*> end() const { return {}; }
 };
 
 using View = ForwardView;
 using Pattern = IntForwardView;
-static_assert(std::ranges::input_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(!std::indirectly_comparable<std::ranges::iterator_t<View>,
-              std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(!std::indirectly_comparable<xranges::iterator_t<View>,
+              xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test6
@@ -158,14 +158,14 @@ namespace test7 {
 
 using View = InputView;
 using Pattern = ForwardView;
-static_assert(std::ranges::input_range<View>);
-static_assert(!std::ranges::forward_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(!rxx::ranges::details::tiny_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(!xranges::forward_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(!xranges::details::tiny_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test7
@@ -174,7 +174,7 @@ static_assert(!CanInstantiate<View, Pattern>);
 // `size()` function is not `constexpr`.
 namespace test8 {
 
-struct AlmostTinyRange : std::ranges::view_base {
+struct AlmostTinyRange : xranges::view_base {
     int* begin() const;
     int* end() const;
     static std::size_t size() { return 1; }
@@ -182,14 +182,14 @@ struct AlmostTinyRange : std::ranges::view_base {
 
 using View = InputView;
 using Pattern = AlmostTinyRange;
-static_assert(std::ranges::input_range<View>);
-static_assert(!std::ranges::forward_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(!rxx::ranges::details::tiny_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(!xranges::forward_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(!xranges::details::tiny_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test8
@@ -198,7 +198,7 @@ static_assert(!CanInstantiate<View, Pattern>);
 // `size()` returns a number `>2`.
 namespace test9 {
 
-struct AlmostTinyRange : std::ranges::view_base {
+struct AlmostTinyRange : xranges::view_base {
     int* begin() const;
     int* end() const;
     constexpr static std::size_t size() { return 2; }
@@ -206,14 +206,14 @@ struct AlmostTinyRange : std::ranges::view_base {
 
 using View = InputView;
 using Pattern = ForwardView;
-static_assert(std::ranges::input_range<View>);
-static_assert(!std::ranges::forward_range<View>);
-static_assert(std::ranges::forward_range<Pattern>);
-static_assert(!rxx::ranges::details::tiny_range<Pattern>);
-static_assert(std::ranges::view<View>);
-static_assert(std::ranges::view<Pattern>);
-static_assert(std::indirectly_comparable<std::ranges::iterator_t<View>,
-    std::ranges::iterator_t<Pattern>, std::ranges::equal_to>);
+static_assert(xranges::input_range<View>);
+static_assert(!xranges::forward_range<View>);
+static_assert(xranges::forward_range<Pattern>);
+static_assert(!xranges::details::tiny_range<Pattern>);
+static_assert(xranges::view<View>);
+static_assert(xranges::view<Pattern>);
+static_assert(std::indirectly_comparable<xranges::iterator_t<View>,
+    xranges::iterator_t<Pattern>, xranges::equal_to>);
 static_assert(!CanInstantiate<View, Pattern>);
 
 } // namespace test9

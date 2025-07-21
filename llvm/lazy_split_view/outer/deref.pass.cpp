@@ -14,7 +14,7 @@
 // constexpr outer-iterator::value-type outer-iterator::operator*() const;
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <algorithm>
 #include <cassert>
@@ -33,16 +33,16 @@ constexpr void test_one(Separator sep) {
     {
         auto i = v.begin();
         static_assert(!std::is_reference_v<decltype(*i)>);
-        assert(std::ranges::equal(*i, "abc"s));
-        assert(std::ranges::equal(*(++i), "def"s));
-        assert(std::ranges::equal(*(++i), "ghi"s));
+        assert(xranges::equal(*i, "abc"s));
+        assert(xranges::equal(*(++i), "def"s));
+        assert(xranges::equal(*(++i), "ghi"s));
     }
 
     // Const iterator.
     {
         auto const ci = v.begin();
         static_assert(!std::is_reference_v<decltype(*ci)>);
-        assert(std::ranges::equal(*ci, "abc"s));
+        assert(xranges::equal(*ci, "abc"s));
     }
 }
 

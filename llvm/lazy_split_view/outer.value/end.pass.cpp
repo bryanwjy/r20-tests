@@ -11,10 +11,10 @@
 
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
-// rxx::ranges::lazy_split_view::outer-iterator::value_type::end()
+// xranges::lazy_split_view::outer-iterator::value_type::end()
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 

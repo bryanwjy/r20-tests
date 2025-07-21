@@ -14,14 +14,14 @@
 // constexpr View base() const& requires copy_constructible<_View>;
 // constexpr View base() &&;
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
 #include <string_view>
 #include <utility>
 
-struct MoveOnlyView : std::ranges::view_base {
+struct MoveOnlyView : xranges::view_base {
     std::string_view view_;
     constexpr MoveOnlyView() = default;
     constexpr MoveOnlyView(char const* ptr) : view_(ptr) {}
@@ -38,11 +38,11 @@ struct MoveOnlyView : std::ranges::view_base {
         return view_ == rhs.view_;
     }
 };
-static_assert(std::ranges::view<MoveOnlyView>);
-static_assert(std::ranges::contiguous_range<MoveOnlyView>);
+static_assert(xranges::view<MoveOnlyView>);
+static_assert(xranges::contiguous_range<MoveOnlyView>);
 static_assert(!std::copyable<MoveOnlyView>);
 
-struct ViewWithInitTracking : std::ranges::view_base {
+struct ViewWithInitTracking : xranges::view_base {
     enum class InitializedBy {
         Copy,
         Move,
@@ -76,13 +76,13 @@ template <class View>
 concept CanCallBase = requires(View v) { std::forward<View>(v).base(); };
 
 static_assert(
-    CanCallBase<rxx::ranges::lazy_split_view<MoveOnlyView, ForwardView>&&>);
+    CanCallBase<xranges::lazy_split_view<MoveOnlyView, ForwardView>&&>);
 static_assert(
-    !CanCallBase<rxx::ranges::lazy_split_view<MoveOnlyView, ForwardView>&>);
-static_assert(!CanCallBase<
-              rxx::ranges::lazy_split_view<MoveOnlyView, ForwardView> const&>);
-static_assert(!CanCallBase<
-              rxx::ranges::lazy_split_view<MoveOnlyView, ForwardView> const&&>);
+    !CanCallBase<xranges::lazy_split_view<MoveOnlyView, ForwardView>&>);
+static_assert(
+    !CanCallBase<xranges::lazy_split_view<MoveOnlyView, ForwardView> const&>);
+static_assert(
+    !CanCallBase<xranges::lazy_split_view<MoveOnlyView, ForwardView> const&&>);
 
 constexpr bool test() {
     using View = ViewWithInitTracking;
@@ -93,7 +93,7 @@ constexpr bool test() {
         // Non-const lvalue.
         {
             View str{"abc def"};
-            rxx::ranges::lazy_split_view<View, std::string_view> v(str, " ");
+            xranges::lazy_split_view<View, std::string_view> v(str, " ");
 
             std::same_as<View> decltype(auto) result = v.base();
             assert(result == str);
@@ -103,8 +103,7 @@ constexpr bool test() {
         // Const lvalue.
         {
             View str{"abc def"};
-            rxx::ranges::lazy_split_view<View, std::string_view> const v(
-                str, " ");
+            xranges::lazy_split_view<View, std::string_view> const v(str, " ");
 
             std::same_as<View> decltype(auto) result = v.base();
             assert(result == str);
@@ -114,7 +113,7 @@ constexpr bool test() {
         // Non-const rvalue.
         {
             View str{"abc def"};
-            rxx::ranges::lazy_split_view<View, std::string_view> v(str, " ");
+            xranges::lazy_split_view<View, std::string_view> v(str, " ");
 
             std::same_as<View> decltype(auto) result = std::move(v).base();
             assert(result == str);
@@ -124,8 +123,7 @@ constexpr bool test() {
         // Const rvalue.
         {
             View str{"abc def"};
-            rxx::ranges::lazy_split_view<View, std::string_view> const v(
-                str, " ");
+            xranges::lazy_split_view<View, std::string_view> const v(str, " ");
 
             std::same_as<View> decltype(auto) result = std::move(v).base();
             assert(result == str);
@@ -135,7 +133,7 @@ constexpr bool test() {
 
     // Move-only input -- only the rvalue overload of `base` is available.
     {
-        rxx::ranges::lazy_split_view<MoveOnlyView, ForwardView> v;
+        xranges::lazy_split_view<MoveOnlyView, ForwardView> v;
         assert(std::move(v).base() == MoveOnlyView());
     }
 

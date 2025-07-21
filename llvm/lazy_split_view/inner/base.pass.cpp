@@ -18,10 +18,13 @@
 
 #include "../../static_asserts.h"
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <concepts>
 #include <utility>
+
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 static_assert(noexcept(std::declval<InnerIterForward&>().base()));
 static_assert(noexcept(std::declval<InnerIterForward const&>().base()));
@@ -34,9 +37,9 @@ constexpr bool test() {
     // `base` works with a forward view (two different overloads based on
     // ref-qualification of the `inner-iterator`).
     {
-        using BaseIter = std::ranges::iterator_t<CopyableView>;
+        using BaseIter = xranges::iterator_t<CopyableView>;
         CopyableView input("abc def");
-        rxx::ranges::lazy_split_view<CopyableView, ForwardView> v(input, " ");
+        xranges::lazy_split_view<CopyableView, ForwardView> v(input, " ");
         auto i = (*v.begin()).begin();
         auto const ci = i;
 
@@ -70,9 +73,9 @@ constexpr bool test() {
 
     // `base` works with an input view (no overloads).
     {
-        using BaseIter = std::ranges::iterator_t<InputView>;
+        using BaseIter = xranges::iterator_t<InputView>;
         InputView input("abc def");
-        rxx::ranges::lazy_split_view<InputView, ForwardTinyView> v(input, ' ');
+        xranges::lazy_split_view<InputView, ForwardTinyView> v(input, ' ');
         auto i = (*v.begin()).begin();
         auto const ci = i;
 

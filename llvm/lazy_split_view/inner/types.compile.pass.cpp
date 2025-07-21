@@ -23,17 +23,15 @@
 
 #include "../types.h"
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <concepts>
 #include <iterator>
 
 template <class Range, class Pattern>
-using OuterIter =
-    std::ranges::iterator_t<rxx::ranges::lazy_split_view<Range, Pattern>>;
+using OuterIter = xranges::iterator_t<xranges::lazy_split_view<Range, Pattern>>;
 template <class Range, class Pattern>
-using InnerIter =
-    std::ranges::iterator_t<decltype(*OuterIter<Range, Pattern>())>;
+using InnerIter = xranges::iterator_t<decltype(*OuterIter<Range, Pattern>())>;
 
 // iterator_concept
 
@@ -59,10 +57,10 @@ static_assert(NoIteratorCategory<InputView, ForwardTinyView>);
 
 static_assert(
     std::same_as<typename InnerIter<ForwardView, ForwardView>::value_type,
-        std::ranges::range_value_t<ForwardView>>);
+        xranges::range_value_t<ForwardView>>);
 
 // difference_type
 
 static_assert(
     std::same_as<typename InnerIter<ForwardView, ForwardView>::difference_type,
-        std::ranges::range_difference_t<ForwardView>>);
+        xranges::range_difference_t<ForwardView>>);

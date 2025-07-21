@@ -16,13 +16,13 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
 #include <utility>
 
-struct ForwardViewCommonIfConst : std::ranges::view_base {
+struct ForwardViewCommonIfConst : xranges::view_base {
     std::string_view view_;
     constexpr explicit ForwardViewCommonIfConst() = default;
     constexpr ForwardViewCommonIfConst(char const* ptr) : view_(ptr) {}
@@ -50,7 +50,7 @@ bool operator==(forward_iterator<char*>, std::default_sentinel_t) {
     return false;
 }
 
-struct ForwardViewNonCommonRange : std::ranges::view_base {
+struct ForwardViewNonCommonRange : xranges::view_base {
     std::string_view view_;
     constexpr explicit ForwardViewNonCommonRange() = default;
     constexpr ForwardViewNonCommonRange(char const* ptr) : view_(ptr) {}
@@ -87,13 +87,13 @@ constexpr bool test() {
         using V = ForwardView;
         using P = V;
 
-        static_assert(std::ranges::forward_range<V>);
-        static_assert(std::ranges::common_range<V const>);
+        static_assert(xranges::forward_range<V>);
+        static_assert(xranges::common_range<V const>);
         static_assert(simple_view<V>);
         static_assert(simple_view<P>);
 
         {
-            rxx::ranges::lazy_split_view<V, P> v;
+            xranges::lazy_split_view<V, P> v;
             auto it = v.end();
             static_assert(std::is_same_v<decltype(it)::iterator_concept,
                 std::forward_iterator_tag>);
@@ -102,7 +102,7 @@ constexpr bool test() {
         }
 
         {
-            rxx::ranges::lazy_split_view<V, P> const cv;
+            xranges::lazy_split_view<V, P> const cv;
             auto it = cv.end();
             static_assert(std::is_same_v<decltype(it)::iterator_concept,
                 std::forward_iterator_tag>);
@@ -119,15 +119,15 @@ constexpr bool test() {
         using V = ForwardView;
         using P = ForwardDiffView;
 
-        static_assert(std::ranges::forward_range<V>);
-        static_assert(std::ranges::common_range<V>);
+        static_assert(xranges::forward_range<V>);
+        static_assert(xranges::common_range<V>);
         static_assert(simple_view<V>);
         static_assert(!simple_view<P>);
-        static_assert(std::ranges::forward_range<V const>);
-        static_assert(std::ranges::common_range<V const>);
+        static_assert(xranges::forward_range<V const>);
+        static_assert(xranges::common_range<V const>);
 
         {
-            rxx::ranges::lazy_split_view<V, P> v;
+            xranges::lazy_split_view<V, P> v;
             auto it = v.end();
             static_assert(std::is_same_v<decltype(it)::iterator_concept,
                 std::forward_iterator_tag>);
@@ -136,7 +136,7 @@ constexpr bool test() {
         }
 
         {
-            rxx::ranges::lazy_split_view<V, P> const cv;
+            xranges::lazy_split_view<V, P> const cv;
             auto it = cv.end();
             static_assert(std::is_same_v<decltype(it)::iterator_concept,
                 std::forward_iterator_tag>);
@@ -152,13 +152,13 @@ constexpr bool test() {
         using V = ForwardViewCommonIfConst;
         using P = V;
 
-        static_assert(std::ranges::forward_range<V>);
-        static_assert(!std::ranges::common_range<V>);
-        static_assert(std::ranges::forward_range<V const>);
-        static_assert(std::ranges::common_range<V const>);
+        static_assert(xranges::forward_range<V>);
+        static_assert(!xranges::common_range<V>);
+        static_assert(xranges::forward_range<V const>);
+        static_assert(xranges::common_range<V const>);
 
         {
-            rxx::ranges::lazy_split_view<V, P> v;
+            xranges::lazy_split_view<V, P> v;
             auto it = v.begin();
             static_assert(std::is_same_v<decltype(it)::iterator_concept,
                 std::forward_iterator_tag>);
@@ -166,7 +166,7 @@ constexpr bool test() {
         }
 
         {
-            rxx::ranges::lazy_split_view<V, P> const cv;
+            xranges::lazy_split_view<V, P> const cv;
             auto it = cv.begin();
             static_assert(std::is_same_v<decltype(it)::iterator_concept,
                 std::forward_iterator_tag>);
@@ -182,19 +182,19 @@ constexpr bool test() {
         using V = ForwardViewNonCommonRange;
         using P = V;
 
-        static_assert(std::ranges::forward_range<V>);
-        static_assert(!std::ranges::common_range<V>);
-        static_assert(std::ranges::forward_range<V const>);
-        static_assert(!std::ranges::common_range<V const>);
+        static_assert(xranges::forward_range<V>);
+        static_assert(!xranges::common_range<V>);
+        static_assert(xranges::forward_range<V const>);
+        static_assert(!xranges::common_range<V const>);
 
         {
-            rxx::ranges::lazy_split_view<V, P> v;
+            xranges::lazy_split_view<V, P> v;
             auto it = v.end();
             static_assert(std::same_as<decltype(it), std::default_sentinel_t>);
         }
 
         {
-            rxx::ranges::lazy_split_view<V, P> const cv;
+            xranges::lazy_split_view<V, P> const cv;
             auto it = cv.end();
             static_assert(std::same_as<decltype(it), std::default_sentinel_t>);
         }

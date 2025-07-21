@@ -16,19 +16,19 @@
 // constexpr decltype(auto) inner-iterator::operator++(int);
 
 #include "../types.h"
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <type_traits>
 
-struct EmptyView : std::ranges::view_base {
+struct EmptyView : xranges::view_base {
     constexpr int* begin() const { return nullptr; }
     constexpr int* end() const { return nullptr; }
     constexpr static std::size_t size() { return 0; }
 };
-static_assert(std::ranges::forward_range<EmptyView>);
-static_assert(std::ranges::view<EmptyView>);
-static_assert(rxx::ranges::details::tiny_range<EmptyView>);
+static_assert(xranges::forward_range<EmptyView>);
+static_assert(xranges::view<EmptyView>);
+static_assert(xranges::details::tiny_range<EmptyView>);
 
 constexpr bool test() {
     // Can call `inner-iterator::operator++`; `View` is a forward range.
@@ -94,8 +94,7 @@ constexpr bool test() {
     {
         // ++i
         {
-            rxx::ranges::lazy_split_view<InputView, EmptyView> v(
-                "a", EmptyView());
+            xranges::lazy_split_view<InputView, EmptyView> v("a", EmptyView());
             auto val = *v.begin();
 
             auto i = val.begin();
@@ -112,8 +111,7 @@ constexpr bool test() {
 
         // i++
         {
-            rxx::ranges::lazy_split_view<InputView, EmptyView> v(
-                "a", EmptyView());
+            xranges::lazy_split_view<InputView, EmptyView> v("a", EmptyView());
             auto val = *v.begin();
 
             auto i = val.begin();

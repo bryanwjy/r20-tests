@@ -14,14 +14,14 @@
 // constexpr lazy_split_view(View base, Pattern pattern); // explicit since
 // C++23
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
 #include <string_view>
 #include <utility>
 
-struct ViewWithCounting : std::ranges::view_base {
+struct ViewWithCounting : xranges::view_base {
     int* times_copied = nullptr;
     int* times_moved = nullptr;
 
@@ -48,8 +48,8 @@ struct ViewWithCounting : std::ranges::view_base {
     constexpr bool operator==(ViewWithCounting const&) const { return true; }
 };
 
-static_assert(std::ranges::forward_range<ViewWithCounting>);
-static_assert(std::ranges::view<ViewWithCounting>);
+static_assert(xranges::forward_range<ViewWithCounting>);
+static_assert(xranges::view<ViewWithCounting>);
 
 using View = ViewWithCounting;
 using Pattern = ViewWithCounting;
@@ -57,22 +57,22 @@ using Pattern = ViewWithCounting;
 // SFINAE tests.
 
 static_assert(
-    is_explicit_constructible_v<rxx::ranges::lazy_split_view<View, Pattern>,
-        View, Pattern>,
+    is_explicit_constructible_v<xranges::lazy_split_view<View, Pattern>, View,
+        Pattern>,
     "This constructor must be explicit");
 
 constexpr bool test() {
     // Calling the constructor with `(ForwardView, ForwardView)`.
     {
         CopyableView input = "abc def";
-        rxx::ranges::lazy_split_view<CopyableView, CopyableView> v(input, " ");
+        xranges::lazy_split_view<CopyableView, CopyableView> v(input, " ");
         assert(v.base() == input);
     }
 
     // Calling the constructor with `(InputView, TinyView)`.
     {
         InputView input = "abc def";
-        rxx::ranges::lazy_split_view<InputView, ForwardTinyView> v(input, ' ');
+        xranges::lazy_split_view<InputView, ForwardTinyView> v(input, ' ');
         // Note: `InputView` isn't equality comparable.
         (void)v;
     }
@@ -86,7 +86,7 @@ constexpr bool test() {
             View view(view_copied, view_moved);
             Pattern pattern(pattern_copied, pattern_moved);
 
-            rxx::ranges::lazy_split_view<View, Pattern> v(view, pattern);
+            xranges::lazy_split_view<View, Pattern> v(view, pattern);
             assert(view_copied ==
                 1); // The local variable is copied into the argument.
             assert(view_moved == 1);
@@ -98,7 +98,7 @@ constexpr bool test() {
         {
             int view_copied = 0, view_moved = 0, pattern_copied = 0,
                 pattern_moved = 0;
-            rxx::ranges::lazy_split_view<View, Pattern> v(
+            xranges::lazy_split_view<View, Pattern> v(
                 View(view_copied, view_moved),
                 Pattern(pattern_copied, pattern_moved));
             assert(view_copied == 0);

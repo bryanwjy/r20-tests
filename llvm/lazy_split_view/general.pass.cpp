@@ -12,13 +12,13 @@
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 
 // template <class View, class Pattern>
-// class rxx::ranges::lazy_split_view;
+// class xranges::lazy_split_view;
 //
 // These test check the output `lazy_split_view` produces for a variety of
 // inputs, including many corner cases, with no restrictions on which member
 // functions can be called.
 
-#include "rxx/ranges/lazy_split_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <algorithm>
@@ -51,7 +51,7 @@ public:
         }
     }
 
-    template <std::ranges::range R>
+    template <xranges::range R>
     constexpr BasicSmallString(R&& from)
         : BasicSmallString(from.begin(), from.end()) {}
 
@@ -61,9 +61,9 @@ public:
     }
 };
 
-template <std::ranges::view View, std::ranges::range Expected>
+template <xranges::view View, xranges::range Expected>
 constexpr bool is_equal(View& view, Expected const& expected) {
-    using Char = std::ranges::range_value_t<std::ranges::range_value_t<View>>;
+    using Char = xranges::range_value_t<xranges::range_value_t<View>>;
     using Str = BasicSmallString<Char>;
 
     auto actual_it = view.begin();
@@ -80,7 +80,7 @@ constexpr bool is_equal(View& view, Expected const& expected) {
 template <class T, class Separator, class U, std::size_t M>
 constexpr bool test_function_call(
     T&& input, Separator&& separator, std::array<U, M> expected) {
-    rxx::ranges::lazy_split_view v(input, separator);
+    xranges::lazy_split_view v(input, separator);
     return is_equal(v, expected);
 }
 
@@ -88,10 +88,10 @@ template <class T, class Separator, class U, std::size_t M>
 constexpr bool test_with_piping(
     T&& input, Separator&& separator, std::array<U, M> expected) {
     auto expected_it = expected.begin();
-    for (auto e : input | rxx::views::lazy_split(separator)) {
+    for (auto e : input | xviews::lazy_split(separator)) {
         if (expected_it == expected.end())
             return false;
-        if (!std::ranges::equal(e, *expected_it))
+        if (!xranges::equal(e, *expected_it))
             return false;
 
         ++expected_it;
@@ -109,21 +109,21 @@ constexpr bool test_l_r_values() {
         {
             auto input = "abc"sv;
             auto sep = " "sv;
-            [[maybe_unused]] rxx::ranges::lazy_split_view v(input, sep);
+            [[maybe_unused]] xranges::lazy_split_view v(input, sep);
         }
 
         // Const lvalues.
         {
             auto const input = "abc"sv;
             auto const sep = " "sv;
-            [[maybe_unused]] rxx::ranges::lazy_split_view v(input, sep);
+            [[maybe_unused]] xranges::lazy_split_view v(input, sep);
         }
 
         // Rvalues.
         {
             auto input = "abc"sv;
             auto sep = " "sv;
-            [[maybe_unused]] rxx::ranges::lazy_split_view v(
+            [[maybe_unused]] xranges::lazy_split_view v(
                 std::move(input), std::move(sep));
         }
 
@@ -131,7 +131,7 @@ constexpr bool test_l_r_values() {
         {
             auto const input = "abc"sv;
             auto const sep = " "sv;
-            [[maybe_unused]] rxx::ranges::lazy_split_view v(
+            [[maybe_unused]] xranges::lazy_split_view v(
                 std::move(input), std::move(sep));
         }
     }
@@ -145,7 +145,7 @@ constexpr bool test_string_literal_separator() {
     // Splitting works as expected when the separator is a single character
     // literal.
     {
-        rxx::ranges::lazy_split_view v("abc def"sv, ' ');
+        xranges::lazy_split_view v("abc def"sv, ' ');
         assert(is_equal(v, std::array{"abc"sv, "def"sv}));
     }
 
@@ -153,7 +153,7 @@ constexpr bool test_string_literal_separator() {
     // string literal doesn't match anything. This is because of the implicit
     // terminating null in the literal.
     {
-        rxx::ranges::lazy_split_view v("abc def"sv, " ");
+        xranges::lazy_split_view v("abc def"sv, " ");
         assert(is_equal(v, std::array{"abc def"sv}));
     }
 
@@ -161,7 +161,7 @@ constexpr bool test_string_literal_separator() {
     // two-character string literal: `{' ', '\0'}`. Should the input string
     // contain that two-character sequence, the separator would match.
     {
-        rxx::ranges::lazy_split_view v("abc \0def"sv, " ");
+        xranges::lazy_split_view v("abc \0def"sv, " ");
         assert(is_equal(v, std::array{"abc"sv, "def"sv}));
     }
 
@@ -282,7 +282,7 @@ bool test_nontrivial_characters() {
     Vec expected1 = {m1, m2};
     Vec expected2 = {m3};
 
-    rxx::ranges::lazy_split_view v(Vec{m1, m2, sep, m3}, sep);
+    xranges::lazy_split_view v(Vec{m1, m2, sep, m3}, sep);
 
     // Segment 1: {m1, m2}
     auto outer = v.begin();
