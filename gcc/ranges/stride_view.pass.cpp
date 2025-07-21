@@ -21,8 +21,8 @@
 #include "rxx/ranges/stride_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
 #include <ranges>
@@ -30,11 +30,13 @@
 
 namespace ranges = std::ranges;
 namespace views = std::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3, 4, 5, 6, 7};
 
-    auto v2 = x | rxx::views::stride(2);
+    auto v2 = x | xviews::stride(2);
     auto const i0 = v2.begin(), i1 = v2.begin() + 1;
     assert(i0 + 1 - 1 == i0);
     assert(i0 != i1);
@@ -50,25 +52,25 @@ constexpr bool test01() {
     i2 += 2;
     i2 -= -2;
     assert(i2 == v2.end());
-    assert(ranges::size(v2) == 4);
-    assert(ranges::equal(v2, (int[]){1, 3, 5, 7}));
-    assert(ranges::equal(v2 | views::reverse, (int[]){7, 5, 3, 1}));
+    assert(xranges::size(v2) == 4);
+    assert(xranges::equal(v2, (int[]){1, 3, 5, 7}));
+    assert(xranges::equal(v2 | xviews::reverse, (int[]){7, 5, 3, 1}));
     assert(v2.stride() == 2);
 
-    auto v1 = x | rxx::views::stride(1);
-    assert(ranges::size(v1) == ranges::size(x));
-    assert(ranges::equal(v1, x));
-    assert(ranges::equal(v1 | views::reverse, x | views::reverse));
+    auto v1 = x | xviews::stride(1);
+    assert(xranges::size(v1) == xranges::size(x));
+    assert(xranges::equal(v1, x));
+    assert(xranges::equal(v1 | xviews::reverse, x | xviews::reverse));
     assert(v1.stride() == 1);
 
-    auto v5 = x | rxx::views::stride(5);
-    assert(ranges::equal(v5, (int[]){1, 6}));
-    assert(ranges::equal(v5 | views::reverse, (int[]){6, 1}));
+    auto v5 = x | xviews::stride(5);
+    assert(xranges::equal(v5, (int[]){1, 6}));
+    assert(xranges::equal(v5 | xviews::reverse, (int[]){6, 1}));
     assert(v5.stride() == 5);
 
-    auto v10 = x | rxx::views::stride(10);
-    assert(ranges::equal(v10, (int[]){1}));
-    assert(ranges::equal(v10 | views::reverse, (int[]){1}));
+    auto v10 = x | xviews::stride(10);
+    assert(xranges::equal(v10, (int[]){1}));
+    assert(xranges::equal(v10 | xviews::reverse, (int[]){1}));
     assert(v10.stride() == 10);
 
     return true;
@@ -78,15 +80,15 @@ template <typename container>
 void test02() {
     int x[] = {1, 2, 3, 4, 5, 6, 7, 8};
     container rx(x);
-    auto v = rx | rxx::views::stride(3);
-    assert(ranges::equal(v, (int[]){1, 4, 7}));
+    auto v = rx | xviews::stride(3);
+    assert(xranges::equal(v, (int[]){1, 4, 7}));
 }
 
 void test03() {
     // PR libstdc++/107313
     int x[] = {1, 2, 3, 4, 5};
     rxx::tests::test_input_range<int> rx(x);
-    auto r = views::counted(rx.begin(), 4) | rxx::views::stride(2);
+    auto r = xviews::counted(rx.begin(), 4) | xviews::stride(2);
     auto i = r.begin();
     std::default_sentinel_t s = r.end();
     assert(s != i);

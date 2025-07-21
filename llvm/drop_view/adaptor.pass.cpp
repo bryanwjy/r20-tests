@@ -15,8 +15,7 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/drop_view.h"
-#include "rxx/ranges/repeat_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
@@ -29,7 +28,7 @@
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct SizedView : std::ranges::view_base {
+struct SizedView : xranges::view_base {
     int* begin_ = nullptr;
     int* end_ = nullptr;
     constexpr SizedView(int* begin, int* end) : begin_(begin), end_(end) {}
@@ -44,7 +43,7 @@ static_assert(xranges::forward_range<SizedView>);
 static_assert(xranges::sized_range<SizedView>);
 static_assert(xranges::view<SizedView>);
 
-struct SizedViewWithUnsizedSentinel : std::ranges::view_base {
+struct SizedViewWithUnsizedSentinel : xranges::view_base {
     using iterator = random_access_iterator<int*>;
     using sentinel = sentinel_wrapper<random_access_iterator<int*>>;
 
@@ -98,10 +97,10 @@ constexpr bool test() {
         {
             SomeView view(buf, buf + N);
             auto f = [](int i) { return i; };
-            auto const partial = std::views::transform(f) | xviews::drop(3);
+            auto const partial = xviews::transform(f) | xviews::drop(3);
 
             using Result = xranges::drop_view<
-                std::ranges::transform_view<SomeView, decltype(f)>>;
+                xranges::transform_view<SomeView, decltype(f)>>;
             std::same_as<Result> decltype(auto) result = partial(view);
             assert(result.base().base().begin_ == buf);
             assert(result.base().base().end_ == buf + N);
@@ -114,11 +113,10 @@ constexpr bool test() {
         {
             SomeView view(buf, buf + N);
             auto f = [](int i) { return i; };
-            auto const partial = xviews::drop(3) | std::views::transform(f);
+            auto const partial = xviews::drop(3) | xviews::transform(f);
 
-            using Result =
-                std::ranges::transform_view<xranges::drop_view<SomeView>,
-                    decltype(f)>;
+            using Result = xranges::transform_view<xranges::drop_view<SomeView>,
+                decltype(f)>;
             std::same_as<Result> decltype(auto) result = partial(view);
             assert(result.base().base().begin_ == buf);
             assert(result.base().base().end_ == buf + N);
@@ -150,9 +148,9 @@ constexpr bool test() {
 
     // `views::drop(empty_view, n)` returns an `empty_view`.
     {
-        using Result = std::ranges::empty_view<int>;
+        using Result = xranges::empty_view<int>;
         [[maybe_unused]] std::same_as<Result> decltype(auto) result =
-            std::views::empty<int> | xviews::drop(3);
+            xviews::empty<int> | xviews::drop(3);
     }
 
     // `views::drop(span, n)` returns a `span`.
@@ -190,24 +188,24 @@ constexpr bool test() {
 
     // `views::drop(iota_view, n)` returns an `iota_view`.
     {
-        auto iota = std::views::iota(1, 8);
+        auto iota = xviews::iota(1, 8);
         // The second template argument of the resulting `iota_view` is
         // different because it has to be able to hold the `range_difference_t`
         // of the input `iota_view`.
-        using Result = std::ranges::iota_view<int, int>;
+        using Result = xranges::iota_view<int, int>;
         std::same_as<Result> decltype(auto) result = iota | xviews::drop(3);
         assert(result.size() == 4);
         assert(*result.begin() == 4);
-        assert(*std::ranges::next(result.begin(), 3) == 7);
+        assert(*xranges::next(result.begin(), 3) == 7);
     }
 
     // `views::drop(subrange, n)` returns a `subrange` when `subrange::StoreSize
     // == false`.
     {
-        auto subrange = std::ranges::subrange(buf, buf + N);
+        auto subrange = xranges::subrange(buf, buf + N);
         static_assert(!decltype(subrange)::_StoreSize);
 
-        using Result = std::ranges::subrange<int*>;
+        using Result = xranges::subrange<int*>;
         std::same_as<Result> decltype(auto) result = subrange | xviews::drop(3);
         assert(result.size() == 5);
     }
@@ -218,10 +216,10 @@ constexpr bool test() {
         using View = SizedViewWithUnsizedSentinel;
         View view(buf, buf + N);
 
-        using Subrange = std::ranges::subrange<View::iterator, View::sentinel,
-            std::ranges::subrange_kind::sized>;
+        using Subrange = xranges::subrange<View::iterator, View::sentinel,
+            xranges::subrange_kind::sized>;
         auto subrange = Subrange(view.begin(), view.end(),
-            std::ranges::distance(view.begin(), view.end()));
+            xranges::distance(view.begin(), view.end()));
         static_assert(decltype(subrange)::_StoreSize);
 
         std::same_as<Subrange> decltype(auto) result =
@@ -233,10 +231,10 @@ constexpr bool test() {
     // random access range.
     {
         SizedView v(buf, buf + N);
-        auto subrange = std::ranges::subrange(v.begin(), v.end());
+        auto subrange = xranges::subrange(v.begin(), v.end());
 
         using Result =
-            xranges::drop_view<std::ranges::subrange<forward_iterator<int*>,
+            xranges::drop_view<xranges::subrange<forward_iterator<int*>,
                 sized_sentinel<forward_iterator<int*>>>>;
         std::same_as<Result> decltype(auto) result = subrange | xviews::drop(3);
         assert(result.size() == 5);
@@ -247,8 +245,8 @@ constexpr bool test() {
     {
         test_small_range(std::span(buf));
         test_small_range(std::string_view("abcdef"));
-        test_small_range(std::ranges::subrange(buf, buf + N));
-        test_small_range(std::views::iota(1, 8));
+        test_small_range(xranges::subrange(buf, buf + N));
+        test_small_range(xviews::iota(1, 8));
     }
 
     // `views::drop(repeat_view, n)` returns a `repeat_view` when `repeat_view`
@@ -268,7 +266,7 @@ constexpr bool test() {
         auto repeat = xranges::repeat_view<int>(1);
         using Result = xranges::repeat_view<int, std::unreachable_sentinel_t>;
         std::same_as<Result> decltype(auto) result = repeat | xviews::drop(3);
-        static_assert(!std::ranges::sized_range<Result>);
+        static_assert(!xranges::sized_range<Result>);
         static_assert(
             std::same_as<std::unreachable_sentinel_t, decltype(result.end())>);
     }

@@ -21,6 +21,7 @@
 #include "rxx/ranges/concat_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
 #include "rxx/ranges/basic_istream_view.h"
 #include "rxx/ranges/drop_view.h"
 #include "rxx/ranges/empty_view.h"
@@ -30,7 +31,6 @@
 #include "rxx/ranges/single_view.h"
 #include "rxx/ranges/transform_view.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
 #include <ranges>
@@ -52,8 +52,8 @@ constexpr bool test01() {
 
     assert(xranges::size(v) == 9);
     assert(xranges::size(std::as_const(v)) == 9);
-    assert(ranges::equal(v, xviews::iota(1, 10)));
-    assert(ranges::equal(
+    assert(xranges::equal(v, xviews::iota(1, 10)));
+    assert(xranges::equal(
         v | xviews::reverse, xviews::iota(1, 10) | xviews::reverse));
 
     auto it0 = v.begin();
@@ -73,10 +73,10 @@ constexpr bool test01() {
     assert(it0 + 9 == std::default_sentinel);
 
     auto it5 = it0 + 5;
-    ranges::iter_swap(it0, it5);
+    xranges::iter_swap(it0, it5);
     assert(*it0 == 6 && *it5 == 1);
-    ranges::iter_swap(it0, it5);
-    *it0 = ranges::iter_move(it0);
+    xranges::iter_swap(it0, it5);
+    *it0 = xranges::iter_move(it0);
     return true;
 }
 
@@ -85,7 +85,7 @@ void test02() {
     rxx::tests::test_input_range<int> rx(x);
     auto v = xviews::concat(xviews::single(0), rx, xviews::empty<int>);
     static_assert(!xranges::forward_range<decltype(v)>);
-    assert(ranges::equal(v | xviews::drop(1), x));
+    assert(xranges::equal(v | xviews::drop(1), x));
 }
 
 void test03() {
@@ -97,19 +97,19 @@ void test03() {
     auto range_noncopyable_it = xviews::istream<int>(ss);
     xranges::range auto view1 =
         xviews::concat(range_copyable_it, range_noncopyable_it);
-    assert(ranges::equal(view1, std::vector{1, 2, 3, 4, 5, 6}));
+    assert(xranges::equal(view1, std::vector{1, 2, 3, 4, 5, 6}));
 
     ss = std::stringstream{"4 5 6"};
     range_noncopyable_it = xviews::istream<int>(ss);
     static_assert(xranges::details::member_end<decltype(xviews::concat(
             range_noncopyable_it, range_copyable_it))&>);
-    ranges::range auto view2 =
+    xranges::range auto view2 =
         xviews::concat(range_noncopyable_it, range_copyable_it);
-    assert(ranges::equal(view2, std::vector{4, 5, 6, 1, 2, 3}));
+    assert(xranges::equal(view2, std::vector{4, 5, 6, 1, 2, 3}));
 }
 
 void test04() {
-    // PR libstdc++/115215 - views::concat rejects non-movable reference
+    // PR libstdc++/115215 - xviews::concat rejects non-movable reference
     int x[] = {1, 2, 3};
     struct nomove {
         nomove() = default;
@@ -121,11 +121,11 @@ void test04() {
 }
 
 void test05() {
-    // PR libstdc++/120934 - views::concat is ill-formed depending on argument
+    // PR libstdc++/120934 - xviews::concat is ill-formed depending on argument
     // order
     auto v1 = xviews::single(1);
     std::vector<int> vec = {2, 3};
-    auto v2 = xviews::join(xviews::transform(vec, views::single));
+    auto v2 = xviews::join(xviews::transform(vec, xviews::single));
 
     static_assert(xranges::range<decltype(xviews::concat(v1, v2))>);
     static_assert(xranges::range<decltype(xviews::concat(v2, v1))>);

@@ -21,8 +21,9 @@
 #include "rxx/ranges/as_rvalue_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/transform_view.h"
 
-#include <algorithm>
 #include <cassert>
 #include <memory>
 #include <optional>
@@ -30,6 +31,8 @@
 
 namespace ranges = std::ranges;
 namespace views = std::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 template <typename T>
 struct MoveOnly {
@@ -63,11 +66,11 @@ constexpr bool test01() {
     MoveOnly<int> a[3] = {
         MakeMoveOnly<int>(1), MakeMoveOnly<int>(2), MakeMoveOnly<int>(3)};
     MoveOnly<int> b[3];
-    auto v = a | rxx::views::as_rvalue;
-    ranges::copy(v, b);
-    assert(ranges::all_of(a, [](auto& p) { return p.get() == nullptr; }));
-    assert(ranges::equal(
-        b | views::transform([](auto& p) { return *p; }), (int[]){1, 2, 3}));
+    auto v = a | xviews::as_rvalue;
+    xranges::copy(v, b);
+    assert(xranges::all_of(a, [](auto& p) { return p.get() == nullptr; }));
+    assert(xranges::equal(
+        b | xviews::transform([](auto& p) { return *p; }), (int[]){1, 2, 3}));
 
     return true;
 }
@@ -76,9 +79,9 @@ void test02() {
     MoveOnly<int> x = MakeMoveOnly<int>(42);
     MoveOnly<int> y;
     rxx::tests::test_input_range<MoveOnly<int>> rx(&x, &x + 1);
-    auto v = rx | rxx::views::as_rvalue;
-    static_assert(!ranges::common_range<decltype(v)>);
-    ranges::copy(v, &y);
+    auto v = rx | xviews::as_rvalue;
+    static_assert(!xranges::common_range<decltype(v)>);
+    xranges::copy(v, &y);
     assert(x.get() == nullptr);
     assert(*y == 42);
 }

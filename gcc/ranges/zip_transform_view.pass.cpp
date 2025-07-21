@@ -21,8 +21,8 @@
 #include "rxx/ranges/zip_transform_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
 
-#include <algorithm>
 #include <cassert>
 #include <ranges>
 #include <utility>
@@ -49,10 +49,10 @@ static_assert(!can_zip_transform<void (*)()>);
 static_assert(can_zip_transform<int (&(*)())[3]>);
 
 constexpr bool test01() {
-    static_assert(ranges::empty(xviews::zip_transform([] { return 0; })));
+    static_assert(xranges::empty(xviews::zip_transform([] { return 0; })));
 
     auto z1 = xviews::zip_transform(std::identity{}, std::array{1, 2, 3});
-    assert(ranges::equal(z1, (int[]){1, 2, 3}));
+    assert(xranges::equal(z1, (int[]){1, 2, 3}));
     auto const i0 = z1.begin(), i1 = z1.begin() + 1;
     assert(i0 + 1 - 1 == i0);
     assert(i0 < i1);
@@ -61,8 +61,8 @@ constexpr bool test01() {
     assert(i0 - i1 == -1);
     assert(z1.end() - i1 == 2);
     assert(i1 - z1.end() == -2);
-    ranges::iter_swap(i0, i1);
-    assert(ranges::equal(std::move(z1), (int[]){2, 1, 3}));
+    xranges::iter_swap(i0, i1);
+    assert(xranges::equal(std::move(z1), (int[]){2, 1, 3}));
 
     auto z2 = xviews::zip_transform(
         std::multiplies{}, std::array{-1, 2}, std::array{3, 4, 5});
@@ -72,17 +72,17 @@ constexpr bool test01() {
     assert(i2 == z2.end());
     assert(xranges::size(z2) == 2);
     assert(xranges::size(std::as_const(z2)) == 2);
-    assert(ranges::equal(z2, (int[]){-3, 8}));
+    assert(xranges::equal(z2, (int[]){-3, 8}));
 
     auto z3 = xviews::zip_transform(
-        [](auto... xs) { return ranges::max({xs...}); },
+        [](auto... xs) { return xranges::max({xs...}); },
         std::array{1, 6, 7, 0, 0}, std::array{2, 5, 9}, std::array{3, 4, 8, 0});
     assert(xranges::size(z3) == 3);
-    assert(ranges::equal(z3, (int[]){3, 6, 9}));
+    assert(xranges::equal(z3, (int[]){3, 6, 9}));
 
     auto z4 = xviews::zip_transform([]() { return 1; });
     assert(xranges::size(z4) == 0);
-    static_assert(std::same_as<ranges::range_value_t<decltype(z4)>, int>);
+    static_assert(std::same_as<xranges::range_value_t<decltype(z4)>, int>);
 
     return true;
 }
@@ -93,8 +93,8 @@ constexpr bool test02() {
     using rxx::tests::test_random_access_range;
 
     using ty1 = xranges::zip_transform_view<std::plus<>,
-        views::all_t<test_forward_range<int>>,
-        views::all_t<test_random_access_range<int>>>;
+        xviews::all_t<test_forward_range<int>>,
+        xviews::all_t<test_random_access_range<int>>>;
     static_assert(
         std::sentinel_for<decltype(__RXX_AUTOCAST(std::declval<ty1&>().end())),
             xranges::iterator_t<ty1>>);
@@ -104,9 +104,9 @@ constexpr bool test02() {
 
     using ty2 =
         xranges::zip_transform_view<decltype([](int, int, int) { return 0; }),
-            views::all_t<test_forward_range<int>>,
-            views::all_t<test_input_range<int>>,
-            views::all_t<test_forward_range<int>>>;
+            xviews::all_t<test_forward_range<int>>,
+            xviews::all_t<test_input_range<int>>,
+            xviews::all_t<test_forward_range<int>>>;
     static_assert(xranges::input_range<ty2>);
     static_assert(!xranges::forward_range<ty2>);
     static_assert(!xranges::sized_range<ty2>);
@@ -117,14 +117,14 @@ constexpr bool test02() {
 constexpr bool test03() {
     int u[] = {1, 2, 3, 4}, v[] = {4, 5, 6};
     auto z = xviews::zip_transform(
-        std::plus{}, u | views::filter([](auto) { return true; }), v);
+        std::plus{}, u | xviews::filter([](auto) { return true; }), v);
     using ty = decltype(z);
     static_assert(xranges::forward_range<ty>);
     static_assert(!xranges::common_range<ty>);
     static_assert(!xranges::sized_range<ty>);
     assert(z.begin() == z.begin());
     assert(z.begin() != z.end());
-    assert(ranges::next(z.begin(), 3) == z.end());
+    assert(xranges::next(z.begin(), 3) == z.end());
     auto it = z.begin();
     ++it;
     it++;

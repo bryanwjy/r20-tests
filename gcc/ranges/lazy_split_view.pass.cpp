@@ -23,9 +23,13 @@
 #include "rxx/ranges/lazy_split_view.h"
 
 #include "../test_iterators.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges/common_view.h"
+#include "rxx/ranges/filter_view.h"
 #include "rxx/ranges/join_view.h"
+#include "rxx/ranges/ref_view.h"
+#include "rxx/ranges/transform_view.h"
 
-#include <algorithm>
 #include <cassert>
 #include <iterator>
 #include <ranges>
@@ -40,6 +44,8 @@ using rxx::tests::test_range;
 
 namespace ranges = std::ranges;
 namespace views = std::ranges::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 using namespace std::literals;
 
@@ -47,87 +53,86 @@ void test01() {
     auto x = "the  quick  brown  fox"sv;
     auto p = std::string{"  "};
     auto v = x |
-        rxx::views::lazy_split(
-            views::all(p)); // views::all is needed here after P2281.
+        xviews::lazy_split(
+            xviews::all(p)); // xviews::all is needed here after P2281.
     auto i = v.begin();
-    assert(ranges::equal(*i++, "the"sv));
-    assert(ranges::equal(*i++, "quick"sv));
-    assert(ranges::equal(*i++, "brown"sv));
-    assert(ranges::equal(*i++, "fox"sv));
+    assert(xranges::equal(*i++, "the"sv));
+    assert(xranges::equal(*i++, "quick"sv));
+    assert(xranges::equal(*i++, "brown"sv));
+    assert(xranges::equal(*i++, "fox"sv));
     assert(i == v.end());
 }
 
 void test02() {
     auto x = "the quick brown fox"sv;
-    auto v = x | rxx::views::lazy_split(' ');
+    auto v = x | xviews::lazy_split(' ');
     auto i = v.begin();
-    assert(ranges::equal(*i++, "the"sv));
-    assert(ranges::equal(*i++, "quick"sv));
-    assert(ranges::equal(*i++, "brown"sv));
-    assert(ranges::equal(*i++, "fox"sv));
+    assert(xranges::equal(*i++, "the"sv));
+    assert(xranges::equal(*i++, "quick"sv));
+    assert(xranges::equal(*i++, "brown"sv));
+    assert(xranges::equal(*i++, "fox"sv));
     assert(i == v.end());
 }
 
 void test03() {
     char x[] = "the quick brown fox";
     test_range<char, forward_iterator_wrapper> rx(x, x + sizeof(x) - 1);
-    auto v = rx | rxx::views::lazy_split(' ');
+    auto v = rx | xviews::lazy_split(' ');
     auto i = v.begin();
-    assert(ranges::equal(*i++, "the"sv));
-    assert(ranges::equal(*i++, "quick"sv));
-    assert(ranges::equal(*i++, "brown"sv));
-    assert(ranges::equal(*i++, "fox"sv));
+    assert(xranges::equal(*i++, "the"sv));
+    assert(xranges::equal(*i++, "quick"sv));
+    assert(xranges::equal(*i++, "brown"sv));
+    assert(xranges::equal(*i++, "fox"sv));
     assert(i == v.end());
 }
 
 void test04() {
     auto x = "the  quick  brown  fox"sv;
     std::initializer_list<char> p = {' ', ' '};
-    static_assert(!ranges::view<decltype(p)>);
-    static_assert(
-        std::same_as<decltype(p | views::all), ranges::ref_view<decltype(p)>>);
+    static_assert(!xranges::view<decltype(p)>);
+    static_assert(std::same_as<decltype(p | xviews::all),
+        xranges::ref_view<decltype(p)>>);
     auto v = x |
-        rxx::views::lazy_split(
-            views::all(p)); // views::all is needed here after P2281.
+        xviews::lazy_split(
+            xviews::all(p)); // xviews::all is needed here after P2281.
     auto i = v.begin();
-    assert(ranges::equal(*i++, "the"sv));
-    assert(ranges::equal(*i++, "quick"sv));
-    assert(ranges::equal(*i++, "brown"sv));
-    assert(ranges::equal(*i++, "fox"sv));
+    assert(xranges::equal(*i++, "the"sv));
+    assert(xranges::equal(*i++, "quick"sv));
+    assert(xranges::equal(*i++, "brown"sv));
+    assert(xranges::equal(*i++, "fox"sv));
     assert(i == v.end());
 }
 
 void test05() {
-    auto as_string = [](ranges::view auto rng) {
-        auto in = rng | views::common;
+    auto as_string = [](xranges::view auto rng) {
+        auto in = rng | xviews::common;
         return std::string(in.begin(), in.end());
     };
     std::string str =
         "Now is the time for all good men to come to the aid of their county.";
-    auto rng = str | rxx::views::lazy_split(' ') | views::transform(as_string) |
-        views::common;
+    auto rng = str | xviews::lazy_split(' ') | xviews::transform(as_string) |
+        xviews::common;
     std::vector<std::string> words(rng.begin(), rng.end());
     auto not_space_p = [](char c) { return c != ' '; };
-    assert(ranges::equal(
-        words | rxx::views::join, str | views::filter(not_space_p)));
+    assert(xranges::equal(
+        words | xviews::join, str | xviews::filter(not_space_p)));
 }
 
 void test06() {
     std::string str = "hello world";
-    auto v =
-        str | views::transform(std::identity{}) | rxx::views::lazy_split(' ');
+    auto v = str | xviews::transform(std::identity{}) | xviews::lazy_split(' ');
 
     // Verify that _Iterator<false> is implicitly convertible to
     // _Iterator<true>.
-    static_assert(
-        !std::same_as<decltype(ranges::begin(v)), decltype(ranges::cbegin(v))>);
-    auto b = ranges::cbegin(v);
-    b = ranges::begin(v);
+    static_assert(!std::same_as<decltype(xranges::begin(v)),
+                  decltype(xranges::cbegin(v))>);
+    auto b = xranges::cbegin(v);
+    b = xranges::begin(v);
 }
 
 void test07() {
     char str[] = "banana split";
-    auto split = str | rxx::views::lazy_split(' ');
+    auto split = str | xviews::lazy_split(' ');
     auto val = *split.begin();
     auto b = val.begin();
     auto b2 = b++;
@@ -138,20 +143,20 @@ void test07() {
 void test08() {
     char x[] = "the quick brown fox";
     test_range<char, input_iterator_wrapper> rx(x, x + sizeof(x) - 1);
-    auto v = rx | rxx::views::lazy_split(' ');
+    auto v = rx | xviews::lazy_split(' ');
     auto i = v.begin();
-    assert(ranges::equal(*i, "the"sv));
+    assert(xranges::equal(*i, "the"sv));
     ++i;
-    assert(ranges::equal(*i, "quick"sv));
+    assert(xranges::equal(*i, "quick"sv));
     ++i;
-    assert(ranges::equal(*i, "brown"sv));
+    assert(xranges::equal(*i, "brown"sv));
     ++i;
-    assert(ranges::equal(*i, "fox"sv));
+    assert(xranges::equal(*i, "fox"sv));
     ++i;
     assert(i == v.end());
 }
 
-template <auto lazy_split = rxx::views::lazy_split>
+template <auto lazy_split = xviews::lazy_split>
 void test09() {
     // Verify SFINAE behavior.
     std::string s, p;
@@ -167,19 +172,19 @@ void test09() {
     // ranges such as std::string&&.
     static_assert(requires { s | lazy_split(p); });
     static_assert(requires { lazy_split(p)(s); });
-    static_assert(requires { s | (lazy_split(p) | views::all); });
-    static_assert(requires { (lazy_split(p) | views::all)(s); });
+    static_assert(requires { s | (lazy_split(p) | xviews::all); });
+    static_assert(requires { (lazy_split(p) | xviews::all)(s); });
 
-    static_assert(requires { s | lazy_split(views::all(p)); });
-    static_assert(requires { lazy_split(views::all(p))(s); });
-    static_assert(requires { s | (lazy_split(views::all(p)) | views::all); });
-    static_assert(requires { (lazy_split(views::all(p)) | views::all)(s); });
+    static_assert(requires { s | lazy_split(xviews::all(p)); });
+    static_assert(requires { lazy_split(xviews::all(p))(s); });
+    static_assert(requires { s | (lazy_split(xviews::all(p)) | xviews::all); });
+    static_assert(requires { (lazy_split(xviews::all(p)) | xviews::all)(s); });
 
     auto adapt = lazy_split(p);
     static_assert(requires { s | adapt; });
     static_assert(requires { adapt(s); });
 
-    auto adapt2 = lazy_split(p) | views::all;
+    auto adapt2 = lazy_split(p) | xviews::all;
     static_assert(requires { s | adapt2; });
     static_assert(requires { adapt2(s); });
 }
@@ -187,39 +192,37 @@ void test09() {
 void test10() {
     // LWG 3505
     auto to_string = [](auto r) {
-        return std::string(r.begin(), ranges::next(r.begin(), r.end()));
+        return std::string(r.begin(), xranges::next(r.begin(), r.end()));
     };
     auto v =
-        "xxyx"sv | rxx::views::lazy_split("xy"sv) | views::transform(to_string);
-    assert(ranges::equal(v, (std::string_view[]){"x", "x"}));
+        "xxyx"sv | xviews::lazy_split("xy"sv) | xviews::transform(to_string);
+    assert(xranges::equal(v, (std::string_view[]){"x", "x"}));
 }
 
 void test11() {
     // LWG 3478
-    auto v = rxx::views::lazy_split("text"sv, "text"sv);
+    auto v = xviews::lazy_split("text"sv, "text"sv);
     auto i = v.begin();
-    assert(ranges::empty(*i++));
-    assert(ranges::empty(*i++));
+    assert(xranges::empty(*i++));
+    assert(xranges::empty(*i++));
     assert(i == v.end());
 
+    static_assert(xranges::distance(xviews::lazy_split(" text "sv, ' ')) == 3);
     static_assert(
-        ranges::distance(rxx::views::lazy_split(" text "sv, ' ')) == 3);
+        xranges::distance(xviews::lazy_split(" t e x t "sv, ' ')) == 6);
     static_assert(
-        ranges::distance(rxx::views::lazy_split(" t e x t "sv, ' ')) == 6);
+        xranges::distance(xviews::lazy_split("  text  "sv, "  "sv)) == 3);
     static_assert(
-        ranges::distance(rxx::views::lazy_split("  text  "sv, "  "sv)) == 3);
+        xranges::distance(xviews::lazy_split("  text    "sv, "  "sv)) == 4);
     static_assert(
-        ranges::distance(rxx::views::lazy_split("  text    "sv, "  "sv)) == 4);
-    static_assert(
-        ranges::distance(rxx::views::lazy_split("  text     "sv, "  "sv)) == 4);
-    static_assert(ranges::distance(rxx::views::lazy_split("t"sv, 't')) == 2);
-    static_assert(
-        ranges::distance(rxx::views::lazy_split("text"sv, ""sv)) == 4);
+        xranges::distance(xviews::lazy_split("  text     "sv, "  "sv)) == 4);
+    static_assert(xranges::distance(xviews::lazy_split("t"sv, 't')) == 2);
+    static_assert(xranges::distance(xviews::lazy_split("text"sv, ""sv)) == 4);
 }
 
 constexpr bool test12() {
     // LWG 3904
-    auto r = views::single(0) | rxx::views::lazy_split(0);
+    auto r = xviews::single(0) | xviews::lazy_split(0);
     auto i = r.begin();
     ++i;
     assert(i != r.end());

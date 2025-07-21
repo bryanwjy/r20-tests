@@ -3,17 +3,18 @@ MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
 
 CXX ?= c++
-RXX_PATH ?= $(dir $(MKFILE_DIR))r20
-OUTPUT_DIR ?= $(RXX_PATH)/build
+RXX_SRC ?= $(dir $(MKFILE_DIR))r20
+OUTPUT_DIR ?= $(RXX_SRC)/build
 
 INTERMEDIATE_DIR := $(OUTPUT_DIR)/obj
 TEST_ROOT := $(MKFILE_DIR)
 GCC_DIR := $(TEST_ROOT)/gcc
 LLVM_DIR := $(TEST_ROOT)/llvm
+RXX_DIR := $(TEST_ROOT)/rxx
 
-TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) -name '*.pass.cpp')
+TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -name '*.pass.cpp')
 TEST_OBJECTS := $(addsuffix .o, $(TEST_SRCS:$(TEST_ROOT)/%=%))
-CXX_FLAGS := -std=c++20 -O1 -I$(RXX_PATH) -ftemplate-backtrace-limit=0
+CXX_FLAGS := -std=c++20 -O1 -I$(RXX_SRC) -ftemplate-backtrace-limit=0
 LINKER_FLAGS := 
 
 DEPENDENCIES := $(TEST_OBJECTS:.o=.d)
