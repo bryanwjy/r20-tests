@@ -15,8 +15,7 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/repeat_view.h"
-#include "rxx/ranges/take_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
@@ -28,7 +27,7 @@
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct SizedView : std::ranges::view_base {
+struct SizedView : xranges::view_base {
     int* begin_ = nullptr;
     int* end_ = nullptr;
     constexpr SizedView(int* begin, int* end) : begin_(begin), end_(end) {}
@@ -75,10 +74,10 @@ constexpr bool test() {
         {
             SomeView view(buf, buf + N);
             auto f = [](int i) { return i; };
-            auto const partial = std::views::transform(f) | xviews::take(3);
+            auto const partial = xviews::transform(f) | xviews::take(3);
 
             using Result = xranges::take_view<
-                std::ranges::transform_view<SomeView, decltype(f)>>;
+                xranges::transform_view<SomeView, decltype(f)>>;
             std::same_as<Result> decltype(auto) result = partial(view);
             assert(result.base().base().begin_ == buf);
             assert(result.base().base().end_ == buf + N);
@@ -89,11 +88,10 @@ constexpr bool test() {
         {
             SomeView view(buf, buf + N);
             auto f = [](int i) { return i; };
-            auto const partial = xviews::take(3) | std::views::transform(f);
+            auto const partial = xviews::take(3) | xviews::transform(f);
 
-            using Result =
-                std::ranges::transform_view<xranges::take_view<SomeView>,
-                    decltype(f)>;
+            using Result = xranges::transform_view<xranges::take_view<SomeView>,
+                decltype(f)>;
             std::same_as<Result> decltype(auto) result = partial(view);
             assert(result.base().base().begin_ == buf);
             assert(result.base().base().end_ == buf + N);
@@ -123,9 +121,9 @@ constexpr bool test() {
 
     // `views::take(empty_view, n)` returns an `empty_view`.
     {
-        using Result = std::ranges::empty_view<int>;
+        using Result = xranges::empty_view<int>;
         [[maybe_unused]] std::same_as<Result> decltype(auto) result =
-            std::views::empty<int> | xviews::take(3);
+            xviews::empty<int> | xviews::take(3);
     }
 
     // `views::take(span, n)` returns a `span`.
@@ -163,8 +161,8 @@ constexpr bool test() {
 
     // `views::take(subrange, n)` returns a `subrange`.
     {
-        auto subrange = std::ranges::subrange(buf, buf + N);
-        using Result = std::ranges::subrange<int*>;
+        auto subrange = xranges::subrange(buf, buf + N);
+        using Result = xranges::subrange<int*>;
         std::same_as<Result> decltype(auto) result = subrange | xviews::take(3);
         assert(result.size() == 3);
     }
@@ -173,10 +171,10 @@ constexpr bool test() {
     // random access range.
     {
         SizedView v(buf, buf + N);
-        auto subrange = std::ranges::subrange(v.begin(), v.end());
+        auto subrange = xranges::subrange(v.begin(), v.end());
 
         using Result =
-            xranges::take_view<std::ranges::subrange<forward_iterator<int*>,
+            xranges::take_view<xranges::subrange<forward_iterator<int*>,
                 sized_sentinel<forward_iterator<int*>>>>;
         std::same_as<Result> decltype(auto) result = subrange | xviews::take(3);
         assert(result.size() == 3);
@@ -185,12 +183,12 @@ constexpr bool test() {
     // `views::take(subrange, n)` returns a `subrange` with all default template
     // arguments.
     {
-        std::ranges::subrange<int*, sized_sentinel<int*>,
-            std::ranges::subrange_kind::sized>
+        xranges::subrange<int*, sized_sentinel<int*>,
+            xranges::subrange_kind::sized>
             subrange;
 
-        using Result = std::ranges::subrange<int*, int*,
-            std::ranges::subrange_kind::sized>;
+        using Result =
+            xranges::subrange<int*, int*, xranges::subrange_kind::sized>;
         [[maybe_unused]] std::same_as<Result> decltype(auto) result =
             subrange | xviews::take(3);
     }
@@ -199,10 +197,10 @@ constexpr bool test() {
     {
         // libc++ iota has a bug
 #if !RXX_LIBCXX || RXX_LIBCXX_AT_LEAST(18, 01, 00)
-        auto iota = std::views::iota(1, 8);
+        auto iota = xviews::iota(1, 8);
         // The second template argument of the resulting `iota_view` is same as
         // the first.
-        using Result = std::ranges::iota_view<int, int>;
+        using Result = xranges::iota_view<int, int>;
         std::same_as<Result> decltype(auto) result = iota | xviews::take(3);
         assert(result.size() == 3);
 #endif
@@ -235,8 +233,8 @@ constexpr bool test() {
     {
         test_small_range(std::span(buf));
         test_small_range(std::string_view("abcdef"));
-        test_small_range(std::ranges::subrange(buf, buf + N));
-        test_small_range(std::views::iota(1, 8));
+        test_small_range(xranges::subrange(buf, buf + N));
+        test_small_range(xviews::iota(1, 8));
     }
 
     // Test that it's possible to call `xviews::take` with any single
@@ -252,7 +250,7 @@ constexpr bool test() {
         int input[] = {1, 2, 3};
         using Iter = cpp20_input_iterator<int*>;
         using Sent = sentinel_wrapper<Iter>;
-        std::ranges::subrange r{Iter{input}, Sent{Iter{input + 3}}};
+        xranges::subrange r{Iter{input}, Sent{Iter{input + 3}}};
         auto tv = xviews::take(std::move(r), 1);
         auto it = tv.begin();
         assert(*it == 1);

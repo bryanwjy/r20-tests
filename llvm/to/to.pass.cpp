@@ -17,17 +17,15 @@
 // template<class C, input_range R, class... Args> requires (!view<C>)
 //   constexpr C to(R&& r, Args&&... args);     // Since C++23
 
-#include "rxx/ranges/to.h"
-
 #include "../static_asserts.h"
 #include "../test_iterators.h"
 #include "../test_range.h"
 #include "container.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <vector>
 
 namespace xranges = rxx::ranges;
@@ -107,7 +105,7 @@ struct NonCommonRange {
 static_assert(xranges::input_range<NonCommonRange>);
 static_assert(!xranges::common_range<NonCommonRange>);
 static_assert(
-    std::derived_from<typename std::iterator_traits<std::ranges::iterator_t<
+    std::derived_from<typename std::iterator_traits<xranges::iterator_t<
                           NonCommonRange>>::iterator_category,
         std::input_iterator_tag>);
 
@@ -362,7 +360,7 @@ constexpr void test_ctr_choice_order() {
             std::same_as<C> decltype(auto) result = xranges::to<C>(in);
 
             assert(result.ctr_choice == CtrChoice::DirectCtr);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert((in | xranges::to<C>()) == result);
             auto closure = xranges::to<C>();
             assert((in | closure) == result);
@@ -374,7 +372,7 @@ constexpr void test_ctr_choice_order() {
                 xranges::to<C>(in, arg1, arg2);
 
             assert(result.ctr_choice == CtrChoice::DirectCtr);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert(result.extra_arg1 == arg1);
             assert(result.extra_arg2 == arg2);
             assert((in | xranges::to<C>(arg1, arg2)) == result);
@@ -390,7 +388,7 @@ constexpr void test_ctr_choice_order() {
             std::same_as<C> decltype(auto) result = xranges::to<C>(in);
 
             assert(result.ctr_choice == CtrChoice::FromRangeT);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert((in | xranges::to<C>()) == result);
             auto closure = xranges::to<C>();
             assert((in | closure) == result);
@@ -402,7 +400,7 @@ constexpr void test_ctr_choice_order() {
                 xranges::to<C>(in, arg1, arg2);
 
             assert(result.ctr_choice == CtrChoice::FromRangeT);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert(result.extra_arg1 == arg1);
             assert(result.extra_arg2 == arg2);
             assert((in | xranges::to<C>(arg1, arg2)) == result);
@@ -418,7 +416,7 @@ constexpr void test_ctr_choice_order() {
             std::same_as<C> decltype(auto) result = xranges::to<C>(in);
 
             assert(result.ctr_choice == CtrChoice::BeginEndPair);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert((in | xranges::to<C>()) == result);
             auto closure = xranges::to<C>();
             assert((in | closure) == result);
@@ -430,7 +428,7 @@ constexpr void test_ctr_choice_order() {
                 xranges::to<C>(in, arg1, arg2);
 
             assert(result.ctr_choice == CtrChoice::BeginEndPair);
-            assert(std::ranges::equal(result, in));
+            assert(xranges::equal(result, in));
             assert(result.extra_arg1 == arg1);
             assert(result.extra_arg2 == arg2);
             assert((in | xranges::to<C>(arg1, arg2)) == result);
@@ -449,7 +447,7 @@ constexpr void test_ctr_choice_order() {
 
                 assert(result.ctr_choice == CtrChoice::DefaultCtrAndInsert);
                 assert(result.inserter_choice == InserterChoice);
-                assert(std::ranges::equal(result, in));
+                assert(xranges::equal(result, in));
 
                 if constexpr (CanReserve) {
                     assert(result.called_reserve);
@@ -468,7 +466,7 @@ constexpr void test_ctr_choice_order() {
 
                 assert(result.ctr_choice == CtrChoice::DefaultCtrAndInsert);
                 assert(result.inserter_choice == InserterChoice);
-                assert(std::ranges::equal(result, in));
+                assert(xranges::equal(result, in));
                 assert(result.extra_arg1 == arg1);
                 assert(result.extra_arg2 == arg2);
 
@@ -608,7 +606,7 @@ constexpr void test_recursive() {
     assert((in | xranges::to<C4>()) == result);
 
     // LWG3984: ranges::to's recursion branch may be ill-formed
-    auto in_owning_view = std::views::all(std::move(in));
+    auto in_owning_view = xviews::all(std::move(in));
     static_assert(!xranges::viewable_range<decltype((in_owning_view))>);
     assert(xranges::to<C4>(in_owning_view) == result);
 }
