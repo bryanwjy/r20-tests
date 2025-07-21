@@ -20,9 +20,9 @@
 
 #include "rxx/ranges/chunk_view.h"
 
+#include "../test_iterators.h"
 #include "rxx/ranges/join_view.h"
 #include "rxx/ranges/zip_view.h"
-#include "test_iterators.h"
 
 #include <cassert>
 #include <sstream>

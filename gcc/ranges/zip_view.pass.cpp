@@ -20,9 +20,14 @@
 
 #include "rxx/ranges/zip_view.h"
 
-#include <algorithm>
+#include "rxx/algorithm.h"
+#include "rxx/iterator.h"
+#include "rxx/ranges/elements_view.h"
+#include "rxx/ranges/get_element.h"
+#include "rxx/ranges/iota_view.h"
+#include "rxx/type_traits/common_reference.h"
+
 #include <cassert>
-#include <ranges>
 #include <sstream>
 #include <string_view>
 #include <utility>
@@ -30,12 +35,14 @@
 
 namespace ranges = std::ranges;
 namespace views = std::ranges::views;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::ranges::views;
 
 constexpr bool test01() {
-    static_assert(ranges::empty(rxx::views::zip()));
-    static_assert(ranges::empty(views::empty<int>));
+    static_assert(xranges::empty(xviews::zip()));
+    static_assert(xranges::empty(xviews::empty<int>));
 
-    auto z1 = rxx::views::zip(std::array{1, 2});
+    auto z1 = xviews::zip(std::array{1, 2});
     auto const i0 = z1.begin(), i1 = z1.begin() + 1;
     assert(i0 + 1 - 1 == i0);
     assert(i0 < i1);
@@ -44,30 +51,32 @@ constexpr bool test01() {
     assert(i0 - i1 == -1);
     assert(z1.end() - i1 == 1);
     assert(i1 - z1.end() == -1);
-    ranges::iter_swap(i0, i1);
-    assert(ranges::equal(std::move(z1) | views::keys, (int[]){2, 1}));
+    xranges::iter_swap(i0, i1);
+    assert(xranges::equal(std::move(z1) | xviews::keys, (int[]){2, 1}));
 
-    auto z2 = rxx::views::zip(std::array{1, 2}, std::array{3, 4, 5});
+    auto z2 = xviews::zip(std::array{1, 2}, std::array{3, 4, 5});
     auto i2 = z2.begin();
     i2 += 1;
     i2 -= -1;
     assert(i2 == z2.end());
-    assert(ranges::size(z2) == 2);
-    assert(ranges::size(std::as_const(z2)) == 2);
-    assert(std::get<0>(z2[0]) == 1 && std::get<1>(z2[0]) == 3);
-    assert(std::get<0>(z2[1]) == 2 && std::get<1>(z2[1]) == 4);
+    assert(xranges::size(z2) == 2);
+    assert(xranges::size(std::as_const(z2)) == 2);
+    assert(xranges::get_element<0>(z2[0]) == 1 &&
+        xranges::get_element<1>(z2[0]) == 3);
+    assert(xranges::get_element<0>(z2[1]) == 2 &&
+        xranges::get_element<1>(z2[1]) == 4);
     for (auto const [x, y] : z2) {
         assert(y - x == 2);
         std::swap(x, y);
     }
 
     int x[2] = {1, 2}, y[2] = {3, 4}, z[2] = {5, 6};
-    auto const z3 = rxx::views::zip(x, y, z);
-    assert(ranges::size(z3) == 2);
-    for (int i = 0; i < ranges::size(x); i++) {
-        assert(&std::get<0>(z3[i]) == &x[i]);
-        assert(&std::get<1>(z3[i]) == &y[i]);
-        assert(&std::get<2>(z3[i]) == &z[i]);
+    auto const z3 = xviews::zip(x, y, z);
+    assert(xranges::size(z3) == 2);
+    for (int i = 0; i < xranges::size(x); i++) {
+        assert(&xranges::get_element<0>(z3[i]) == &x[i]);
+        assert(&xranges::get_element<1>(z3[i]) == &y[i]);
+        assert(&xranges::get_element<2>(z3[i]) == &z[i]);
     }
 
     return true;
@@ -99,12 +108,12 @@ constexpr bool test03() {
     auto z =
         rxx::views::zip(u | views::filter([](auto) { return true; }), v, w);
     using ty = decltype(z);
-    static_assert(ranges::forward_range<ty>);
-    static_assert(!ranges::common_range<ty>);
-    static_assert(!ranges::sized_range<ty>);
+    static_assert(xranges::forward_range<ty>);
+    static_assert(!xranges::common_range<ty>);
+    static_assert(!xranges::sized_range<ty>);
     assert(z.begin() == z.begin());
     assert(z.begin() != z.end());
-    assert(ranges::next(z.begin(), 3) == z.end());
+    assert(xranges::next(z.begin(), 3) == z.end());
     auto it = z.begin();
     ++it;
     it++;
@@ -118,9 +127,9 @@ constexpr bool test03() {
 constexpr bool test04() {
     // PR libstdc++/106766
 #if __SIZEOF_INT128__ && 0
-    auto r = rxx::views::zip(views::iota(__int128(0), __int128(1)));
+    auto r = xviews::zip(xviews::iota(__int128(0), __int128(1)));
 #else
-    auto r = rxx::views::zip(views::iota(0ll, 1ll));
+    auto r = xviews::zip(xviews::iota(0ll, 1ll));
 #endif
     auto i = r.begin();
     auto s = r.end();
@@ -136,8 +145,8 @@ constexpr bool test05() {
     // PR libstdc++/109203
     int x[] = {1, 1, 2};
     int y[] = {2, 1, 3};
-    auto r = rxx::views::zip(x, y);
-    ranges::sort(r);
+    auto r = xviews::zip(x, y);
+    xranges::sort(r);
 #endif
 
     return true;

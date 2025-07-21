@@ -20,8 +20,8 @@
 
 #include "rxx/ranges/slide_view.h"
 
+#include "../test_iterators.h"
 #include "rxx/ranges/join_view.h"
-#include "test_iterators.h"
 
 #include <algorithm>
 #include <array>

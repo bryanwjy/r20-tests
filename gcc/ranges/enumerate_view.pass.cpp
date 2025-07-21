@@ -20,8 +20,8 @@
 
 #include "rxx/ranges/enumerate_view.h"
 
+#include "../test_iterators.h"
 #include "rxx/ranges/get_element.h"
-#include "test_iterators.h"
 
 #include <algorithm>
 #include <cassert>

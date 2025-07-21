@@ -20,6 +20,7 @@
 
 #include "rxx/ranges/concat_view.h"
 
+#include "../test_iterators.h"
 #include "rxx/ranges/basic_istream_view.h"
 #include "rxx/ranges/drop_view.h"
 #include "rxx/ranges/empty_view.h"
@@ -28,7 +29,6 @@
 #include "rxx/ranges/reverse_view.h"
 #include "rxx/ranges/single_view.h"
 #include "rxx/ranges/transform_view.h"
-#include "test_iterators.h"
 
 #include <algorithm>
 #include <array>
