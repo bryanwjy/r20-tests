@@ -18,20 +18,22 @@
 
 #include "../test_iterators.h"
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/owning_view.h"
+#include "rxx/ranges/ref_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     View() = default;
     forward_iterator<int*> begin() const;
     sentinel_wrapper<forward_iterator<int*>> end() const;
 };
-static_assert(std::ranges::view<View>);
+static_assert(xranges::view<View>);
 
 // A range that is not a view
 struct Range {
@@ -39,8 +41,8 @@ struct Range {
     forward_iterator<int*> begin() const;
     sentinel_wrapper<forward_iterator<int*>> end() const;
 };
-static_assert(std::ranges::range<Range>);
-static_assert(!std::ranges::view<Range>);
+static_assert(xranges::range<Range>);
+static_assert(!xranges::view<Range>);
 
 struct Pred {
     constexpr bool operator()(int x, int y) const { return x <= y; }
@@ -59,13 +61,13 @@ constexpr bool test() {
         Pred pred;
         xranges::chunk_by_view view(r, pred);
         static_assert(std::is_same_v<decltype(view),
-            xranges::chunk_by_view<std::ranges::ref_view<Range>, Pred>>);
+            xranges::chunk_by_view<xranges::ref_view<Range>, Pred>>);
     }
     {
         Pred pred;
         xranges::chunk_by_view view(Range{}, pred);
         static_assert(std::is_same_v<decltype(view),
-            xranges::chunk_by_view<std::ranges::owning_view<Range>, Pred>>);
+            xranges::chunk_by_view<xranges::owning_view<Range>, Pred>>);
     }
 
     return true;

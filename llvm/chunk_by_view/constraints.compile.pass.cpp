@@ -23,11 +23,11 @@
 #include "../almost_satisfies_types.h"
 #include "../test_iterators.h"
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <concepts>
 #include <cstddef>
 #include <iterator>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
@@ -40,7 +40,7 @@ concept CanFormChunkByView =
 // chunk_by_view is not valid when the view is not a forward_range
 namespace test_when_view_is_not_a_forward_range {
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     ForwardIteratorNotDerivedFrom begin() const;
     ForwardIteratorNotDerivedFrom end() const;
 };
@@ -48,9 +48,9 @@ struct Pred {
     bool operator()(int, int) const;
 };
 
-static_assert(!std::ranges::forward_range<View>);
+static_assert(!xranges::forward_range<View>);
 static_assert(std::indirect_binary_predicate<Pred, int*, int*>);
-static_assert(std::ranges::view<View>);
+static_assert(xranges::view<View>);
 static_assert(std::is_object_v<Pred>);
 static_assert(!CanFormChunkByView<View, Pred>);
 
@@ -60,15 +60,15 @@ static_assert(!CanFormChunkByView<View, Pred>);
 // indirect_binary_predicate
 namespace test_when_the_predicate_is_not_indirect_binary_predicate {
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     int* begin() const;
     int* end() const;
 };
 struct Pred {};
 
-static_assert(std::ranges::forward_range<View>);
+static_assert(xranges::forward_range<View>);
 static_assert(!std::indirect_binary_predicate<Pred, int*, int*>);
-static_assert(std::ranges::view<View>);
+static_assert(xranges::view<View>);
 static_assert(std::is_object_v<Pred>);
 static_assert(!CanFormChunkByView<View, Pred>);
 
@@ -85,9 +85,9 @@ struct Pred {
     bool operator()(int, int) const;
 };
 
-static_assert(std::ranges::input_range<View>);
+static_assert(xranges::input_range<View>);
 static_assert(std::indirect_binary_predicate<Pred, int*, int*>);
-static_assert(!std::ranges::view<View>);
+static_assert(!xranges::view<View>);
 static_assert(std::is_object_v<Pred>);
 static_assert(!CanFormChunkByView<View, Pred>);
 
@@ -96,15 +96,15 @@ static_assert(!CanFormChunkByView<View, Pred>);
 // chunk_by_view is not valid when the predicate is not an object type
 namespace test_when_the_predicate_is_not_an_object_type {
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     int* begin() const;
     int* end() const;
 };
 using Pred = bool (&)(int, int);
 
-static_assert(std::ranges::input_range<View>);
+static_assert(xranges::input_range<View>);
 static_assert(std::indirect_binary_predicate<Pred, int*, int*>);
-static_assert(std::ranges::view<View>);
+static_assert(xranges::view<View>);
 static_assert(!std::is_object_v<Pred>);
 static_assert(!CanFormChunkByView<View, Pred>);
 
@@ -113,7 +113,7 @@ static_assert(!CanFormChunkByView<View, Pred>);
 // chunk_by_view is valid when all the constraints are satisfied (test the test)
 namespace test_when_all_the_constraints_are_satisfied {
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     int* begin() const;
     int* end() const;
 };
@@ -121,9 +121,9 @@ struct Pred {
     bool operator()(int, int) const;
 };
 
-static_assert(std::ranges::input_range<View>);
+static_assert(xranges::input_range<View>);
 static_assert(std::indirect_binary_predicate<Pred, int*, int*>);
-static_assert(std::ranges::view<View>);
+static_assert(xranges::view<View>);
 static_assert(std::is_object_v<Pred>);
 static_assert(CanFormChunkByView<View, Pred>);
 

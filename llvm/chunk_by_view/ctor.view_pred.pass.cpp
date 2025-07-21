@@ -16,18 +16,18 @@
 // constexpr chunk_by_view(View, Pred);
 
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/view_base.h"
 #include "types.h"
 
 #include <algorithm>
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     constexpr explicit Range(int* b, int* e) : begin_(b), end_(e) {}
     constexpr int* begin() const { return begin_; }
     constexpr int* end() const { return end_; }
@@ -37,8 +37,8 @@ private:
     int* end_;
 };
 
-static_assert(std::ranges::view<Range>);
-static_assert(std::ranges::forward_range<Range>);
+static_assert(xranges::view<Range>);
+static_assert(xranges::forward_range<Range>);
 
 struct Pred {
     constexpr bool operator()(int x, int y) const { return x <= y; }
@@ -49,7 +49,7 @@ struct TrackingPred : TrackInitialization {
     constexpr bool operator()(int&, int&) const;
 };
 
-struct TrackingRange : TrackInitialization, std::ranges::view_base {
+struct TrackingRange : TrackInitialization, xranges::view_base {
     using TrackInitialization::TrackInitialization;
     int* begin() const;
     int* end() const;
@@ -72,9 +72,9 @@ constexpr bool test() {
         Pred pred;
         xranges::chunk_by_view<Range, Pred> view(range, pred);
         auto it = view.begin(), end = view.end();
-        assert(std::ranges::equal(*it++, std::array{1, 2, 3}));
-        assert(std::ranges::equal(*it++, std::array{0, 1, 2}));
-        assert(std::ranges::equal(*it++, std::array{-1, -1, 0}));
+        assert(xranges::equal(*it++, std::array{1, 2, 3}));
+        assert(xranges::equal(*it++, std::array{0, 1, 2}));
+        assert(xranges::equal(*it++, std::array{-1, -1, 0}));
         assert(it == end);
     }
 

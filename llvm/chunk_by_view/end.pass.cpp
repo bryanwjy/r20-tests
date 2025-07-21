@@ -17,18 +17,18 @@
 
 #include "../static_asserts.h"
 #include "../test_iterators.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/chunk_by_view.h"
 #include "rxx/ranges/concepts.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
 #include <concepts>
-#include <functional>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct NonCommonRange : std::ranges::view_base {
+struct NonCommonRange : xranges::view_base {
     using Iterator = forward_iterator<int*>;
     using Sentinel = sentinel_wrapper<Iterator>;
     constexpr explicit NonCommonRange(int* b, int* e) : begin_(b), end_(e) {}
@@ -40,10 +40,10 @@ private:
     int* end_;
 };
 
-static_assert(std::ranges::forward_range<NonCommonRange>);
-static_assert(!std::ranges::common_range<NonCommonRange>);
+static_assert(xranges::forward_range<NonCommonRange>);
+static_assert(!xranges::common_range<NonCommonRange>);
 
-struct CommonRange : std::ranges::view_base {
+struct CommonRange : xranges::view_base {
     using Iterator = bidirectional_iterator<int*>;
     constexpr explicit CommonRange(int* b, int* e) : begin_(b), end_(e) {}
     constexpr Iterator begin() const { return Iterator(begin_); }
@@ -54,8 +54,8 @@ private:
     int* end_;
 };
 
-static_assert(std::ranges::bidirectional_range<CommonRange>);
-static_assert(std::ranges::common_range<CommonRange>);
+static_assert(xranges::bidirectional_range<CommonRange>);
+static_assert(xranges::common_range<CommonRange>);
 
 constexpr bool test() {
     int buff[] = {1, 0, 3, 1, 2, 3, 4, 5};
@@ -66,7 +66,7 @@ constexpr bool test() {
         auto pred = [](int, int) { return true; };
         xranges::chunk_by_view view(range, pred);
         using ChunkByView = decltype(view);
-        static_assert(std::ranges::common_range<ChunkByView>);
+        static_assert(xranges::common_range<ChunkByView>);
         ASSERT_SAME_TYPE(
             xranges::sentinel_t<ChunkByView>, decltype(view.end()));
     }
@@ -113,7 +113,7 @@ constexpr bool test() {
     // end() on a non-common range
     {
         NonCommonRange range(buff, buff + 1);
-        xranges::chunk_by_view view(range, std::ranges::less_equal{});
+        xranges::chunk_by_view view(range, xranges::less_equal{});
         auto end = view.end();
         ASSERT_SAME_TYPE(
             std::default_sentinel_t, xranges::sentinel_t<decltype(view)>);

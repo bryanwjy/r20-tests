@@ -16,15 +16,15 @@
 // constexpr Pred const& pred() const;
 
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
 #include <concepts>
-#include <ranges>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     int* begin() const;
     int* end() const;
 };

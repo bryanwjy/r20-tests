@@ -18,16 +18,17 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
+#include "rxx/functional.h"
 #include "rxx/ranges/chunk_by_view.h"
+#include "rxx/ranges/transform_view.h"
 
 #include <array>
 #include <cassert>
 #include <concepts>
-#include <functional>
-#include <ranges>
 #include <span>
 #include <type_traits>
 #include <utility>
+
 template <typename T>
 requires std::is_enum_v<T>
 static constexpr auto to_underlying(T val) noexcept {
@@ -46,14 +47,13 @@ template <class Iterator, IsConst Constant>
 constexpr void test() {
     using Sentinel = sentinel_wrapper<Iterator>;
     using Underlying = View<Iterator, Sentinel>;
-    using ChunkByView =
-        xranges::chunk_by_view<Underlying, std::ranges::less_equal>;
+    using ChunkByView = xranges::chunk_by_view<Underlying, xranges::less_equal>;
     using ChunkByIterator = xranges::iterator_t<ChunkByView>;
 
     auto make_chunk_by_view = [](auto& arr) {
         View view{
             Iterator{arr.data()}, Sentinel{Iterator{arr.data() + arr.size()}}};
-        return ChunkByView{std::move(view), std::ranges::less_equal{}};
+        return ChunkByView{std::move(view), xranges::less_equal{}};
     };
 
     // Increment the iterator when it won't find another satisfied value after
@@ -127,7 +127,7 @@ constexpr void test() {
         std::array array = {1, 2, 3, -3, -2, -1};
         auto v = View{Iterator{array.data()},
                      Sentinel{Iterator{array.data() + array.size()}}} |
-            std::views::transform([](int x) { return IntWrapper{x}; });
+            xviews::transform([](int x) { return IntWrapper{x}; });
         auto view = xviews::chunk_by(std::move(v), &IntWrapper::lessEqual);
 
         auto it = view.begin();
