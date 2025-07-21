@@ -12,8 +12,8 @@
 // UNSUPPORTED: c++03, c++11, c++14, c++17
 // UNSUPPORTED: msvc
 
-// std::ranges::begin
-// std::ranges::cbegin
+// xranges::begin
+// xranges::cbegin
 //   Test the fix for https://llvm.org/PR54100
 
 #include "../static_asserts.h"
@@ -31,9 +31,9 @@ static_assert(sizeof(A) == 0); // an extension supported by GCC and Clang
 
 int main(int, char**) {
     A a[10];
-    std::same_as<A*> auto p = std::ranges::begin(a);
+    std::same_as<A*> auto p = xranges::begin(a);
     assert(p == a);
-    std::same_as<A const*> auto cp = std::ranges::cbegin(a);
+    std::same_as<A const*> auto cp = xranges::cbegin(a);
     assert(cp == a);
 
     return 0;
