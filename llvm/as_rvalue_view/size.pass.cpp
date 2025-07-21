@@ -10,69 +10,75 @@
 //===----------------------------------------------------------------------===//
 
 #include "rxx/ranges/as_rvalue_view.h"
+#include "rxx/ranges/subrange.h"
+#include "rxx/ranges/view_base.h"
+
 #include <cassert>
 #include <cstddef>
 
-struct ConstSizedView : std::ranges::view_base {
-  bool *size_called;
-  int *begin() const;
-  int *end() const;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
-  constexpr std::size_t size() const {
-    *size_called = true;
-    return 3;
-  }
+struct ConstSizedView : xranges::view_base {
+    bool* size_called;
+    int* begin() const;
+    int* end() const;
+
+    constexpr std::size_t size() const {
+        *size_called = true;
+        return 3;
+    }
 };
 
-struct SizedView : std::ranges::view_base {
-  bool *size_called;
-  int *begin() const;
-  int *end() const;
+struct SizedView : xranges::view_base {
+    bool* size_called;
+    int* begin() const;
+    int* end() const;
 
-  constexpr int size() {
-    *size_called = true;
-    return 5;
-  }
+    constexpr int size() {
+        *size_called = true;
+        return 5;
+    }
 };
 
-struct UnsizedView : std::ranges::view_base {
-  int *begin() const;
-  int *end() const;
+struct UnsizedView : xranges::view_base {
+    int* begin() const;
+    int* end() const;
 };
 
 template <class T>
 concept HasSize = requires(T v) { v.size(); };
 
 static_assert(HasSize<ConstSizedView>);
-static_assert(HasSize<const ConstSizedView>);
+static_assert(HasSize<ConstSizedView const>);
 static_assert(HasSize<SizedView>);
-static_assert(!HasSize<const SizedView>);
+static_assert(!HasSize<SizedView const>);
 static_assert(!HasSize<UnsizedView>);
-static_assert(!HasSize<const UnsizedView>);
+static_assert(!HasSize<UnsizedView const>);
 
 constexpr bool test() {
-  {
-    bool size_called = false;
-    rxx::ranges::as_rvalue_view view(ConstSizedView{{}, &size_called});
-    std::same_as<std::size_t> auto size = view.size();
-    assert(size == 3);
-    assert(size_called);
-  }
+    {
+        bool size_called = false;
+        xranges::as_rvalue_view view(ConstSizedView{{}, &size_called});
+        std::same_as<std::size_t> auto size = view.size();
+        assert(size == 3);
+        assert(size_called);
+    }
 
-  {
-    bool size_called = false;
-    rxx::ranges::as_rvalue_view view(SizedView{{}, &size_called});
-    std::same_as<int> auto size = view.size();
-    assert(size == 5);
-    assert(size_called);
-  }
+    {
+        bool size_called = false;
+        xranges::as_rvalue_view view(SizedView{{}, &size_called});
+        std::same_as<int> auto size = view.size();
+        assert(size == 5);
+        assert(size_called);
+    }
 
-  return true;
+    return true;
 }
 
-int main(int, char **) {
-  test();
-  static_assert(test());
+int main(int, char**) {
+    test();
+    static_assert(test());
 
-  return 0;
+    return 0;
 }

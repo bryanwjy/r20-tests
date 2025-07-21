@@ -9,57 +9,61 @@
 //
 //===----------------------------------------------------------------------===//
 
-// rxx::ranges::as_rvalue_view::as_rvalue_view(...)
+// xranges::as_rvalue_view::as_rvalue_view(...)
 
 #include "rxx/ranges/as_rvalue_view.h"
+
 #include <cassert>
 #include <ranges>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-struct DefaultConstructibleView : std::ranges::view_base {
-  int *begin() const;
-  int *end() const;
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
-  int i_ = 23;
+struct DefaultConstructibleView : std::ranges::view_base {
+    int* begin() const;
+    int* end() const;
+
+    int i_ = 23;
 };
 
 struct NonDefaultConstructibleView : std::ranges::view_base {
-  NonDefaultConstructibleView(int i) : i_(i) {}
+    NonDefaultConstructibleView(int i) : i_(i) {}
 
-  int *begin() const;
-  int *end() const;
+    int* begin() const;
+    int* end() const;
 
-  int i_ = 23;
+    int i_ = 23;
 };
 
 static_assert(!std::is_constructible_v<
-              rxx::ranges::as_rvalue_view<NonDefaultConstructibleView>>);
+              xranges::as_rvalue_view<NonDefaultConstructibleView>>);
 static_assert(std::is_constructible_v<
-              rxx::ranges::as_rvalue_view<NonDefaultConstructibleView>, int>);
+    xranges::as_rvalue_view<NonDefaultConstructibleView>, int>);
 static_assert(std::is_nothrow_constructible_v<
-              rxx::ranges::as_rvalue_view<DefaultConstructibleView>>);
+    xranges::as_rvalue_view<DefaultConstructibleView>>);
 
 template <class T, class... Args>
 concept IsImplicitlyConstructible =
     requires(T val, Args... args) { val = {std::forward<Args>(args)...}; };
 
 static_assert(IsImplicitlyConstructible<
-              rxx::ranges::as_rvalue_view<DefaultConstructibleView>>);
+    xranges::as_rvalue_view<DefaultConstructibleView>>);
 static_assert(!IsImplicitlyConstructible<
-              rxx::ranges::as_rvalue_view<NonDefaultConstructibleView>, int>);
+              xranges::as_rvalue_view<NonDefaultConstructibleView>, int>);
 
 constexpr bool test() {
-  rxx::ranges::as_rvalue_view<DefaultConstructibleView> view = {};
-  assert(view.base().i_ == 23);
+    xranges::as_rvalue_view<DefaultConstructibleView> view = {};
+    assert(view.base().i_ == 23);
 
-  return true;
+    return true;
 }
 
-int main(int, char **) {
-  static_assert(test());
-  test();
+int main(int, char**) {
+    static_assert(test());
+    test();
 
-  return 0;
+    return 0;
 }

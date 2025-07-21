@@ -10,13 +10,15 @@
 //===----------------------------------------------------------------------===//
 
 #include "rxx/ranges/as_rvalue_view.h"
+
 #include <vector>
 
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
+
 static_assert(std::ranges::enable_borrowed_range<
-              rxx::ranges::as_rvalue_view<std::ranges::empty_view<int>>>);
-static_assert(
-    std::ranges::enable_borrowed_range<
-        rxx::ranges::as_rvalue_view<std::views::all_t<std::vector<int> &>>>);
-static_assert(
-    !std::ranges::enable_borrowed_range<
-        rxx::ranges::as_rvalue_view<std::views::all_t<std::vector<int>>>>);
+    xranges::as_rvalue_view<std::ranges::empty_view<int>>>);
+static_assert(std::ranges::enable_borrowed_range<
+    xranges::as_rvalue_view<xviews::all_t<std::vector<int>&>>>);
+static_assert(!std::ranges::enable_borrowed_range<
+              xranges::as_rvalue_view<xviews::all_t<std::vector<int>>>>);

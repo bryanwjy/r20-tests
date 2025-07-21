@@ -9,70 +9,72 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "../MoveOnly.h"
 #include "rxx/ranges/as_rvalue_view.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 
-#include "../MoveOnly.h"
+namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
-struct SimpleView : std::ranges::view_base {
-  int i;
-  int *begin() const;
-  int *end() const;
+struct SimpleView : xranges::view_base {
+    int i;
+    int* begin() const;
+    int* end() const;
 };
 
 struct MoveOnlyView : SimpleView {
-  MoveOnly m;
+    MoveOnly m;
 };
 
 template <class T>
-concept HasBase = requires(T &&t) { std::forward<T>(t).base(); };
+concept HasBase = requires(T&& t) { std::forward<T>(t).base(); };
 
-static_assert(HasBase<rxx::ranges::as_rvalue_view<SimpleView> const &>);
-static_assert(HasBase<rxx::ranges::as_rvalue_view<SimpleView> &&>);
+static_assert(HasBase<xranges::as_rvalue_view<SimpleView> const&>);
+static_assert(HasBase<xranges::as_rvalue_view<SimpleView>&&>);
 
-static_assert(!HasBase<rxx::ranges::as_rvalue_view<MoveOnlyView> const &>);
-static_assert(HasBase<rxx::ranges::as_rvalue_view<MoveOnlyView> &&>);
+static_assert(!HasBase<xranges::as_rvalue_view<MoveOnlyView> const&>);
+static_assert(HasBase<xranges::as_rvalue_view<MoveOnlyView>&&>);
 
 constexpr bool test() {
-  { // const &
-    const rxx::ranges::as_rvalue_view<SimpleView> view(SimpleView{{}, 5});
-    std::same_as<SimpleView> decltype(auto) v = view.base();
-    assert(v.i == 5);
-  }
+    { // const &
+        xranges::as_rvalue_view<SimpleView> const view(SimpleView{{}, 5});
+        std::same_as<SimpleView> decltype(auto) v = view.base();
+        assert(v.i == 5);
+    }
 
-  { // &
-    rxx::ranges::as_rvalue_view<SimpleView> view(SimpleView{{}, 5});
-    std::same_as<SimpleView> decltype(auto) v = view.base();
-    assert(v.i == 5);
-  }
+    { // &
+        xranges::as_rvalue_view<SimpleView> view(SimpleView{{}, 5});
+        std::same_as<SimpleView> decltype(auto) v = view.base();
+        assert(v.i == 5);
+    }
 
-  { // &&
-    rxx::ranges::as_rvalue_view<SimpleView> view(SimpleView{{}, 5});
-    std::same_as<SimpleView> decltype(auto) v = std::move(view).base();
-    assert(v.i == 5);
-  }
+    { // &&
+        xranges::as_rvalue_view<SimpleView> view(SimpleView{{}, 5});
+        std::same_as<SimpleView> decltype(auto) v = std::move(view).base();
+        assert(v.i == 5);
+    }
 
-  { // const &&
-    const rxx::ranges::as_rvalue_view<SimpleView> view(SimpleView{{}, 5});
-    std::same_as<SimpleView> decltype(auto) v = std::move(view).base();
-    assert(v.i == 5);
-  }
+    { // const &&
+        xranges::as_rvalue_view<SimpleView> const view(SimpleView{{}, 5});
+        std::same_as<SimpleView> decltype(auto) v = std::move(view).base();
+        assert(v.i == 5);
+    }
 
-  { // move only
-    rxx::ranges::as_rvalue_view<MoveOnlyView> view(MoveOnlyView{{}, 5});
-    std::same_as<MoveOnlyView> decltype(auto) v = std::move(view).base();
-    assert(v.m.get() == 5);
-  }
+    { // move only
+        xranges::as_rvalue_view<MoveOnlyView> view(MoveOnlyView{{}, 5});
+        std::same_as<MoveOnlyView> decltype(auto) v = std::move(view).base();
+        assert(v.m.get() == 5);
+    }
 
-  return true;
+    return true;
 }
 
-int main(int, char **) {
-  test();
-  static_assert(test());
+int main(int, char**) {
+    test();
+    static_assert(test());
 
-  return 0;
+    return 0;
 }
