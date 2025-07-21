@@ -17,7 +17,7 @@
 // Tests that the deduction guide is explicit.
 
 #include "../test_iterators.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <ranges>
 
@@ -40,5 +40,5 @@ void testExplicitCTAD() {
     xranges::join_view v =
         r; // expected-error-re {{no viable constructor or deduction guide for
            // deduction of template arguments of
-           // '{{(std::ranges::)?}}join_view'}}
+           // '{{(xranges::)?}}join_view'}}
 }

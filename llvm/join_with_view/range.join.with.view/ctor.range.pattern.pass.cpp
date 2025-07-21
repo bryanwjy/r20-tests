@@ -16,13 +16,11 @@
 // constexpr explicit join_with_view(V base, Pattern pattern);
 
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;

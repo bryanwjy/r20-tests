@@ -14,7 +14,7 @@
 // constexpr decltype(auto) operator*() const;
 
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <ranges>

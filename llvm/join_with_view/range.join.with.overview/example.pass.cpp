@@ -21,11 +21,9 @@
 //   // The above prints the-quick-brown-fox
 // - end example]
 
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <string>
 #include <vector>
 

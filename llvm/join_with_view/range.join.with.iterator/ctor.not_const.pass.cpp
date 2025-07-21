@@ -19,11 +19,9 @@
 //            convertible_to<iterator_t<Pattern>, PatternIter>;
 
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
-#include <ranges>
 #include <vector>
 
 namespace xranges = rxx::ranges;

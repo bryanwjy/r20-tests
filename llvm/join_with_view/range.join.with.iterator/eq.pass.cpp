@@ -19,12 +19,10 @@
 
 #include "../../test_comparisons.h"
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <utility>
 
 namespace xranges = rxx::ranges;

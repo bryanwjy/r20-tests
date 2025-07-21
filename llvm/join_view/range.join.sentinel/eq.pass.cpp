@@ -19,7 +19,7 @@
 
 #include "../../test_range.h"
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
@@ -85,7 +85,7 @@ constexpr bool test() {
         ChildView children[4] = {ChildView(buffer[0]), ChildView(buffer[1]),
             ChildView(buffer[2]), ChildView(buffer[3])};
         auto jv = xranges::join_view(ParentView(children));
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
     }
 
     // test iterator<false> == sentinel<true>
@@ -94,7 +94,7 @@ constexpr bool test() {
             ChildView(buffer[2]), ChildView(buffer[3])};
         using ParentT = std::remove_all_extents_t<decltype(children)>;
         auto jv = xranges::join_view(ForwardParentView<ParentT>(children));
-        assert(std::as_const(jv).end() == std::ranges::next(jv.begin(), 16));
+        assert(std::as_const(jv).end() == xranges::next(jv.begin(), 16));
     }
 
     // test iterator<true> == sentinel<true>
@@ -105,7 +105,7 @@ constexpr bool test() {
         using ParentT = std::remove_all_extents_t<decltype(children)>;
         auto const jv =
             xranges::join_view(ForwardParentView<ParentT>(children));
-        assert(jv.end() == std::ranges::next(jv.begin(), 16));
+        assert(jv.end() == xranges::next(jv.begin(), 16));
     }
 
     // test iterator<Const> == sentinel<!Const>
@@ -113,9 +113,9 @@ constexpr bool test() {
         BufferView<int*> inners[] = {buffer[0], buffer[1]};
         ConstComparableView outer(inners);
         auto jv = xranges::join_view(outer);
-        assert(jv.end() == std::ranges::next(jv.begin(), 8));
-        assert(std::as_const(jv).end() == std::ranges::next(jv.begin(), 8));
-        assert(jv.end() == std::ranges::next(std::as_const(jv).begin(), 8));
+        assert(jv.end() == xranges::next(jv.begin(), 8));
+        assert(std::as_const(jv).end() == xranges::next(jv.begin(), 8));
+        assert(jv.end() == xranges::next(std::as_const(jv).begin(), 8));
     }
 
     return true;

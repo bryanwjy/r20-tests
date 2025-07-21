@@ -13,7 +13,7 @@
 
 // join_view() requires default_initializable<V> = default;
 
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
@@ -21,7 +21,7 @@
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
-struct DefaultView : std::ranges::view_base {
+struct DefaultView : xranges::view_base {
     int i; // deliberately uninitialised
 
     ChildView* begin() const;

@@ -15,7 +15,7 @@
 // Check LWG-3698: `regex_iterator` and `join_view` don't work together very
 // well
 
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <algorithm>
 #include <array>
@@ -34,14 +34,14 @@ int main(int, char**) {
     std::regex regex{"[a-z]"};
 
     auto lower =
-        std::ranges::subrange(std::cregex_iterator(xranges::begin(text),
+        xranges::subrange(std::cregex_iterator(xranges::begin(text),
                                   xranges::end(text), regex),
             std::cregex_iterator{}) |
-        xviews::join | std::views::transform([](auto const& sm) {
+        xviews::join | xviews::transform([](auto const& sm) {
             return std::string_view(sm.first, sm.second);
         });
 
-    assert(std::ranges::equal(
+    assert(xranges::equal(
         lower, std::to_array<std::string_view>({"e", "l", "l", "o"})));
 #endif
     return 0;

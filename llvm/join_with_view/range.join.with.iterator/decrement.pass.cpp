@@ -23,14 +23,12 @@
 //            bidirectional-common<PatternBase>;
 
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
 #include <forward_list>
-#include <ranges>
 #include <string>
 #include <string_view>
 #include <vector>

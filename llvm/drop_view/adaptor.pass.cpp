@@ -20,7 +20,6 @@
 #include <array>
 #include <cassert>
 #include <concepts>
-#include <ranges>
 #include <span>
 #include <string_view>
 #include <utility>

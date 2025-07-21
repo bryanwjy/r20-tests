@@ -16,15 +16,12 @@
 // friend constexpr decltype(auto) iter_move(const iterator& x);
 
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
-#include "rxx/ranges/repeat_view.h"
+#include "rxx/algorithm.h"
+#include "rxx/ranges.h"
 
-#include <algorithm>
 #include <array>
 #include <cassert>
 #include <cstddef>
-#include <ranges>
 #include <utility>
 #include <vector>
 

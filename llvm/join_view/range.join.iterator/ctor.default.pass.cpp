@@ -15,17 +15,17 @@
 
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
+#include "rxx/ranges/view_base.h"
 
 #include <cassert>
-#include <ranges>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 template <class It>
-struct view : std::ranges::view_base {
+struct view : xranges::view_base {
     It begin() const;
     sentinel_wrapper<It> end() const;
 };

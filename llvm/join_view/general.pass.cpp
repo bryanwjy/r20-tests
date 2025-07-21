@@ -13,7 +13,7 @@
 
 // General tests for join_view. This file does not test anything specifically.
 
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <algorithm>
@@ -60,7 +60,7 @@ int main(int, char**) {
         // P2328R1 join_view should join all views of ranges
         // join a range of prvalue containers
         std::vector x{1, 2, 3, 4};
-        auto y = x | std::views::transform([](auto i) {
+        auto y = x | xviews::transform([](auto i) {
             std::vector<int> v(i);
             for (int& ii : v) {
                 ii = i;

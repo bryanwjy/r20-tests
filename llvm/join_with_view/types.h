@@ -14,13 +14,10 @@
 
 #include "../test_iterators.h"
 #include "../test_range.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
-#include "rxx/ranges/to.h"
+#include "rxx/ranges.h"
 
 #include <cstddef>
 #include <initializer_list>
-#include <ranges>
 #include <string>
 #include <type_traits>
 #include <utility>

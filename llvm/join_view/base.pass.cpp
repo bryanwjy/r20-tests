@@ -15,7 +15,7 @@
 // constexpr V base() &&;
 
 #include "../static_asserts.h"
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 #include "types.h"
 
 #include <cassert>
@@ -50,7 +50,7 @@ constexpr bool test() {
         assert(jv.base().base() == buffer + 0);
 
         static_assert(hasLValueQualifiedBase(jv));
-        ASSERT_SAME_TYPE(decltype(jv.base()), std::ranges::ref_view<int[4][4]>);
+        ASSERT_SAME_TYPE(decltype(jv.base()), xranges::ref_view<int[4][4]>);
     }
 
     {
@@ -58,7 +58,7 @@ constexpr bool test() {
         assert(jv.base().base() == buffer + 0);
 
         static_assert(hasLValueQualifiedBase(jv));
-        ASSERT_SAME_TYPE(decltype(jv.base()), std::ranges::ref_view<int[4][4]>);
+        ASSERT_SAME_TYPE(decltype(jv.base()), xranges::ref_view<int[4][4]>);
     }
 
     return true;

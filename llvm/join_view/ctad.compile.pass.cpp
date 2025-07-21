@@ -14,7 +14,7 @@
 // template<class R>
 //   explicit join_view(R&&) -> join_view<views::all_t<R>>;
 
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 #include <ranges>
 #include <utility>
@@ -26,7 +26,7 @@ struct Child {
     int* end() const;
 };
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     Child* begin() const;
     Child* end() const;
 };
@@ -43,7 +43,7 @@ struct BorrowedRange {
 template <>
 inline constexpr bool std::ranges::enable_borrowed_range<BorrowedRange> = true;
 
-struct NestedChildren : std::ranges::view_base {
+struct NestedChildren : xranges::view_base {
     View* begin() const;
     View* end() const;
 };
@@ -58,13 +58,13 @@ void testCTAD() {
     static_assert(std::same_as<decltype(xranges::join_view(std::move(v))),
         xranges::join_view<View>>);
     static_assert(std::same_as<decltype(xranges::join_view(r)),
-        xranges::join_view<std::ranges::ref_view<Range>>>);
+        xranges::join_view<xranges::ref_view<Range>>>);
     static_assert(std::same_as<decltype(xranges::join_view(std::move(r))),
-        xranges::join_view<std::ranges::owning_view<Range>>>);
+        xranges::join_view<xranges::owning_view<Range>>>);
     static_assert(std::same_as<decltype(xranges::join_view(br)),
-        xranges::join_view<std::ranges::ref_view<BorrowedRange>>>);
+        xranges::join_view<xranges::ref_view<BorrowedRange>>>);
     static_assert(std::same_as<decltype(xranges::join_view(std::move(br))),
-        xranges::join_view<std::ranges::owning_view<BorrowedRange>>>);
+        xranges::join_view<xranges::owning_view<BorrowedRange>>>);
 
     NestedChildren n;
     xranges::join_view jv(n);

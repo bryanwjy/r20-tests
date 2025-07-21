@@ -22,7 +22,7 @@ using NonSwappableView = BufferView<copying_iterator<int*>>;
 static_assert(xranges::input_range<NonSwappableView>);
 static_assert(
     !std::indirectly_swappable<xranges::iterator_t<NonSwappableView>>);
-#include "rxx/ranges/join_view.h"
+#include "rxx/ranges.h"
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -40,11 +40,11 @@ constexpr bool test() {
         auto iter2 = std::next(jv.begin());
         assert(buffer[0][0] == 1);
         assert(buffer[0][1] == 2);
-        std::ranges::iter_swap(iter1, iter2);
+        xranges::iter_swap(iter1, iter2);
         assert(buffer[0][0] == 2);
         assert(buffer[0][1] == 1);
 
-        static_assert(noexcept(std::ranges::iter_swap(iter1, iter2)));
+        static_assert(noexcept(xranges::iter_swap(iter1, iter2)));
     }
 
     {
@@ -52,7 +52,7 @@ constexpr bool test() {
         IterMoveSwapAwareView inners[1] = {buffer[0]};
         xranges::join_view jv(inners);
         auto it1 = jv.begin();
-        auto it2 = std::ranges::next(it1);
+        auto it2 = xranges::next(it1);
 
         auto const& iter_swap_called_times =
             jv.base().begin()->iter_swap_called;
@@ -61,7 +61,7 @@ constexpr bool test() {
         assert(buffer[0][0] == 2);
         assert(buffer[0][1] == 1);
 
-        std::ranges::iter_swap(it1, it2);
+        xranges::iter_swap(it1, it2);
 
         assert(buffer[0][0] == 1);
         assert(buffer[0][1] == 2);

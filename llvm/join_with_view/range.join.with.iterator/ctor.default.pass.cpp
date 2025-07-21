@@ -18,13 +18,11 @@
 #include "../../test_comparisons.h"
 #include "../../test_iterators.h"
 #include "../types.h"
-#include "rxx/ranges/access.h"
-#include "rxx/ranges/join_with_view.h"
+#include "rxx/ranges.h"
 
 #include <cassert>
 #include <initializer_list>
 #include <iterator>
-#include <ranges>
 #include <type_traits>
 #include <utility>
 
