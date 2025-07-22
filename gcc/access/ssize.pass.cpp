@@ -84,7 +84,7 @@ void test06() {
 }
 
 void test07() {
-#ifdef __SIZEOF_INT128__
+#if RXX_SUPPORTS_INT128
     struct R {
         unsigned __int128 size() const { return 4; }
     };
