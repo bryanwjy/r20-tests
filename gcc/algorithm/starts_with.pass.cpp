@@ -112,8 +112,7 @@ void test03() {
     auto haystack = std::views::iota(0, 10);
     auto needle = std::views::iota(0, 5);
 
-#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX && \
-    (!__STRICT_ANSI__ || RXX_LIBSTDCXX_AT_LEAST(16))
+#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX_AT_LEAST(16)
     auto haystack_ict = std::views::iota(__int128(0), __int128(10));
     auto needle_ict = std::views::iota(__int128(0), __int128(5));
 #else

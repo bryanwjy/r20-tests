@@ -111,8 +111,7 @@ void test03() {
     auto haystack = xviews::iota(0, 10);
     auto needle = xviews::iota(5, 10);
 
-#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX && \
-    (!__STRICT_ANSI__ || RXX_LIBSTDCXX_AT_LEAST(16))
+#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX_AT_LEAST(16)
     auto haystack_ict = xviews::iota(__int128(0), __int128(10));
     auto needle_ict = xviews::iota(__int128(5), __int128(10));
 #else
