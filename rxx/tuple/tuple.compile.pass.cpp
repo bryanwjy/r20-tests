@@ -35,9 +35,9 @@ static_assert(sizeof(decltype(rxx::tuple<int, float, long long, double>{
     std::declval<rxx::tuple<int const&, float const&, long long const&,
         double const&>>()})));
 static constexpr rxx::tuple<int, float, long long, double> t3(
-    tuple_cat(t1, t2));
+    rxx::tuple_cat(t1, t2));
 
-static_assert(std::same_as<decltype(tuple_cat(t1, t2)),
+static_assert(std::same_as<decltype(rxx::tuple_cat(t1, t2)),
     rxx::tuple<int, float, long long, double>>);
 
 static_assert(
