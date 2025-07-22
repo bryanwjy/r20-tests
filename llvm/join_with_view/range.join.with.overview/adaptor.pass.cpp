@@ -31,7 +31,7 @@ concept CanBePiped = requires(View&& view, T&& t) {
     { std::forward<View>(view) | std::forward<T>(t) };
 };
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     using Iterator = forward_iterator<std::string_view*>;
     using Sentinel = sentinel_wrapper<Iterator>;
     constexpr explicit Range(std::string_view* b, std::string_view* e)
@@ -45,7 +45,7 @@ private:
     std::string_view* end_;
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     using Iterator = forward_iterator<char const*>;
     using Sentinel = sentinel_wrapper<Iterator>;
     static constexpr std::string_view pat{", "};
@@ -187,19 +187,20 @@ constexpr void test_adaptor_with_pattern(std::span<std::string_view> buff) {
     // Test `adaptor | views::join_with(pattern)`
     {
         auto pred = [](std::string_view s) { return s.size() >= 3; };
-        using Result = xranges::join_with_view<
-            std::ranges::filter_view<Range, decltype(pred)>, Pattern>;
+        using Result =
+            xranges::join_with_view<xranges::filter_view<Range, decltype(pred)>,
+                Pattern>;
         Range const range(buff.data(), buff.data() + buff.size());
         Pattern pattern;
 
         {
             std::same_as<Result> decltype(auto) result =
-                range | std::views::filter(pred) | xviews::join_with(pattern);
+                range | xviews::filter(pred) | xviews::join_with(pattern);
             compareViews(result, "abcd, ghij");
         }
         {
             auto const partial =
-                std::views::filter(pred) | xviews::join_with(pattern);
+                xviews::filter(pred) | xviews::join_with(pattern);
             std::same_as<Result> decltype(auto) result = range | partial;
             compareViews(result, "abcd, ghij");
         }
@@ -314,20 +315,20 @@ constexpr void test_adaptor_with_single_element(
     // Test `adaptor | views::join_with(element)`
     {
         auto pred = [](std::string_view s) { return s.size() >= 3; };
-        using Result = xranges::join_with_view<
-            std::ranges::filter_view<Range, decltype(pred)>,
-            xranges::single_view<char>>;
+        using Result =
+            xranges::join_with_view<xranges::filter_view<Range, decltype(pred)>,
+                xranges::single_view<char>>;
         Range const range(buff.data(), buff.data() + buff.size());
         char const element = '.';
 
         {
             std::same_as<Result> decltype(auto) result =
-                range | std::views::filter(pred) | xviews::join_with(element);
+                range | xviews::filter(pred) | xviews::join_with(element);
             compareViews(result, "abcd.ghij");
         }
         {
             auto const partial =
-                std::views::filter(pred) | xviews::join_with(element);
+                xviews::filter(pred) | xviews::join_with(element);
             std::same_as<Result> decltype(auto) result = range | partial;
             compareViews(result, "abcd.ghij");
         }

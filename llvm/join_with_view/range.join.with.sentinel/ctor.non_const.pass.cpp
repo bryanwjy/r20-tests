@@ -52,7 +52,7 @@ constexpr bool test() {
             forward_iterator>;
         using V = std::vector<Inner>;
         using Pattern = xranges::single_view<int>;
-        using JWV = xranges::join_with_view<std::views::all_t<V>, Pattern>;
+        using JWV = xranges::join_with_view<xviews::all_t<V>, Pattern>;
         static_assert(!xranges::common_range<JWV>);
 
         using Sent = xranges::sentinel_t<JWV>;

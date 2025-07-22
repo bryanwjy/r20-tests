@@ -40,8 +40,8 @@ constexpr bool test() {
     { // `V` and `Pattern` are not empty. Test return types too.
         using V = std::array<std::array<int, 2>, 3>;
         using Pattern = std::array<long, 1>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
@@ -60,7 +60,7 @@ constexpr bool test() {
         assert(*it1 == 9);
         assert(testEquality(it1, it1, true));
 
-        Iter it2 = std::ranges::prev(jwv.end());
+        Iter it2 = xranges::prev(jwv.end());
         assert(*it2 == 4);
         assert(testEquality(it2, it2, true));
         assert(testEquality(it1, it2, false));
@@ -71,7 +71,7 @@ constexpr bool test() {
         assert(testEquality(it1, cit1, true));
         assert(testEquality(it2, cit1, false));
 
-        CIter cit2 = std::ranges::prev(std::as_const(jwv).end());
+        CIter cit2 = xranges::prev(std::as_const(jwv).end());
         assert(*cit2 == 4);
         assert(testEquality(cit2, cit2, true));
         assert(testEquality(cit1, cit2, false));
@@ -80,18 +80,18 @@ constexpr bool test() {
 
         // `it1.inner_it_` and `it2.inner_it_` are equal, but `it1.outer_it_`
         // and `it2.outer_it_` are not.
-        std::ranges::advance(it1, 2);
+        xranges::advance(it1, 2);
         assert(*it1 == 0);
-        std::ranges::advance(it2, -2);
+        xranges::advance(it2, -2);
         assert(*it2 == 0);
         assert(testEquality(it1, it2, false));
 
         // `cit1.inner_it_` and `cit2.inner_it_` are equal, but `cit1.outer_it_`
         // and `cit2.outer_it_` are not.
-        std::ranges::advance(cit1, 2);
+        xranges::advance(cit1, 2);
         assert(*cit1 == 0);
         assert(testEquality(it1, cit1, true));
-        std::ranges::advance(cit2, -2);
+        xranges::advance(cit2, -2);
         assert(*cit2 == 0);
         assert(testEquality(it2, cit2, true));
         assert(testEquality(cit1, cit2, false));
@@ -101,7 +101,7 @@ constexpr bool test() {
         // `it2.inner_it_index()` are equal to 1.
         ++it1;
         assert(*it1 == 7);
-        std::ranges::advance(it2, -2);
+        xranges::advance(it2, -2);
         assert(*it2 == 7);
         assert(testEquality(it1, it2, true));
 
@@ -111,7 +111,7 @@ constexpr bool test() {
         ++cit1;
         assert(*cit1 == 7);
         assert(testEquality(it1, cit1, true));
-        std::ranges::advance(cit2, -2);
+        xranges::advance(cit2, -2);
         assert(*cit2 == 7);
         assert(testEquality(it2, cit2, true));
         assert(testEquality(cit1, cit2, true));
@@ -142,9 +142,9 @@ constexpr bool test() {
         using Inner = BasicVectorView<int, ViewProperties{.common = false},
             EqComparableInputIter>;
         using V = std::vector<Inner>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
@@ -164,7 +164,7 @@ constexpr bool test() {
         {
             Iter it1 = jwv.begin();
             assert(*it1 == 1);
-            Iter it2 = std::ranges::next(jwv.begin(), 2);
+            Iter it2 = xranges::next(jwv.begin(), 2);
             assert(*it2 == 5);
             assert(testEquality(it1, it2, false));
             ++it1;
@@ -177,7 +177,7 @@ constexpr bool test() {
         {
             CIter cit1 = std::as_const(jwv).begin();
             assert(*cit1 == 1);
-            CIter cit2 = std::ranges::next(std::as_const(jwv).begin(), 2);
+            CIter cit2 = xranges::next(std::as_const(jwv).begin(), 2);
             assert(*cit2 == 5);
             assert(testEquality(cit1, cit2, false));
             ++cit1;
@@ -219,7 +219,7 @@ constexpr bool test() {
             assert(*it1 == *it2);
             assert(testEquality(it1, it2, false));
 
-            std::ranges::advance(it1, 2);
+            xranges::advance(it1, 2);
             ++it2;
             assert(*it1 == *it2);
             assert(testEquality(it1, it2, true));
@@ -239,7 +239,7 @@ constexpr bool test() {
             assert(*cit1 == *cit2);
             assert(testEquality(cit1, cit2, false));
 
-            std::ranges::advance(cit1, 2);
+            xranges::advance(cit1, 2);
             ++cit2;
             assert(*cit1 == *cit2);
             assert(testEquality(cit1, cit2, true));
@@ -249,9 +249,9 @@ constexpr bool test() {
     { // `ref-is-glvalue` is false
         using Inner = std::vector<int>;
         using V = RvalueVector<Inner>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
         using Iter = xranges::iterator_t<JWV>;
         static_assert(!CanEq<Iter>);
     }
@@ -260,9 +260,9 @@ constexpr bool test() {
         using Inner = std::vector<int>;
         using V =
             BasicVectorView<Inner, ViewProperties{}, DefaultCtorInputIter>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
         using Iter = xranges::iterator_t<JWV>;
         static_assert(!CanEq<Iter>);
     }
@@ -271,9 +271,9 @@ constexpr bool test() {
         using Inner = BasicVectorView<int, ViewProperties{.common = false},
             cpp20_input_iterator>;
         using V = std::vector<Inner>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
         static_assert(!CanEq<Iter>);

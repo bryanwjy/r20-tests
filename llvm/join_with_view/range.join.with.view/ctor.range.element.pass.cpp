@@ -53,7 +53,7 @@ struct std::common_type<int, MoveOnlyInt> {
     using type = int;
 };
 
-struct OutputView : std::ranges::view_base {
+struct OutputView : xranges::view_base {
     using It = cpp20_output_iterator<int*>;
     It begin() const;
     sentinel_wrapper<It> end() const;
@@ -68,7 +68,7 @@ struct InputRange {
     sentinel_wrapper<It> end() const;
 };
 
-struct InputView : InputRange, std::ranges::view_base {};
+struct InputView : InputRange, xranges::view_base {};
 
 static_assert(xranges::input_range<InputRange>);
 static_assert(xranges::input_range<InputRange const>);
@@ -76,7 +76,7 @@ static_assert(xranges::view<InputView>);
 static_assert(xranges::input_range<InputView>);
 static_assert(xranges::input_range<InputView const>);
 
-class View : public std::ranges::view_base {
+class View : public xranges::view_base {
     using OuterRange = std::array<std::array<MoveOnlyInt, 2>, 3>;
 
     static constexpr OuterRange range_on_input_view = {
@@ -105,11 +105,11 @@ public:
 
     constexpr explicit View(InputView) : r_(&range_on_input_view) {}
     constexpr explicit View(InputRange) = delete;
-    constexpr explicit View(std::ranges::ref_view<InputRange>)
+    constexpr explicit View(xranges::ref_view<InputRange>)
         : r_(&range_on_ref_input_range) {}
-    constexpr explicit View(std::ranges::ref_view<InputRange const>)
+    constexpr explicit View(xranges::ref_view<InputRange const>)
         : r_(&range_on_const_ref_input_range) {}
-    constexpr explicit View(std::ranges::owning_view<InputRange>)
+    constexpr explicit View(xranges::owning_view<InputRange>)
         : r_(&range_on_owning_input_range) {}
 
     constexpr auto begin() const { return r_->begin(); }
@@ -119,7 +119,7 @@ public:
 static_assert(xranges::input_range<View>);
 static_assert(xranges::input_range<View const>);
 
-class Pattern : public std::ranges::view_base {
+class Pattern : public xranges::view_base {
     int val_;
 
 public:
@@ -145,37 +145,37 @@ static_assert(xranges::forward_range<Pattern>);
 static_assert(xranges::forward_range<Pattern const>);
 
 constexpr void test_ctor_with_view_and_element() {
-    // Check construction from `r` and `e`, when `r` models `std::ranges::view`
+    // Check construction from `r` and `e`, when `r` models `xranges::view`
 
     { // `r` and `e` are glvalues
         InputView r;
         static_assert(
-            std::constructible_from<View, std::views::all_t<InputView&>> &&
+            std::constructible_from<View, xviews::all_t<InputView&>> &&
             std::constructible_from<Pattern,
                 xranges::single_view<
                     xranges::range_value_t<xranges::range_reference_t<View>>>>);
         int e = 0;
         xranges::join_with_view<View, Pattern> jwv(r, e);
-        assert(std::ranges::equal(jwv, std::array{1, 1, 0, 1, 1, 0, 1, 1}));
+        assert(xranges::equal(jwv, std::array{1, 1, 0, 1, 1, 0, 1, 1}));
     }
 
     { // `r` and `e` are const glvalues
         InputView const r;
         int const e = 1;
         xranges::join_with_view<View, Pattern> jwv(r, e);
-        assert(std::ranges::equal(jwv, std::array{1, 1, 1, 1, 1, 1, 1, 1}));
+        assert(xranges::equal(jwv, std::array{1, 1, 1, 1, 1, 1, 1, 1}));
     }
 
     { // `r` and `e` are prvalues
         xranges::join_with_view<View, Pattern> jwv(InputView{}, MoveOnlyInt{2});
-        assert(std::ranges::equal(jwv, std::array{1, 1, 2, 1, 1, 2, 1, 1}));
+        assert(xranges::equal(jwv, std::array{1, 1, 2, 1, 1, 2, 1, 1}));
     }
 
     { // `r` and `e` are xvalues
         InputView r;
         MoveOnlyInt e = 3;
         xranges::join_with_view<View, Pattern> jwv(std::move(r), std::move(e));
-        assert(std::ranges::equal(jwv, std::array{1, 1, 3, 1, 1, 3, 1, 1}));
+        assert(xranges::equal(jwv, std::array{1, 1, 3, 1, 1, 3, 1, 1}));
     }
 
     // Check explicitness
@@ -193,33 +193,33 @@ constexpr void test_ctor_with_view_and_element() {
 
 constexpr void test_ctor_with_non_view_and_element() {
     // Check construction from `r` and `e`, when `r` does not model
-    // `std::ranges::view`
+    // `xranges::view`
 
     { // `r` and `e` are glvalues
         InputRange r;
         int e = 0;
         xranges::join_with_view<View, Pattern> jwv(r, e);
-        assert(std::ranges::equal(jwv, std::array{2, 2, 0, 2, 2, 0, 2, 2}));
+        assert(xranges::equal(jwv, std::array{2, 2, 0, 2, 2, 0, 2, 2}));
     }
 
     { // `r` and `e` are const glvalues
         InputRange const r;
         int const e = 1;
         xranges::join_with_view<View, Pattern> jwv(r, e);
-        assert(std::ranges::equal(jwv, std::array{3, 3, 1, 3, 3, 1, 3, 3}));
+        assert(xranges::equal(jwv, std::array{3, 3, 1, 3, 3, 1, 3, 3}));
     }
 
     { // `r` and `e` are prvalues
         xranges::join_with_view<View, Pattern> jwv(
             InputRange{}, MoveOnlyInt{2});
-        assert(std::ranges::equal(jwv, std::array{4, 4, 2, 4, 4, 2, 4, 4}));
+        assert(xranges::equal(jwv, std::array{4, 4, 2, 4, 4, 2, 4, 4}));
     }
 
     { // `r` and `e` are xvalues
         InputRange r;
         MoveOnlyInt e = 3;
         xranges::join_with_view<View, Pattern> jwv(std::move(r), std::move(e));
-        assert(std::ranges::equal(jwv, std::array{4, 4, 3, 4, 4, 3, 4, 4}));
+        assert(xranges::equal(jwv, std::array{4, 4, 3, 4, 4, 3, 4, 4}));
     }
 
     // Check explicitness
@@ -237,7 +237,7 @@ constexpr void test_constraints() {
     { // `R` is not an input range
         using R = OutputView;
         static_assert(!xranges::input_range<R>);
-        static_assert(std::constructible_from<View, std::views::all_t<R>>);
+        static_assert(std::constructible_from<View, xviews::all_t<R>>);
         static_assert(
             std::constructible_from<Pattern, xranges::single_view<int>>);
         static_assert(
@@ -248,7 +248,7 @@ constexpr void test_constraints() {
     { // `V` is not constructible from `views::all_t<R>`
         using R = test_range<cpp20_input_iterator>;
         static_assert(xranges::input_range<R>);
-        static_assert(!std::constructible_from<View, std::views::all_t<R>>);
+        static_assert(!std::constructible_from<View, xviews::all_t<R>>);
         static_assert(
             std::constructible_from<Pattern, xranges::single_view<int>>);
         static_assert(
@@ -261,7 +261,7 @@ constexpr void test_constraints() {
         using R = InputView;
         using Pat = test_view<forward_iterator>;
         static_assert(xranges::input_range<R>);
-        static_assert(std::constructible_from<View, std::views::all_t<R>>);
+        static_assert(std::constructible_from<View, xviews::all_t<R>>);
         static_assert(!std::constructible_from<Pat, xranges::single_view<int>>);
         static_assert(
             !std::constructible_from<xranges::join_with_view<View, Pat>, R,

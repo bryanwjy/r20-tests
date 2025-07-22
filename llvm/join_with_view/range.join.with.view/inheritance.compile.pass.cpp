@@ -25,13 +25,13 @@ namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 template <class T>
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     std::vector<T>* begin();
     std::vector<T>* end();
 };
 
 template <class T>
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     T* begin();
     T* end();
 };
@@ -40,8 +40,8 @@ template <class T>
 using JoinWithView = xranges::join_with_view<View<T>, Pattern<T>>;
 
 static_assert(std::derived_from<JoinWithView<int>,
-    std::ranges::view_interface<JoinWithView<int>>>);
+    xranges::view_interface<JoinWithView<int>>>);
 static_assert(std::derived_from<JoinWithView<void*>,
-    std::ranges::view_interface<JoinWithView<void*>>>);
+    xranges::view_interface<JoinWithView<void*>>>);
 static_assert(std::derived_from<JoinWithView<std::string>,
-    std::ranges::view_interface<JoinWithView<std::string>>>);
+    xranges::view_interface<JoinWithView<std::string>>>);

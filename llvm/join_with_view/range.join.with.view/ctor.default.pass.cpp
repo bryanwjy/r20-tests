@@ -33,7 +33,7 @@ static constexpr auto view = std::to_array<std::array<int, 2>>({
     {5, 6}
 });
 
-struct TrivialView : std::ranges::view_base {
+struct TrivialView : xranges::view_base {
     int val_; // intentionally uninitialized
 
     constexpr auto begin() { return view.data(); }
@@ -47,7 +47,7 @@ struct NonDefaultConstructibleView : TrivialView {
     NonDefaultConstructibleView(int);
 };
 
-struct TrivialPattern : std::ranges::view_base {
+struct TrivialPattern : xranges::view_base {
     int val_; // intentionally uninitialized
 
     constexpr int* begin() { return &val_; }
@@ -65,7 +65,7 @@ constexpr bool test() {
     { // Check if `base_` and `pattern_` are value initialised
         xranges::join_with_view<TrivialView, TrivialPattern> v;
         assert(std::move(v).base().val_ == 0);
-        assert(std::ranges::equal(v, std::array{1, 2, 0, 3, 4, 0, 5, 6}));
+        assert(xranges::equal(v, std::array{1, 2, 0, 3, 4, 0, 5, 6}));
     }
 
     { // Default constructor should not be explicit

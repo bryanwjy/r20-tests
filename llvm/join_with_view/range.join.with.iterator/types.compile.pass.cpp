@@ -342,8 +342,8 @@ static_assert(ConstIteratorCategoryIs<
 
 namespace test_value_type {
 template <class ValueType, class ConstValueType = ValueType>
-struct View : std::ranges::view_base {
-    struct InnerRange : std::ranges::view_base {
+struct View : xranges::view_base {
+    struct InnerRange : xranges::view_base {
         ValueType* begin();
         ValueType* end();
         ConstValueType* begin() const;
@@ -373,8 +373,12 @@ static_assert(IteratorValueTypeIs<View<int>, Pattern<int>, int>);
 static_assert(IteratorValueTypeIs<View<int>, Pattern<long>, long>);
 static_assert(IteratorValueTypeIs<View<long>, Pattern<int>, long>);
 static_assert(IteratorValueTypeIs<View<std::nullptr_t>, Pattern<void*>, void*>);
+static_assert(IteratorValueTypeIs<View<rxx::tuple<long, int>>,
+    Pattern<rxx::tuple<int, long>>, rxx::tuple<long, long>>);
+#if RXX_CXX23
 static_assert(IteratorValueTypeIs<View<std::tuple<long, int>>,
     Pattern<std::tuple<int, long>>, std::tuple<long, long>>);
+#endif
 
 template <class V, class Pat>
 using ConstIteratorValueType =
@@ -391,8 +395,14 @@ static_assert(ConstIteratorValueTypeIs<View<int>, Pattern<long>, long>);
 static_assert(ConstIteratorValueTypeIs<View<long>, Pattern<int>, long>);
 static_assert(
     ConstIteratorValueTypeIs<View<std::nullptr_t>, Pattern<void*>, void*>);
+
+static_assert(ConstIteratorValueTypeIs<View<rxx::tuple<long, int>>,
+    Pattern<rxx::tuple<int, long>>, rxx::tuple<long, long>>);
+
+#if RXX_CXX23
 static_assert(ConstIteratorValueTypeIs<View<std::tuple<long, int>>,
     Pattern<std::tuple<int, long>>, std::tuple<long, long>>);
+#endif
 
 // Test value types of non-simple const ranges
 static_assert(
@@ -404,9 +414,15 @@ static_assert(
 static_assert(ConstIteratorValueTypeIs<View<int, std::nullptr_t>,
     Pattern<int, void*>, void*>);
 static_assert(
+    ConstIteratorValueTypeIs<View<rxx::tuple<long, int>, std::pair<long, int>>,
+        Pattern<rxx::tuple<int, long>, std::pair<int, long>>,
+        std::pair<long, long>>);
+#if RXX_CXX23
+static_assert(
     ConstIteratorValueTypeIs<View<std::tuple<long, int>, std::pair<long, int>>,
         Pattern<std::tuple<int, long>, std::pair<int, long>>,
         std::pair<long, long>>);
+#endif
 } // namespace test_value_type
 
 namespace test_difference_type {
@@ -426,8 +442,8 @@ static_assert(std::forward_iterator<Iter<int, void*>>);
 template <class DifferenceType, class InnerDifferenceType,
     class ConstDifferenceType = DifferenceType,
     class InnerConstDifferenceType = InnerDifferenceType>
-struct View : std::ranges::view_base {
-    struct InnerRange : std::ranges::view_base {
+struct View : xranges::view_base {
+    struct InnerRange : xranges::view_base {
         Iter<InnerDifferenceType, float> begin();
         Iter<InnerDifferenceType, float> end();
         Iter<InnerConstDifferenceType, double> begin() const;
@@ -441,7 +457,7 @@ struct View : std::ranges::view_base {
 };
 
 template <class DifferenceType, class ConstDifferenceType = DifferenceType>
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     Iter<DifferenceType, float> begin();
     Iter<DifferenceType, float> end();
     Iter<ConstDifferenceType, double> begin() const;

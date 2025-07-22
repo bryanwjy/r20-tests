@@ -45,8 +45,8 @@ constexpr void test_pre_increment() {
     { // `V` and `Pattern` are not empty. Test return type too.
         using V = VRange<RefIsGlvalue, std::array<int, 2>>;
         using Pattern = std::array<int, 2>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         JWV jwv(
             V{
@@ -99,10 +99,10 @@ constexpr void test_pre_increment() {
     }
 
     { // `V` and `Pattern` are empty.
-        using V = VRange<RefIsGlvalue, std::ranges::empty_view<int>>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using V = VRange<RefIsGlvalue, xranges::empty_view<int>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         JWV jwv = {};
 
@@ -120,8 +120,8 @@ constexpr void test_pre_increment() {
     { // `Pattern` is empty, `V` is not.
         using V = VRange<RefIsGlvalue, std::vector<int>>;
         using Pattern = std::vector<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         JWV jwv(
             V{
@@ -155,8 +155,7 @@ constexpr void test_pre_increment() {
     { // `V` has empty subrange in the middle, `Pattern` is not empty.
         using V = VRange<RefIsGlvalue, std::vector<int>>;
         using Pattern = xranges::single_view<int>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         JWV jwv(V{{1}, {}, {3}}, Pattern{0});
 
@@ -186,8 +185,7 @@ constexpr void test_pre_increment() {
     { // Only last element of `V` is not empty. `Pattern` is not empty.
         using V = VRange<RefIsGlvalue, std::vector<int>>;
         using Pattern = xranges::single_view<int>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         JWV jwv(V{{}, {}, {555}}, Pattern{1});
 
@@ -216,9 +214,8 @@ constexpr void test_pre_increment() {
 
     { // Only first element of `V` is not empty. `Pattern` is empty.
         using V = VRange<RefIsGlvalue, std::vector<int>>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         JWV jwv(V{{777}, {}, {}}, Pattern{});
 
@@ -241,7 +238,7 @@ constexpr void test_pre_increment() {
       // input range.
         using V = BasicView<VRange<RefIsGlvalue, std::string>, ViewProperties{},
             DefaultCtorInputIter>;
-        using Pattern = std::ranges::empty_view<char>;
+        using Pattern = xranges::empty_view<char>;
         using JWV = xranges::join_with_view<V, Pattern>;
 
         JWV jwv(V{{}, {}, {'a'}}, Pattern{});
@@ -276,8 +273,8 @@ constexpr void test_post_increment() {
     { // `V` and `Pattern` are not empty. Return type should be `iterator`.
         using V = std::array<std::array<int, 3>, 2>;
         using Pattern = std::array<int, 1>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
@@ -331,9 +328,9 @@ constexpr void test_post_increment() {
       // (return type should be `void`).
         using Inner = std::vector<int>;
         using V = RvalueVector<Inner>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         JWV jwv(V{Inner{-3}, Inner{-2}, Inner{-1}}, Pattern{});
 
@@ -379,9 +376,8 @@ constexpr void test_post_increment() {
         using Inner = BasicVectorView<char32_t, ViewProperties{.common = false},
             cpp17_input_iterator>;
         using V = std::array<Inner, 3>;
-        using Pattern = std::ranges::empty_view<char32_t>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using Pattern = xranges::empty_view<char32_t>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         JWV jwv(V{Inner{U'?'}, Inner{}, Inner{}}, Pattern{});
 

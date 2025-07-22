@@ -105,7 +105,7 @@ constexpr void test_end() {
         JWV jwv(std::move(v), std::move(pattern));
         Iter it = jwv.begin();
         std::sentinel_for<Iter> decltype(auto) se = jwv.end();
-        assert(std::ranges::next(it, 6) == se);
+        assert(xranges::next(it, 6) == se);
     }
 
     { // `V` and `Pattern` are not empty
@@ -119,7 +119,7 @@ constexpr void test_end() {
         JWV jwv(std::move(v), std::move(pattern));
         Iter it = jwv.begin();
         std::sentinel_for<Iter> decltype(auto) se = jwv.end();
-        assert(std::ranges::next(it, 11) == se);
+        assert(xranges::next(it, 11) == se);
     }
 }
 
@@ -205,7 +205,7 @@ constexpr void test_const_end() {
             const JWV jwv(std::move(v), std::move(pattern));
             ConstIter it = jwv.begin();
             std::sentinel_for<ConstIter> decltype(auto) se = jwv.end();
-            assert(std::ranges::next(it, 6) == se);
+            assert(xranges::next(it, 6) == se);
         }
 
         { // `const V` and `const Pattern` are not empty
@@ -217,7 +217,7 @@ constexpr void test_const_end() {
             const JWV jwv(std::move(v), std::move(pattern));
             ConstIter it = jwv.begin();
             std::sentinel_for<ConstIter> decltype(auto) se = jwv.end();
-            assert(std::ranges::next(it, 8) == se);
+            assert(xranges::next(it, 8) == se);
         }
     }
 }

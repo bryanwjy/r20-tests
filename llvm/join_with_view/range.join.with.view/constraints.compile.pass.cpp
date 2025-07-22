@@ -34,13 +34,13 @@ concept CanFormJoinWithView =
 
 // join_with_view is not valid when `V` is not an input_range
 namespace test_when_view_is_not_an_input_range {
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     using It = cpp20_output_iterator<std::vector<int>*>;
     It begin();
     sentinel_wrapper<It> end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     int* begin();
     int* end();
 };
@@ -55,12 +55,12 @@ static_assert(!CanFormJoinWithView<View, Pattern>);
 
 // join_with_view is not valid when `Pattern` is not a forward_range
 namespace test_when_pattern_is_not_a_forward_range {
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     std::vector<float>* begin();
     std::vector<float>* end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     using It = cpp20_input_iterator<float*>;
     It begin();
     sentinel_wrapper<It> end();
@@ -73,14 +73,14 @@ static_assert(xranges::view<Pattern>);
 static_assert(!CanFormJoinWithView<View, Pattern>);
 } // namespace test_when_pattern_is_not_a_forward_range
 
-// join_with_view is not valid when `V` does not model std::ranges::view
+// join_with_view is not valid when `V` does not model xranges::view
 namespace test_when_view_does_not_model_view {
 struct View {
     std::vector<double>* begin();
     std::vector<double>* end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     double* begin();
     double* end();
 };
@@ -101,12 +101,12 @@ struct InnerRange {
     sentinel_wrapper<It> end();
 };
 
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     InnerRange* begin();
     InnerRange* end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     long* begin();
     long* end();
 };
@@ -120,9 +120,9 @@ static_assert(xranges::view<Pattern>);
 static_assert(!CanFormJoinWithView<View, Pattern>);
 } // namespace test_when_range_reference_t_of_view_is_not_an_input_range
 
-// join_with_view is not valid when `Pattern` does not model std::ranges::view
+// join_with_view is not valid when `Pattern` does not model xranges::view
 namespace test_when_pattern_does_not_model_view {
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     std::vector<short>* begin();
     std::vector<short>* end();
 };
@@ -142,12 +142,12 @@ static_assert(!CanFormJoinWithView<View, Pattern>);
 // join_with_view is not valid when `range_reference_t<View>` and pattern
 // does not model together compatible-joinable-ranges
 namespace test_when_used_ranges_are_not_concatable {
-using std::ranges::range_reference_t;
-using std::ranges::range_rvalue_reference_t;
-using std::ranges::range_value_t;
+using xranges::range_reference_t;
+using xranges::range_rvalue_reference_t;
+using xranges::range_value_t;
 
 template <class InnerRange>
-struct View : std::ranges::view_base {
+struct View : xranges::view_base {
     InnerRange* begin();
     InnerRange* end();
 };
@@ -172,7 +172,7 @@ struct InnerRange {
     sentinel_wrapper<It> end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     struct It {
         using difference_type = std::ptrdiff_t;
         using value_type = ValueType;
@@ -223,7 +223,7 @@ struct InnerRange {
     sentinel_wrapper<It> end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     float const* begin();
     float const* end();
 };
@@ -247,7 +247,7 @@ struct InnerRange {
     sentinel_wrapper<It> end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     struct It {
         using difference_type = std::ptrdiff_t;
         struct value_type {
@@ -290,7 +290,7 @@ struct InnerRange {
     sentinel_wrapper<It> end();
 };
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     lwg4074::Iter begin();
     lwg4074::Iter end();
 };

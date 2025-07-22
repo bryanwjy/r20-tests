@@ -149,7 +149,7 @@ public:
     friend bool operator==(ProxyIter const&, ProxyIter const&) = default;
 
     friend constexpr ProxyRvalueRef iter_move(ProxyIter const iter) {
-        return ProxyRvalueRef{std::ranges::iter_move(iter.ptr_)};
+        return ProxyRvalueRef{xranges::iter_move(iter.ptr_)};
     }
 
 private:
@@ -190,7 +190,7 @@ public:
         IterMoveTrackingIterator const& iter) {
         assert(iter.flag_ != nullptr);
         *iter.flag_ = true;
-        return std::ranges::iter_move(iter.iter_);
+        return xranges::iter_move(iter.iter_);
     }
 
 private:
@@ -220,8 +220,8 @@ constexpr bool test() {
       // types.
         using V = std::array<std::array<char, 1>, 2>;
         using Pattern = std::array<char, 1>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         JWV jwv(
             V{
@@ -235,23 +235,23 @@ constexpr bool test() {
             std::same_as<char&&> decltype(auto) v_rref2 =
                 iter_move(std::as_const(it));
             std::same_as<char&&> decltype(auto) v_rref3 =
-                std::ranges::iter_move(it);
+                xranges::iter_move(it);
             std::same_as<char&&> decltype(auto) v_rref4 =
-                std::ranges::iter_move(std::as_const(it));
-            assert(std::ranges::equal(
-                std::array{v_rref1, v_rref2, v_rref3, v_rref4},
-                xviews::repeat('0', 4)));
+                xranges::iter_move(std::as_const(it));
+            assert(
+                xranges::equal(std::array{v_rref1, v_rref2, v_rref3, v_rref4},
+                    xviews::repeat('0', 4)));
 
             ++it; // `it` points to element of `Pattern` from here
             std::same_as<char&&> decltype(auto) pattern_rref1 = iter_move(it);
             std::same_as<char&&> decltype(auto) pattern_rref2 =
                 iter_move(std::as_const(it));
             std::same_as<char&&> decltype(auto) pattern_rref3 =
-                std::ranges::iter_move(it);
+                xranges::iter_move(it);
             std::same_as<char&&> decltype(auto) pattern_rref4 =
-                std::ranges::iter_move(std::as_const(it));
-            assert(std::ranges::equal(std::array{pattern_rref1, pattern_rref2,
-                                          pattern_rref3, pattern_rref4},
+                xranges::iter_move(std::as_const(it));
+            assert(xranges::equal(std::array{pattern_rref1, pattern_rref2,
+                                      pattern_rref3, pattern_rref4},
                 xviews::repeat(',', 4)));
         }
 
@@ -261,10 +261,10 @@ constexpr bool test() {
             std::same_as<char const&&> decltype(auto) cv_rref2 =
                 iter_move(std::as_const(cit));
             std::same_as<char const&&> decltype(auto) cv_rref3 =
-                std::ranges::iter_move(cit);
+                xranges::iter_move(cit);
             std::same_as<char const&&> decltype(auto) cv_rref4 =
-                std::ranges::iter_move(std::as_const(cit));
-            assert(std::ranges::equal(
+                xranges::iter_move(std::as_const(cit));
+            assert(xranges::equal(
                 std::array{cv_rref1, cv_rref2, cv_rref3, cv_rref4},
                 xviews::repeat('1', 4)));
 
@@ -274,11 +274,11 @@ constexpr bool test() {
             std::same_as<char const&&> decltype(auto) cpattern_rref2 =
                 iter_move(std::as_const(cit));
             std::same_as<char const&&> decltype(auto) cpattern_rref3 =
-                std::ranges::iter_move(cit);
+                xranges::iter_move(cit);
             std::same_as<char const&&> decltype(auto) cpattern_rref4 =
-                std::ranges::iter_move(std::as_const(cit));
-            assert(std::ranges::equal(std::array{cpattern_rref1, cpattern_rref2,
-                                          cpattern_rref3, cpattern_rref4},
+                xranges::iter_move(std::as_const(cit));
+            assert(xranges::equal(std::array{cpattern_rref1, cpattern_rref2,
+                                      cpattern_rref3, cpattern_rref4},
                 xviews::repeat(',', 4)));
         }
     }
@@ -287,28 +287,26 @@ constexpr bool test() {
         using Inner = std::vector<MoveOnlyInt>;
         using V = std::vector<Inner>;
         using Pattern = std::vector<MoveOnlyInt>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
 #if RXX_CXX23
         // requires from_ranges ctor to work
         V v;
         v.reserve(2);
-        v.emplace_back(xranges::to<Inner>(std::views::iota(0, 4)));
-        v.emplace_back(xranges::to<Inner>(std::views::iota(12, 16)));
+        v.emplace_back(xranges::to<Inner>(xviews::iota(0, 4)));
+        v.emplace_back(xranges::to<Inner>(xviews::iota(12, 16)));
 
-        JWV jwv(std::move(v), xranges::to<Pattern>(std::views::iota(4, 12)));
-        assert(
-            std::ranges::all_of(jwv, &MoveOnlyInt::was_normally_constructed));
+        JWV jwv(std::move(v), xranges::to<Pattern>(xviews::iota(4, 12)));
+        assert(xranges::all_of(jwv, &MoveOnlyInt::was_normally_constructed));
 #else
         V v;
         v.reserve(2);
-        v.emplace_back(reserve_and_emplace<Inner>(std::views::iota(0, 4)));
-        v.emplace_back(reserve_and_emplace<Inner>(std::views::iota(12, 16)));
-        JWV jwv(std::move(v),
-            reserve_and_emplace<Pattern>(std::views::iota(4, 12)));
-        assert(
-            std::ranges::all_of(jwv, &MoveOnlyInt::was_normally_constructed));
+        v.emplace_back(reserve_and_emplace<Inner>(xviews::iota(0, 4)));
+        v.emplace_back(reserve_and_emplace<Inner>(xviews::iota(12, 16)));
+        JWV jwv(
+            std::move(v), reserve_and_emplace<Pattern>(xviews::iota(4, 12)));
+        assert(xranges::all_of(jwv, &MoveOnlyInt::was_normally_constructed));
 #endif
 
         {
@@ -320,21 +318,20 @@ constexpr bool test() {
             ++it;
             values.emplace_back(iter_move(std::as_const(it)));
             it++;
-            values.emplace_back(std::ranges::iter_move(it));
+            values.emplace_back(xranges::iter_move(it));
             ++it;
-            values.emplace_back(std::ranges::iter_move(std::as_const(it)));
+            values.emplace_back(xranges::iter_move(std::as_const(it)));
             it++; // `it` points to element of `Pattern` from here
             values.emplace_back(iter_move(it));
             ++it;
             values.emplace_back(iter_move(std::as_const(it)));
             it++;
-            values.emplace_back(std::ranges::iter_move(it));
+            values.emplace_back(xranges::iter_move(it));
             ++it;
-            values.emplace_back(std::ranges::iter_move(std::as_const(it)));
+            values.emplace_back(xranges::iter_move(std::as_const(it)));
 
-            assert(std::ranges::equal(values, std::views::iota(0, 8)));
-            assert(std::ranges::all_of(
-                values, &MoveOnlyInt::was_move_constructed));
+            assert(xranges::equal(values, xviews::iota(0, 8)));
+            assert(xranges::all_of(values, &MoveOnlyInt::was_move_constructed));
         }
 
         {
@@ -346,25 +343,24 @@ constexpr bool test() {
             cit--;
             values.emplace_back(iter_move(std::as_const(cit)));
             --cit;
-            values.emplace_back(std::ranges::iter_move(cit));
+            values.emplace_back(xranges::iter_move(cit));
             cit--;
-            values.emplace_back(std::ranges::iter_move(std::as_const(cit)));
+            values.emplace_back(xranges::iter_move(std::as_const(cit)));
             --cit; // `it` points to element of `Pattern` from here
             values.emplace_back(iter_move(cit));
             cit--;
             values.emplace_back(iter_move(std::as_const(cit)));
             --cit;
-            values.emplace_back(std::ranges::iter_move(cit));
+            values.emplace_back(xranges::iter_move(cit));
             cit--;
-            values.emplace_back(std::ranges::iter_move(std::as_const(cit)));
+            values.emplace_back(xranges::iter_move(std::as_const(cit)));
 
-            assert(std::ranges::equal(
-                std::views::reverse(values), std::views::iota(8, 16)));
-            assert(std::ranges::all_of(
-                values, &MoveOnlyInt::was_move_constructed));
+            assert(
+                xranges::equal(xviews::reverse(values), xviews::iota(8, 16)));
+            assert(xranges::all_of(values, &MoveOnlyInt::was_move_constructed));
         }
 
-        assert(std::ranges::all_of(jwv, &MoveOnlyInt::was_moved_from));
+        assert(xranges::all_of(jwv, &MoveOnlyInt::was_moved_from));
     }
 
     { // Test `iter_move` when result is proxy rvalue reference type, which is
@@ -373,32 +369,30 @@ constexpr bool test() {
         // range_rvalue_reference_t<Pattern>.
         using Inner = std::vector<MoveOnlyInt>;
         using V = std::vector<Inner>;
-        using Pattern = std::ranges::subrange<ProxyIter, ProxyIter>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using Pattern = xranges::subrange<ProxyIter, ProxyIter>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
-        static_assert(!std::same_as<std::ranges::range_rvalue_reference_t<V>,
-                      std::ranges::range_rvalue_reference_t<JWV>>);
-        static_assert(
-            !std::same_as<std::ranges::range_rvalue_reference_t<Pattern>,
-                std::ranges::range_rvalue_reference_t<JWV>>);
+        static_assert(!std::same_as<xranges::range_rvalue_reference_t<V>,
+                      xranges::range_rvalue_reference_t<JWV>>);
+        static_assert(!std::same_as<xranges::range_rvalue_reference_t<Pattern>,
+                      xranges::range_rvalue_reference_t<JWV>>);
         static_assert(std::same_as<CommonProxyRvalueRef,
-            std::ranges::range_rvalue_reference_t<JWV>>);
+            xranges::range_rvalue_reference_t<JWV>>);
 
 #if RXX_CXX23
         V v;
         v.reserve(2);
-        v.emplace_back(xranges::to<Inner>(std::views::iota(0, 4)));
-        v.emplace_back(xranges::to<Inner>(std::views::iota(12, 16)));
+        v.emplace_back(xranges::to<Inner>(xviews::iota(0, 4)));
+        v.emplace_back(xranges::to<Inner>(xviews::iota(12, 16)));
         auto pattern =
-            xranges::to<std::vector<MoveOnlyInt>>(std::views::iota(4, 12));
+            xranges::to<std::vector<MoveOnlyInt>>(xviews::iota(4, 12));
 #else
         V v;
         v.reserve(2);
-        v.emplace_back(reserve_and_emplace<Inner>(std::views::iota(0, 4)));
-        v.emplace_back(reserve_and_emplace<Inner>(std::views::iota(12, 16)));
-        auto pattern = reserve_and_emplace<std::vector<MoveOnlyInt>>(
-            std::views::iota(4, 12));
+        v.emplace_back(reserve_and_emplace<Inner>(xviews::iota(0, 4)));
+        v.emplace_back(reserve_and_emplace<Inner>(xviews::iota(12, 16)));
+        auto pattern =
+            reserve_and_emplace<std::vector<MoveOnlyInt>>(xviews::iota(4, 12));
 
 #endif
 
@@ -406,8 +400,7 @@ constexpr bool test() {
             ProxyIter{pattern.data() + pattern.size()});
 
         JWV jwv(std::move(v), pattern_as_subrange);
-        assert(
-            std::ranges::all_of(jwv, &MoveOnlyInt::was_normally_constructed));
+        assert(xranges::all_of(jwv, &MoveOnlyInt::was_normally_constructed));
 
         {
             std::vector<MoveOnlyInt> values;
@@ -423,11 +416,11 @@ constexpr bool test() {
             values.emplace_back(rref2.get());
             it++;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref3 =
-                std::ranges::iter_move(it);
+                xranges::iter_move(it);
             values.emplace_back(rref3.get());
             ++it;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref4 =
-                std::ranges::iter_move(std::as_const(it));
+                xranges::iter_move(std::as_const(it));
             values.emplace_back(rref4.get());
             it++; // `it` points to element of `Pattern` from here
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref5 =
@@ -439,16 +432,15 @@ constexpr bool test() {
             values.emplace_back(rref6.get());
             it++;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref7 =
-                std::ranges::iter_move(it);
+                xranges::iter_move(it);
             values.emplace_back(rref7.get());
             ++it;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref8 =
-                std::ranges::iter_move(std::as_const(it));
+                xranges::iter_move(std::as_const(it));
             values.emplace_back(rref8.get());
 
-            assert(std::ranges::equal(values, std::views::iota(0, 8)));
-            assert(std::ranges::all_of(
-                values, &MoveOnlyInt::was_move_constructed));
+            assert(xranges::equal(values, xviews::iota(0, 8)));
+            assert(xranges::all_of(values, &MoveOnlyInt::was_move_constructed));
         }
 
         {
@@ -465,11 +457,11 @@ constexpr bool test() {
             values.emplace_back(rref2.get());
             --cit;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref3 =
-                std::ranges::iter_move(cit);
+                xranges::iter_move(cit);
             values.emplace_back(rref3.get());
             cit--;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref4 =
-                std::ranges::iter_move(std::as_const(cit));
+                xranges::iter_move(std::as_const(cit));
             values.emplace_back(rref4.get());
             --cit; // `it` points to element of `Pattern` from here
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref5 =
@@ -481,30 +473,29 @@ constexpr bool test() {
             values.emplace_back(rref6.get());
             --cit;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref7 =
-                std::ranges::iter_move(cit);
+                xranges::iter_move(cit);
             values.emplace_back(rref7.get());
             cit--;
             std::same_as<CommonProxyRvalueRef> decltype(auto) rref8 =
-                std::ranges::iter_move(std::as_const(cit));
+                xranges::iter_move(std::as_const(cit));
             values.emplace_back(rref8.get());
 
-            assert(std::ranges::equal(
-                std::views::reverse(values), std::views::iota(8, 16)));
-            assert(std::ranges::all_of(
-                values, &MoveOnlyInt::was_move_constructed));
+            assert(
+                xranges::equal(xviews::reverse(values), xviews::iota(8, 16)));
+            assert(xranges::all_of(values, &MoveOnlyInt::was_move_constructed));
         }
 
-        assert(std::ranges::all_of(jwv, &MoveOnlyInt::was_moved_from));
+        assert(xranges::all_of(jwv, &MoveOnlyInt::was_moved_from));
     }
 
     { // Make sure `iter_move` calls underlying's iterator `iter_move` (not
       // `std::move(*i)`).
         using Inner = std::vector<int>;
         using InnerTrackingIter = IterMoveTrackingIterator<Inner::iterator>;
-        using TrackingInner = std::ranges::subrange<InnerTrackingIter>;
+        using TrackingInner = xranges::subrange<InnerTrackingIter>;
         using Pattern = std::array<int, 1>;
         using PatternTrackingIter = IterMoveTrackingIterator<Pattern::iterator>;
-        using TrackingPattern = std::ranges::subrange<PatternTrackingIter>;
+        using TrackingPattern = xranges::subrange<PatternTrackingIter>;
         using JWV =
             xranges::join_with_view<std::span<TrackingInner>, TrackingPattern>;
 

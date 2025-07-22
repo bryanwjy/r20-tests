@@ -63,7 +63,7 @@ constexpr void test_begin() {
         xranges::join_with_view<V, Pattern> jwv(
             V(Vec{"A", "B", "C"}), Pattern(Str{">>"}));
         auto it = jwv.begin();
-        assert(std::ranges::equal(std::views::counted(it, 7), Str{"A>>B>>C"}));
+        assert(xranges::equal(xviews::counted(it, 7), Str{"A>>B>>C"}));
     }
 
     { // `V` does not model simple-view
@@ -111,7 +111,7 @@ constexpr void test_begin() {
         xranges::join_with_view<V, Pattern> jwv(
             V(Vec{"A", "", "C"}), Pattern(Str{"--"}));
         auto it = jwv.begin();
-        assert(std::ranges::equal(std::views::counted(it, 6), Str("A----C")));
+        assert(xranges::equal(xviews::counted(it, 6), Str("A----C")));
     }
 
     { // `V` does not model simple-view
@@ -180,8 +180,8 @@ constexpr void test_const_begin() {
         xranges::join_with_view<V, Pattern> const jwv{
             V{Vec{std::array{1, 2}, std::array{3, 4}}}, Pattern{Pat{0, 0}}};
         auto it = jwv.begin();
-        assert(std::ranges::equal(
-            std::views::counted(it, 6), std::array{1, 2, 0, 0, 3, 4}));
+        assert(xranges::equal(
+            xviews::counted(it, 6), std::array{1, 2, 0, 0, 3, 4}));
     }
 
     // `const V` does not model forward range
