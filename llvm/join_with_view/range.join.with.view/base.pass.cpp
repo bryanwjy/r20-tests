@@ -27,7 +27,7 @@ namespace xviews = rxx::views;
 
 using InnerRange = std::vector<int>;
 
-struct Range : std::ranges::view_base {
+struct Range : xranges::view_base {
     constexpr explicit Range(InnerRange* b, InnerRange* e)
         : begin_(b)
         , end_(e) {}
@@ -53,7 +53,7 @@ struct Range : std::ranges::view_base {
 static_assert(xranges::view<Range>);
 static_assert(xranges::input_range<Range>);
 
-struct Pattern : std::ranges::view_base {
+struct Pattern : xranges::view_base {
     static constexpr int pat[2] = {0, 0};
     constexpr int const* begin() const { return pat; }
     constexpr int const* end() const { return pat + 2; }
@@ -63,7 +63,7 @@ static_assert(xranges::view<Pattern>);
 static_assert(xranges::forward_range<Pattern>);
 
 template <class Tp>
-struct NonCopyableRange : std::ranges::view_base {
+struct NonCopyableRange : xranges::view_base {
     NonCopyableRange(NonCopyableRange const&) = delete;
     NonCopyableRange(NonCopyableRange&&) = default;
     NonCopyableRange& operator=(NonCopyableRange const&) = default;

@@ -26,7 +26,7 @@
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-class View : public std::ranges::view_base {
+class View : public xranges::view_base {
     using OuterRange = std::array<std::array<int, 2>, 3>;
 
     static constexpr OuterRange default_range = {
@@ -52,7 +52,7 @@ public:
     constexpr auto end() { return r_->end(); }
 };
 
-class Pattern : public std::ranges::view_base {
+class Pattern : public xranges::view_base {
     using PatternRange = std::array<int, 2>;
 
     static constexpr PatternRange default_range = {0, 0};
@@ -80,22 +80,22 @@ constexpr bool test() {
             View v;
             Pattern p;
             xranges::join_with_view<View, Pattern> jwv(v, p);
-            assert(std::ranges::equal(
-                jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
+            assert(
+                xranges::equal(jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
         }
 
         { // `view` and `pattern` are const glvalues
             View const v;
             Pattern const p;
             xranges::join_with_view<View, Pattern> jwv(v, p);
-            assert(std::ranges::equal(
-                jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
+            assert(
+                xranges::equal(jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
         }
 
         { // `view` and `pattern` are prvalues
             xranges::join_with_view<View, Pattern> jwv(View{}, Pattern{});
-            assert(std::ranges::equal(
-                jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
+            assert(
+                xranges::equal(jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
         }
 
         { // `view` and `pattern` are xvalues
@@ -103,8 +103,8 @@ constexpr bool test() {
             Pattern p;
             xranges::join_with_view<View, Pattern> jwv(
                 std::move(v), std::move(p));
-            assert(std::ranges::equal(
-                jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
+            assert(
+                xranges::equal(jwv, std::array{6, 5, 7, 7, 4, 3, 7, 7, 2, 1}));
         }
     }
 

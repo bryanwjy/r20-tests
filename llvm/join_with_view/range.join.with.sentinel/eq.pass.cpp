@@ -32,7 +32,7 @@
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
-struct NonCrossConstComparableView : std::ranges::view_base {
+struct NonCrossConstComparableView : xranges::view_base {
     using NonConstRange = std::vector<int>;
     NonConstRange* begin();
     sentinel_wrapper<NonConstRange*> end();
@@ -50,7 +50,7 @@ constexpr bool test() {
         cpp20_input_iterator>;
     using V = std::vector<Inner>;
     using Pattern = xranges::single_view<int>;
-    using JWV = xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+    using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
     static_assert(!xranges::common_range<JWV>);
 
     using Iter = xranges::iterator_t<JWV>;
@@ -70,8 +70,8 @@ constexpr bool test() {
                     Inner{4}
             },
                 3);
-            assert(testEquality(
-                std::ranges::next(jwv.begin(), 4), jwv.end(), true));
+            assert(
+                testEquality(xranges::next(jwv.begin(), 4), jwv.end(), true));
             assert(testEquality(jwv.begin(), jwv.end(), false));
         }
 
@@ -83,10 +83,10 @@ constexpr bool test() {
                     Inner{7, 8}
             },
                 6);
-            assert(testEquality(
-                std::ranges::next(jwv.begin(), 4), jwv.end(), true));
-            assert(testEquality(
-                std::ranges::next(jwv.begin(), 2), jwv.end(), false));
+            assert(
+                testEquality(xranges::next(jwv.begin(), 4), jwv.end(), true));
+            assert(
+                testEquality(xranges::next(jwv.begin(), 2), jwv.end(), false));
         }
     }
 
@@ -99,12 +99,10 @@ constexpr bool test() {
                     Inner{12}
             },
                 11);
-            assert(
-                testEquality(std::ranges::next(std::as_const(jwv).begin(), 4),
-                    jwv.end(), true));
-            assert(
-                testEquality(std::ranges::next(std::as_const(jwv).begin(), 2),
-                    jwv.end(), false));
+            assert(testEquality(
+                xranges::next(std::as_const(jwv).begin(), 4), jwv.end(), true));
+            assert(testEquality(xranges::next(std::as_const(jwv).begin(), 2),
+                jwv.end(), false));
         }
 
         { // Const == false
@@ -115,9 +113,9 @@ constexpr bool test() {
                     Inner{15, 16}
             },
                 14);
-            assert(testEquality(std::ranges::next(jwv.begin(), 4),
-                std::as_const(jwv).end(), true));
-            assert(testEquality(std::ranges::next(jwv.begin(), 3),
+            assert(testEquality(
+                xranges::next(jwv.begin(), 4), std::as_const(jwv).end(), true));
+            assert(testEquality(xranges::next(jwv.begin(), 3),
                 std::as_const(jwv).end(), false));
         }
     }

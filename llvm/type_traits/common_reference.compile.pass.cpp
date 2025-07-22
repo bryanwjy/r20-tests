@@ -217,6 +217,7 @@ static_assert(
 //    -- Otherwise, there shall be no member type.
 static_assert(!has_type<rxx::common_reference<int, short, int, char*>>);
 
+#if RXX_CXX23
 static_assert(std::is_same_v<rxx::common_reference_t<std::tuple<int, int>>,
     std::tuple<int, int>>);
 static_assert(std::is_same_v<
@@ -250,7 +251,7 @@ static_assert(
     !has_type<
         rxx::common_reference<std::tuple<int, X2>, std::tuple<float, Z2>>>);
 static_assert(!has_type<rxx::common_reference<std::tuple<int, X2>, int, X2>>);
-
+#endif
 // rxx::tuple
 
 static_assert(std::is_same_v<rxx::common_reference_t<rxx::tuple<int, int>>,
@@ -291,6 +292,12 @@ static_assert(!has_type<rxx::common_reference<rxx::tuple<int, X2>, int, X2>>);
 
 struct A {};
 template <template <class> class TQual, template <class> class UQual>
+struct std::basic_common_reference<A, rxx::tuple<B>, TQual, UQual> {
+    using type = rxx::tuple<UQual<B>>;
+};
+
+#if RXX_CXX23
+template <template <class> class TQual, template <class> class UQual>
 struct std::basic_common_reference<A, std::tuple<B>, TQual, UQual> {
     using type = std::tuple<UQual<B>>;
 };
@@ -298,6 +305,7 @@ struct std::basic_common_reference<A, std::tuple<B>, TQual, UQual> {
 static_assert(
     std::is_same_v<rxx::common_reference_t<A, std::tuple<B>, std::tuple<D>>,
         std::tuple<B>>);
+#endif
 
 static_assert(std::is_same_v<rxx::common_reference_t<std::pair<int, int>>,
     std::pair<int, int>>);

@@ -51,7 +51,7 @@ concept CanDecrement = CanPreDecrement<I> && CanPostDecrement<I>;
 
 constexpr bool test() {
     { // `V` and `Pattern` are not empty. Test return type too.
-        using V = std::ranges::owning_view<std::vector<std::string>>;
+        using V = xranges::owning_view<std::vector<std::string>>;
         using Pattern = xranges::single_view<char>;
         using JWV = xranges::join_with_view<V, Pattern>;
 
@@ -98,14 +98,14 @@ constexpr bool test() {
             assert(*cit == '_');
         }
 
-        assert(std::ranges::equal(
-            std::views::reverse(std::move(jwv)), std::string_view{"54_32_10"}));
+        assert(xranges::equal(
+            xviews::reverse(std::move(jwv)), std::string_view{"54_32_10"}));
     }
 
     { // `Pattern` is empty, `V` is not.
         using Inner = std::array<int, 1>;
-        using V = std::ranges::owning_view<std::array<Inner, 3>>;
-        using Pattern = std::ranges::owning_view<std::array<int, 0>>;
+        using V = xranges::owning_view<std::array<Inner, 3>>;
+        using Pattern = xranges::owning_view<std::array<int, 0>>;
         using JWV = xranges::join_with_view<V, Pattern>;
 
         JWV jwv(
@@ -142,8 +142,7 @@ constexpr bool test() {
       // back and forth.
         using V = std::array<std::vector<int>, 3>;
         using Pattern = xranges::single_view<int>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         JWV jwv(
             V{
@@ -165,7 +164,7 @@ constexpr bool test() {
             assert(*it == 1);
             --it;
             assert(*it == 5);
-            std::ranges::advance(it, 4);
+            xranges::advance(it, 4);
             it--;
             assert(*it == 125);
         }
@@ -184,7 +183,7 @@ constexpr bool test() {
             assert(*cit == 1);
             --cit;
             assert(*cit == 5);
-            std::ranges::advance(cit, 4);
+            xranges::advance(cit, 4);
             cit--;
             assert(*cit == 125);
         }
@@ -193,8 +192,8 @@ constexpr bool test() {
     { // Only first element of `V` is not empty. `Pattern` is empty. Try to go
       // back and forth.
         using Inner = std::vector<int>;
-        using V = std::ranges::owning_view<std::array<Inner, 3>>;
-        using Pattern = std::ranges::empty_view<int>;
+        using V = xranges::owning_view<std::array<Inner, 3>>;
+        using Pattern = xranges::empty_view<int>;
         using JWV = xranges::join_with_view<V, Pattern>;
 
         JWV jwv(
@@ -227,16 +226,16 @@ constexpr bool test() {
 
     { // `ref-is-glvalue` is false
         using V = RvalueVector<std::vector<int>>;
-        using Pattern = std::ranges::empty_view<int>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using Pattern = xranges::empty_view<int>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
         using Iter = xranges::iterator_t<JWV>;
         static_assert(!CanPreDecrement<Iter>);
         static_assert(!CanPostDecrement<Iter>);
     }
 
     { // `Base` does not model bidirectional range
-        using V = std::ranges::owning_view<std::forward_list<std::vector<int>>>;
+        using V = xranges::owning_view<std::forward_list<std::vector<int>>>;
         using Pattern = xranges::single_view<int>;
         using JWV = xranges::join_with_view<V, Pattern>;
         using Iter = xranges::iterator_t<JWV>;
@@ -249,8 +248,7 @@ constexpr bool test() {
 
     {     // InnerBase does not model bidirectional-common
         { // InnerBase does not model bidirectional range
-            using V =
-                std::ranges::owning_view<std::vector<std::forward_list<int>>>;
+            using V = xranges::owning_view<std::vector<std::forward_list<int>>>;
             using Pattern = xranges::single_view<int>;
             using JWV = xranges::join_with_view<V, Pattern>;
             using Iter = xranges::iterator_t<JWV>;
@@ -264,7 +262,7 @@ constexpr bool test() {
         { // InnerBase does not model common range
             using InnerBase = BasicVectorView<int,
                 ViewProperties{.common = false}, bidirectional_iterator>;
-            using V = std::ranges::owning_view<std::vector<InnerBase>>;
+            using V = xranges::owning_view<std::vector<InnerBase>>;
             using Pattern = xranges::single_view<int>;
             using JWV = xranges::join_with_view<V, Pattern>;
             using Iter = xranges::iterator_t<JWV>;
@@ -278,8 +276,8 @@ constexpr bool test() {
 
     {     // PatternBase does not model bidirectional-common
         { // PatternBase does not model bidirectional range
-            using V = std::ranges::owning_view<std::vector<std::vector<int>>>;
-            using Pattern = std::ranges::owning_view<std::forward_list<int>>;
+            using V = xranges::owning_view<std::vector<std::vector<int>>>;
+            using Pattern = xranges::owning_view<std::forward_list<int>>;
             using JWV = xranges::join_with_view<V, Pattern>;
             using Iter = xranges::iterator_t<JWV>;
             using CIter = xranges::iterator_t<const JWV>;
@@ -290,7 +288,7 @@ constexpr bool test() {
         }
 
         { // PatternBase does not model common range
-            using V = std::ranges::owning_view<std::vector<std::vector<int>>>;
+            using V = xranges::owning_view<std::vector<std::vector<int>>>;
             using Pattern = BasicVectorView<int,
                 ViewProperties{.common = false}, bidirectional_iterator>;
             using JWV = xranges::join_with_view<V, Pattern>;

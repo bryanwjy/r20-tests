@@ -42,7 +42,7 @@ struct ViewProperties {
 
 template <xranges::input_range Data, ViewProperties Prop,
     template <class...> class It, template <class...> class ConstIt = It>
-class BasicView : public std::ranges::view_base {
+class BasicView : public xranges::view_base {
     Data data_;
 
 public:
@@ -56,7 +56,7 @@ public:
         /*******/ : data_(xranges::to<Data>(std::forward<R>(r))) {}
 
     constexpr explicit BasicView(
-        std::initializer_list<std::ranges::range_value_t<Data>> il)
+        std::initializer_list<xranges::range_value_t<Data>> il)
         : data_(xranges::to<Data>(il)) {}
 
     constexpr auto begin()
@@ -98,8 +98,7 @@ struct AsPrvalue {
 template <class Tp>
 class RvalueVector {
     using Vec = std::vector<Tp>;
-    std::ranges::transform_view<std::ranges::owning_view<Vec>, AsPrvalue>
-        range_;
+    xranges::transform_view<xranges::owning_view<Vec>, AsPrvalue> range_;
 
 public:
     constexpr RvalueVector() = default;
@@ -141,7 +140,7 @@ DefaultCtorInputIter(It) -> DefaultCtorInputIter<It>;
 template <class Tp>
 class InputRangeButOutputWhenConst {
     using Vec = std::vector<Tp>;
-    std::ranges::ref_view<Vec> range_;
+    xranges::ref_view<Vec> range_;
 
 public:
     constexpr explicit InputRangeButOutputWhenConst(Vec& vec) : range_(vec) {}
@@ -214,7 +213,7 @@ template <class It>
 EqComparableInputIter(It) -> EqComparableInputIter<It>;
 
 template <class Val>
-struct ConstOppositeView : std::ranges::view_base {
+struct ConstOppositeView : xranges::view_base {
     Val const* begin();
     sentinel_wrapper<Val const*> end();
     Val* begin() const;
@@ -279,15 +278,15 @@ using BV2 = BasicView<RvalueVector<std::string>,
 static_assert(xranges::input_range<BV2>);
 static_assert(!xranges::forward_range<BV2>);
 static_assert(!xranges::common_range<BV2>);
-static_assert(!std::is_reference_v<std::ranges::range_reference_t<BV2>>);
+static_assert(!std::is_reference_v<xranges::range_reference_t<BV2>>);
 static_assert(!simple_view<BV2>);
 
 using RV = RvalueVector<int>;
 static_assert(std::movable<RV>);
 static_assert(xranges::random_access_range<RV>);
 static_assert(xranges::random_access_range<const RV>);
-static_assert(!std::is_reference_v<std::ranges::range_reference_t<RV>>);
-static_assert(!std::is_reference_v<std::ranges::range_reference_t<const RV>>);
+static_assert(!std::is_reference_v<xranges::range_reference_t<RV>>);
+static_assert(!std::is_reference_v<xranges::range_reference_t<const RV>>);
 
 using DCII = DefaultCtorInputIter<int*>;
 static_assert(std::default_initializable<DCII>);

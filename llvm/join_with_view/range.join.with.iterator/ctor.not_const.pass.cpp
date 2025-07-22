@@ -52,7 +52,7 @@ constexpr bool test() {
         assert(*cit1 == 1);
         assert(cit1 == it);
 
-        std::ranges::advance(it, 2);
+        xranges::advance(it, 2);
         assert(*it == 0);
         CIter cit2 = it; // `cit2` points to element of `Pattern`
         assert(*cit2 == 0);
@@ -71,7 +71,7 @@ constexpr bool test() {
     { // Test conversion from `Const` to `!Const` (should be invalid)
         using V = std::vector<std::vector<int>>;
         using Pattern = xranges::single_view<int>;
-        using JWV = xranges::join_with_view<std::views::all_t<V>, Pattern>;
+        using JWV = xranges::join_with_view<xviews::all_t<V>, Pattern>;
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
         static_assert(!std::convertible_to<CIter, Iter>);
@@ -93,7 +93,7 @@ constexpr bool test() {
         using Inner = ConstOppositeView<long>;
         using V = std::vector<Inner>;
         using Pattern = xranges::single_view<long>;
-        using JWV = xranges::join_with_view<std::views::all_t<V>, Pattern>;
+        using JWV = xranges::join_with_view<xviews::all_t<V>, Pattern>;
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
         static_assert(!std::convertible_to<CIter, Iter>);
@@ -103,7 +103,7 @@ constexpr bool test() {
     { // When `convertible_to<iterator_t<Pattern>, PatternIter>` is not modeled
         using V = std::vector<std::vector<long long>>;
         using Pattern = ConstOppositeView<long long>;
-        using JWV = xranges::join_with_view<std::views::all_t<V>, Pattern>;
+        using JWV = xranges::join_with_view<xviews::all_t<V>, Pattern>;
         using Iter = xranges::iterator_t<JWV>;
         using CIter = xranges::iterator_t<const JWV>;
         static_assert(!std::convertible_to<CIter, Iter>);

@@ -91,8 +91,8 @@ static_assert(std::forward_iterator<ProxyIter>);
 
 constexpr bool test() {
     { // Result of `operator*` is (maybe const) lvalue reference
-        using V = std::ranges::owning_view<std::vector<std::string>>;
-        using Pattern = std::ranges::owning_view<std::string>;
+        using V = xranges::owning_view<std::vector<std::string>>;
+        using Pattern = xranges::owning_view<std::string>;
         using JWV = xranges::join_with_view<V, Pattern>;
 
         JWV jwv(
@@ -105,7 +105,7 @@ constexpr bool test() {
             auto it = jwv.begin();
             std::same_as<char&> decltype(auto) v_ref = *std::as_const(it);
             assert(v_ref == 'a');
-            std::ranges::advance(it, 2);
+            xranges::advance(it, 2);
             std::same_as<char&> decltype(auto) pattern_ref = *it;
             assert(pattern_ref == '>');
         }
@@ -114,7 +114,7 @@ constexpr bool test() {
             auto cit = std::as_const(jwv).begin();
             std::same_as<char const&> decltype(auto) cv_ref = *cit;
             assert(cv_ref == 'a');
-            std::ranges::advance(cit, 3);
+            xranges::advance(cit, 3);
             std::same_as<char const&> decltype(auto) cpattern_ref =
                 *std::as_const(cit);
             assert(cpattern_ref == '<');
@@ -122,7 +122,7 @@ constexpr bool test() {
     }
 
     { // Result of `operator*` is const lvalue reference
-        using V = std::ranges::owning_view<std::vector<std::string_view>>;
+        using V = xranges::owning_view<std::vector<std::string_view>>;
         using Pattern = std::string_view;
         using JWV = xranges::join_with_view<V, Pattern>;
 
@@ -136,7 +136,7 @@ constexpr bool test() {
             auto it = jwv.begin();
             std::same_as<char const&> decltype(auto) v_ref = *it;
             assert(v_ref == '1');
-            std::ranges::advance(it, 3);
+            xranges::advance(it, 3);
             std::same_as<char const&> decltype(auto) pattern_ref =
                 *std::as_const(it);
             assert(pattern_ref == '.');
@@ -147,7 +147,7 @@ constexpr bool test() {
             std::same_as<char const&> decltype(auto) cv_ref =
                 *std::as_const(cit);
             assert(cv_ref == '1');
-            std::ranges::advance(cit, 4);
+            xranges::advance(cit, 4);
             std::same_as<char const&> decltype(auto) cpattern_ref = *cit;
             assert(cpattern_ref == '_');
         }
@@ -156,8 +156,8 @@ constexpr bool test() {
     { // Result of `operator*` is prvalue
         using V = std::vector<std::string_view>;
         using Pattern = RvalueVector<char>;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
 
         JWV jwv(
             V{
@@ -169,7 +169,7 @@ constexpr bool test() {
             auto it = jwv.begin();
             std::same_as<char> decltype(auto) v_ref = *std::as_const(it);
             assert(v_ref == 'x');
-            std::ranges::advance(it, 3);
+            xranges::advance(it, 3);
             std::same_as<char> decltype(auto) pattern_ref = *it;
             assert(pattern_ref == ' ');
         }
@@ -178,7 +178,7 @@ constexpr bool test() {
             auto cit = std::as_const(jwv).begin();
             std::same_as<char> decltype(auto) cv_ref = *cit;
             assert(cv_ref == 'x');
-            std::ranges::advance(cit, 4);
+            xranges::advance(cit, 4);
             std::same_as<char> decltype(auto) cpattern_ref =
                 *std::as_const(cit);
             assert(cpattern_ref == '+');
@@ -187,10 +187,10 @@ constexpr bool test() {
 
     { // Result of `operator*` is (maybe const) rvalue reference
         using Inner =
-            xranges::as_rvalue_view<std::ranges::owning_view<std::string>>;
-        using V = std::ranges::owning_view<std::vector<Inner>>;
-        using Pattern = xranges::as_rvalue_view<
-            std::ranges::owning_view<std::array<char, 2>>>;
+            xranges::as_rvalue_view<xranges::owning_view<std::string>>;
+        using V = xranges::owning_view<std::vector<Inner>>;
+        using Pattern =
+            xranges::as_rvalue_view<xranges::owning_view<std::array<char, 2>>>;
         using JWV = xranges::join_with_view<V, Pattern>;
 
         std::vector<Inner> vec;
@@ -203,7 +203,7 @@ constexpr bool test() {
             auto it = jwv.begin();
             std::same_as<char&&> decltype(auto) v_ref = *it;
             assert(v_ref == 'x');
-            std::ranges::advance(it, 3);
+            xranges::advance(it, 3);
             std::same_as<char&&> decltype(auto) pattern_ref =
                 *std::as_const(it);
             assert(pattern_ref == ',');
@@ -214,7 +214,7 @@ constexpr bool test() {
             std::same_as<char const&&> decltype(auto) cv_ref =
                 *std::as_const(cit);
             assert(cv_ref == 'x');
-            std::ranges::advance(cit, 4);
+            xranges::advance(cit, 4);
             std::same_as<char const&&> decltype(auto) cpattern_ref = *cit;
             assert(cpattern_ref == ' ');
         }
@@ -224,14 +224,13 @@ constexpr bool test() {
       // range_reference_t<InnerRng> and range_reference_t<Pattern>
         using Inner = std::vector<int>;
         using V = std::vector<Inner>;
-        using Pattern = std::ranges::subrange<ProxyIter, ProxyIter>;
-        using JWV =
-            xranges::join_with_view<std::ranges::owning_view<V>, Pattern>;
+        using Pattern = xranges::subrange<ProxyIter, ProxyIter>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
-        static_assert(!std::same_as<std::ranges::range_reference_t<V>,
-                      std::ranges::range_reference_t<JWV>>);
-        static_assert(!std::same_as<std::ranges::range_reference_t<Pattern>,
-                      std::ranges::range_reference_t<JWV>>);
+        static_assert(!std::same_as<xranges::range_reference_t<V>,
+                      xranges::range_reference_t<JWV>>);
+        static_assert(!std::same_as<xranges::range_reference_t<Pattern>,
+                      xranges::range_reference_t<JWV>>);
 
         std::array<int, 2> pattern = {-1, -1};
         Pattern pattern_as_subrange(ProxyIter{pattern.data()},
@@ -248,7 +247,7 @@ constexpr bool test() {
         auto it = jwv.begin();
         std::same_as<CommonProxyRef> decltype(auto) v_ref = *it;
         assert(v_ref.get() == 1);
-        std::ranges::advance(it, 7);
+        xranges::advance(it, 7);
         std::same_as<CommonProxyRef> decltype(auto) pattern_ref =
             *std::as_const(it);
         assert(pattern_ref.get() == -1);

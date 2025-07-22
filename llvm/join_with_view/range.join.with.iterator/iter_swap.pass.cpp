@@ -81,7 +81,7 @@ public:
         IterSwapTrackingIterator const& rhs) {
         assert(lhs.flag_ != nullptr && rhs.flag_ != nullptr);
         *lhs.flag_ = *rhs.flag_ = SwapKind::with_same_type;
-        return std::ranges::iter_swap(lhs.iter_, rhs.iter_);
+        return xranges::iter_swap(lhs.iter_, rhs.iter_);
     }
 
     template <std::indirectly_swappable<Iter> OtherIter, IterKind OtherKind>
@@ -90,7 +90,7 @@ public:
         IterSwapTrackingIterator<OtherIter, OtherKind> const& rhs) {
         assert(lhs.flag_ != nullptr && rhs.get_flag() != nullptr);
         *lhs.flag_ = *rhs.get_flag() = SwapKind::with_different_type;
-        return std::ranges::iter_swap(lhs.iter_, rhs.get_iter());
+        return xranges::iter_swap(lhs.iter_, rhs.get_iter());
     }
 
 private:
@@ -107,38 +107,33 @@ constexpr bool test() {
     { // Test common usage
         using V = std::vector<std::string>;
         using Pattern = std::string;
-        using JWV = xranges::join_with_view<std::ranges::owning_view<V>,
-            std::ranges::owning_view<Pattern>>;
+        using JWV = xranges::join_with_view<xranges::owning_view<V>,
+            xranges::owning_view<Pattern>>;
         using namespace std::string_view_literals;
 
         JWV jwv(V{"std", "ranges", "views", "join_with_view"}, Pattern{":: "});
-        assert(
-            std::ranges::equal(jwv, "std:: ranges:: views:: join_with_view"sv));
+        assert(xranges::equal(jwv, "std:: ranges:: views:: join_with_view"sv));
 
         auto it = jwv.begin();
-        iter_swap(it,
-            std::ranges::next(it, 2)); // Swap elements of the same inner range.
-        assert(
-            std::ranges::equal(jwv, "dts:: ranges:: views:: join_with_view"sv));
+        iter_swap(
+            it, xranges::next(it, 2)); // Swap elements of the same inner range.
+        assert(xranges::equal(jwv, "dts:: ranges:: views:: join_with_view"sv));
 
-        std::ranges::advance(it, 3);
+        xranges::advance(it, 3);
         iter_swap(std::as_const(it),
-            std::ranges::next(it, 2)); // Swap elements of the pattern.
-        assert(
-            std::ranges::equal(jwv, "dts ::ranges ::views ::join_with_view"sv));
+            xranges::next(it, 2)); // Swap elements of the pattern.
+        assert(xranges::equal(jwv, "dts ::ranges ::views ::join_with_view"sv));
 
-        std::ranges::advance(it, 3);
+        xranges::advance(it, 3);
         auto const it2 = jwv.begin();
         iter_swap(
             std::as_const(it), it2); // Swap elements of different inner ranges.
-        assert(
-            std::ranges::equal(jwv, "rts ::danges ::views ::join_with_view"sv));
+        assert(xranges::equal(jwv, "rts ::danges ::views ::join_with_view"sv));
 
-        std::ranges::advance(it, 6);
+        xranges::advance(it, 6);
         iter_swap(std::as_const(it), it2); // Swap element from inner range with
                                            // element from the pattern.
-        assert(
-            std::ranges::equal(jwv, " tsr::dangesr::viewsr::join_with_view"sv));
+        assert(xranges::equal(jwv, " tsr::dangesr::viewsr::join_with_view"sv));
 
         static_assert(std::is_void_v<decltype(iter_swap(it, it))>);
         static_assert(std::is_void_v<decltype(iter_swap(it2, it2))>);
@@ -151,11 +146,11 @@ constexpr bool test() {
         using Inner = std::vector<int>;
         using InnerTrackingIter =
             IterSwapTrackingIterator<Inner::iterator, IterKind::inner_view>;
-        using TrackingInner = std::ranges::subrange<InnerTrackingIter>;
+        using TrackingInner = xranges::subrange<InnerTrackingIter>;
         using Pattern = std::array<int, 2>;
         using PatternTrackingIter =
             IterSwapTrackingIterator<Pattern::iterator, IterKind::pattern>;
-        using TrackingPattern = std::ranges::subrange<PatternTrackingIter>;
+        using TrackingPattern = xranges::subrange<PatternTrackingIter>;
         using JWV =
             xranges::join_with_view<std::span<TrackingInner>, TrackingPattern>;
 
@@ -178,7 +173,7 @@ constexpr bool test() {
 
         JWV jwv(tracking_v, tracking_pat);
         auto it1 = jwv.begin();
-        auto it2 = std::ranges::next(it1);
+        auto it2 = xranges::next(it1);
 
         // Test calling `iter_swap` when both `it1` and `it2` point to elements
         // of `v`.
@@ -190,7 +185,7 @@ constexpr bool test() {
 
         // Test calling `iter_swap` when `it1` points to element of `v` and
         // `it2` points to element of `pat`.
-        std::ranges::advance(it2, 2);
+        xranges::advance(it2, 2);
         v_swap_kind = SwapKind::no_swap;
         assert(pat_swap_kind == SwapKind::no_swap);
         iter_swap(it1, it2);
@@ -200,7 +195,7 @@ constexpr bool test() {
 
         // Test calling `iter_swap` when `it1` and `it2` point to elements of
         // `pat`.
-        std::ranges::advance(it1, 4);
+        xranges::advance(it1, 4);
         v_swap_kind = pat_swap_kind = SwapKind::no_swap;
         iter_swap(it1, it2);
         assert(*it1 == 2 && *it2 == -2);
@@ -209,7 +204,7 @@ constexpr bool test() {
 
         // Test calling `iter_swap` when `it1` points to element of `pat` and
         // `it2` points to element of `v`.
-        std::ranges::advance(it2, 3);
+        xranges::advance(it2, 3);
         v_swap_kind = pat_swap_kind = SwapKind::no_swap;
         iter_swap(it1, it2);
         assert(*it1 == 5 && *it2 == 2);
