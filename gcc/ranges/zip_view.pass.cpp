@@ -123,7 +123,8 @@ constexpr bool test03() {
 
 constexpr bool test04() {
     // PR libstdc++/106766
-#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX_AT_LEAST(16)
+#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX && \
+    (!__STRICT_ANSI__ || RXX_LIBSTDCXX_AT_LEAST(16))
     auto r = xviews::zip(xviews::iota(__int128(0), __int128(1)));
 #else
     auto r = xviews::zip(xviews::iota(0ll, 1ll));
