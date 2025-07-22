@@ -189,7 +189,8 @@ void test04() {
 
 void test05() {
     // libc++ does not support this
-#if RXX_LIBSTDCXX
+#if RXX_SUPPORTS_INT128 && RXX_LIBSTDCXX && \
+    (!__STRICT_ANSI__ || RXX_LIBSTDCXX_AT_LEAST(16))
     auto r = xviews::iota(__int128(0), __int128(5));
 #else
     auto r = xviews::iota(0ll, 5ll);
