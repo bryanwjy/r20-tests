@@ -28,8 +28,6 @@
 #include <string_view>
 #include <vector>
 
-namespace ranges = std::ranges;
-namespace views = std::ranges::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 using namespace std::literals;
