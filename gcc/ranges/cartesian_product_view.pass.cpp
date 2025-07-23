@@ -68,7 +68,7 @@ constexpr bool test01() {
     auto v3 = xviews::cartesian_product(x, y, z);
     assert(xranges::size(v3) == 18);
     assert(xranges::equal(v3,
-        (std::tuple<int, int, int>[]){
+        (rxx::tuple<int, int, int>[]){
             {1, 4, 7},
             {1, 4, 8},
             {1, 5, 7},
@@ -95,19 +95,19 @@ constexpr bool test01() {
 
     auto i4 = v4.begin(), j4 = i4 + 1;
     assert(j4 > i4);
-    assert(i4[0] == std::tuple(1, 4, 7, 9));
+    assert(i4[0] == rxx::tuple(1, 4, 7, 9));
     assert(i4 + 18 == v4.end());
     i4 += 5;
     assert(i4 != v4.begin());
     assert(i4 - 5 == v4.begin());
-    assert(*i4 == std::tuple(1, 6, 8, 9));
+    assert(*i4 == rxx::tuple(1, 6, 8, 9));
     assert(i4 - 5 != i4);
     i4 -= 3;
-    assert(*i4 == std::tuple(1, 5, 7, 9));
+    assert(*i4 == rxx::tuple(1, 5, 7, 9));
     assert(j4 + 1 == i4);
     xranges::iter_swap(i4, j4);
-    assert(*j4 == std::tuple(1, 5, 7, 9));
-    assert(*i4 == std::tuple(1, 4, 8, 9));
+    assert(*j4 == rxx::tuple(1, 5, 7, 9));
+    assert(*i4 == rxx::tuple(1, 4, 8, 9));
 
     return true;
 }

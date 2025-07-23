@@ -15,11 +15,11 @@
 #include "../test_iterators.h"
 #include "../test_range.h"
 #include "rxx/ranges.h"
+#include "rxx/tuple.h"
 
 #include <concepts>
 #include <cstdint>
 #include <string>
-#include <tuple>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
