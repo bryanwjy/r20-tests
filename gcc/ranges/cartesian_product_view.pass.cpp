@@ -24,11 +24,8 @@
 #include "rxx/ranges/reverse_view.h"
 
 #include <cassert>
-#include <ranges>
 #include <sstream>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 

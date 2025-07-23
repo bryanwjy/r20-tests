@@ -26,13 +26,10 @@
 #include "rxx/ranges/reverse_view.h"
 #include "rxx/ranges/transform_view.h"
 
-#include <ranges>
 #include <span>
 #include <utility>
 #include <vector>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 

@@ -45,10 +45,12 @@ struct MoveOnly {
         return *this;
     }
 
-    constexpr T* get() const noexcept { return val ? &*val : nullptr; }
-    constexpr T& operator*() const noexcept { return *val; }
+    constexpr T* get() const noexcept {
+        return val ? const_cast<T*>(&*val) : nullptr;
+    }
+    constexpr T& operator*() const noexcept { return *get(); }
 
-    mutable std::optional<T> val;
+    std::optional<T> val;
 };
 
 template <typename T, typename... Args>

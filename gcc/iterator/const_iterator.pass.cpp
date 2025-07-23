@@ -19,13 +19,12 @@
 // <http://www.gnu.org/licenses/>.
 
 #include "../test_iterators.h"
+#include "rxx/iterator.h"
 #include "rxx/ranges/access.h"
 #include "rxx/ranges/concepts.h"
-#include "rxx/iterator.h"
 
 #include <array>
 #include <concepts>
-#include <ranges>
 #include <string_view>
 #include <vector>
 
@@ -34,7 +33,6 @@ using rxx::tests::test_forward_range;
 using rxx::tests::test_input_range;
 using rxx::tests::test_random_access_range;
 
-namespace ranges = std::ranges;
 namespace xranges = rxx::ranges;
 
 template <class Iter, bool Const>
@@ -129,13 +127,13 @@ void test04() {
 
     auto v = std::vector<int>();
     {
-        auto i1 = ranges::cbegin(v); // returns vector<T>::const_iterator
-        f(i1);                       // okay
+        auto i1 = xranges::cbegin(v); // returns vector<T>::const_iterator
+        f(i1);                        // okay
     }
 
     auto t = v | std::views::take_while([](int const x) { return x < 100; });
     {
-        auto i2 = ranges::cbegin(
+        auto i2 = xranges::cbegin(
             t);           // returns basic_const_iterator<vector<T>::iterator>
         f(i2);            // was an error in C++23 before P2836R1
         f(std::move(i2)); // same

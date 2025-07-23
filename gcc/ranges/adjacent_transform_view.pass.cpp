@@ -23,11 +23,8 @@
 #include "rxx/ranges/iota_view.h"
 
 #include <cassert>
-#include <ranges>
 #include <utility>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
