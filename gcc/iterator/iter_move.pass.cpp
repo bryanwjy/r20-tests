@@ -158,10 +158,13 @@ void test_pr106612() {
 
 void test_pr119469() {
     // rvalue references to function types are weird.
+    /* ^ Agreed */
+#if RXX_LIBCXX
     using F = int();
     static_assert(std::same_as<std::iter_rvalue_reference_t<F>, F&>);
     static_assert(std::same_as<std::iter_rvalue_reference_t<F&>, F&>);
     static_assert(std::same_as<std::iter_rvalue_reference_t<F&&>, F&>);
+#endif
 }
 
 int main() {

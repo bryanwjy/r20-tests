@@ -170,8 +170,11 @@ constexpr bool test() {
             decltype(std::as_const(jv).begin())>);
     }
 
-    // Check stashing iterators (LWG3698: regex_iterator and join_view don't
-    // work together very well)
+// Check stashing iterators (LWG3698: regex_iterator and join_view don't
+// work together very well)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         xranges::join_view<StashingRange> jv;
         assert(xranges::equal(

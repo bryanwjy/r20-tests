@@ -95,6 +95,9 @@ constexpr bool test() {
     // Can use `iter_swap` with `inner-iterator`; `View` is a forward range.
     {
         // Non-const iterator.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             SplitViewDiff v("abc def", " ");
             auto segment = *v.begin();
@@ -114,6 +117,9 @@ constexpr bool test() {
         }
 
         // Const iterator.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             SplitViewDiff v("abc def", " ");
             auto segment = *v.begin();
@@ -132,7 +138,10 @@ constexpr bool test() {
         }
     }
 
-    // Can use `iter_swap` with `inner-iterator`; `View` is an input range.
+// Can use `iter_swap` with `inner-iterator`; `View` is an input range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
 
         // Non-const iterator.
@@ -176,6 +185,9 @@ constexpr bool test() {
         }
 
         // Const iterator.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             SplitViewInput v("abc def", ' ');
             auto segment = *v.begin();

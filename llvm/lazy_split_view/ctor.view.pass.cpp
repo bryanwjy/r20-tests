@@ -70,6 +70,9 @@ constexpr bool test() {
     }
 
     // Calling the constructor with `(InputView, TinyView)`.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         InputView input = "abc def";
         xranges::lazy_split_view<InputView, ForwardTinyView> v(input, ' ');

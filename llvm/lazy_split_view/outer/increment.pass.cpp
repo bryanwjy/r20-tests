@@ -30,6 +30,9 @@ constexpr bool test() {
         SplitViewForward v("abc def ghi", " ");
 
         // ++i
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             auto i = v.begin();
             assert(xranges::equal(*i, "abc"s));
@@ -41,6 +44,9 @@ constexpr bool test() {
         }
 
         // i++
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             auto i = v.begin();
             assert(xranges::equal(*i, "abc"s));
@@ -53,6 +59,9 @@ constexpr bool test() {
     }
 
     // Can call `outer-iterator::operator++`; `View` is an input range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         SplitViewInput v("abc def ghi", ' ');
 

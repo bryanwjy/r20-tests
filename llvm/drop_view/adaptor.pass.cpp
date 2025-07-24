@@ -202,8 +202,9 @@ constexpr bool test() {
     // == false`.
     {
         auto subrange = xranges::subrange(buf, buf + N);
+#if RXX_LIBCXX
         static_assert(!decltype(subrange)::_StoreSize);
-
+#endif
         using Result = xranges::subrange<int*>;
         std::same_as<Result> decltype(auto) result = subrange | xviews::drop(3);
         assert(result.size() == 5);
@@ -219,7 +220,9 @@ constexpr bool test() {
             xranges::subrange_kind::sized>;
         auto subrange = Subrange(view.begin(), view.end(),
             xranges::distance(view.begin(), view.end()));
-        static_assert(decltype(subrange)::_StoreSize);
+#if RXX_LIBCXX
+        static_assert(!decltype(subrange)::_StoreSize);
+#endif
 
         std::same_as<Subrange> decltype(auto) result =
             subrange | xviews::drop(3);

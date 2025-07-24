@@ -207,7 +207,9 @@ constexpr bool test() {
     }
 
 // std::string did not work at constexpr before
-#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     { // check invocations of the projection for std::string
         std::string const str{"hello world"};
         std::string const str1{"hi world"};
@@ -240,9 +242,10 @@ constexpr bool test() {
             assert(projection_count == 3);
         }
     }
-#endif
 
-#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AFTER(2024, 06, 11)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2024, 06, 11)
+    if (!std::is_constant_evaluated())
+#endif
     { // check invocations of the projection for non-contiguous iterators
         std::vector<bool> whole{false, false, true, false};
         int projection_count = 0;

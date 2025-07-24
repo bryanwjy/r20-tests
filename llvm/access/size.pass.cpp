@@ -35,7 +35,7 @@ static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&)[]>);
 static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&&)[]>);
 
 extern Incomplete array_of_incomplete[42];
-#if RXX_COMPILER_CLANG
+#if RXX_LIBCXX
 // The standard doesn't specify whether or not an incomplete object
 // is valid; clang supports this but GCC's is_invocable does not work
 // on incomplete types.

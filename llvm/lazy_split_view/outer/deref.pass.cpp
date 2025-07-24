@@ -26,6 +26,10 @@ template <class View, class Separator>
 constexpr void test_one(Separator sep) {
     using namespace std::string_literals;
     using namespace std::string_view_literals;
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (std::is_constant_evaluated())
+        return;
+#endif
 
     View v("abc def ghi"sv, sep);
 
