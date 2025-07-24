@@ -44,6 +44,7 @@
 #include <utility>
 
 namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 struct NotEqualityComparable {};
 
@@ -355,10 +356,10 @@ constexpr bool test() {
         });
     });
 
-    assert(xranges::contains_subrange(std::views::iota(0, 5),
-        std::views::iota(0, 5) | std::views::filter([](int) { return true; })));
+    assert(xranges::contains_subrange(xviews::iota(0, 5),
+        xviews::iota(0, 5) | xviews::filter([](int) { return true; })));
     assert(!xranges::contains_subrange(
-        std::views::iota(0ULL, 42ULL), std::views::iota(0ULL, 1ULL << 32)));
+        xviews::iota(0ULL, 42ULL), xviews::iota(0ULL, 1ULL << 32)));
 
     return true;
 }

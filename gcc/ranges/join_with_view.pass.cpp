@@ -93,8 +93,8 @@ constexpr bool test03() {
 }
 
 constexpr bool test04() {
-    // std::string had a bug prior to libstdc++13.3
-#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AT_LEAST(14)
+    // std::string did not work at constexpr prior to this
+#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AFTER(2023, 11, 08)
     std::string rs[] = {"a", "", "b", "", "c"};
     auto v = rs | xviews::join_with(' ');
     assert(xranges::equal(v, "a  b  c"sv));

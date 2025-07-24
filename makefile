@@ -14,8 +14,8 @@ RXX_DIR := $(TEST_ROOT)/rxx
 
 TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -name '*.pass.cpp')
 TEST_OBJECTS := $(addsuffix .o, $(TEST_SRCS:$(TEST_ROOT)/%=%))
-CXX_FLAGS := -std=c++20 -O1 -I$(RXX_SRC) -ftemplate-backtrace-limit=0
-LINKER_FLAGS := 
+CXX_FLAGS := $(CXX_FLAGS) -std=c++20 -O1 -I$(RXX_SRC) -ftemplate-backtrace-limit=0
+LINKER_FLAGS := $(LINKER_FLAGS)
 
 DEPENDENCIES := $(TEST_OBJECTS:.o=.d)
 

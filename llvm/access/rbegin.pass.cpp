@@ -196,10 +196,19 @@ constexpr bool testRBeginMember() {
     static_assert(!std::is_invocable_v<RangeCRBeginT, NonConstRBeginMember&>);
 
     EnabledBorrowingRBeginMember c;
+#if RXX_COMPILER_GCC
+    // GCC templated conversion operator bug:
+    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85250
+    assert(xranges::rbegin(c) == static_cast<int*>(globalBuff));
+    assert(xranges::crbegin(c) == static_cast<int*>(globalBuff));
+    assert(xranges::rbegin(std::move(c)) == static_cast<int*>(globalBuff));
+    assert(xranges::crbegin(std::move(c)) == static_cast<int*>(globalBuff));
+#else
     assert(xranges::rbegin(c) == globalBuff);
     assert(xranges::crbegin(c) == globalBuff);
     assert(xranges::rbegin(std::move(c)) == globalBuff);
     assert(xranges::crbegin(std::move(c)) == globalBuff);
+#endif
 
     RBeginMemberFunction d;
     assert(xranges::rbegin(d) == &d.x);

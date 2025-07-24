@@ -22,6 +22,7 @@
 #include "rxx/iterator.h"
 #include "rxx/ranges/access.h"
 #include "rxx/ranges/concepts.h"
+#include "rxx/ranges/take_while_view.h"
 
 #include <array>
 #include <concepts>
@@ -34,6 +35,7 @@ using rxx::tests::test_input_range;
 using rxx::tests::test_random_access_range;
 
 namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 template <class Iter, bool Const>
 void test01() {
@@ -131,7 +133,7 @@ void test04() {
         f(i1);                        // okay
     }
 
-    auto t = v | std::views::take_while([](int const x) { return x < 100; });
+    auto t = v | xviews::take_while([](int const x) { return x < 100; });
     {
         auto i2 = xranges::cbegin(
             t);           // returns basic_const_iterator<vector<T>::iterator>

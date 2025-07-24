@@ -32,9 +32,10 @@ template <typename T>
 void implicit_conv(T) noexcept;
 
 template <typename T, typename THead, typename TMid, typename... TTail>
-auto explicit_test(int) noexcept -> decltype((
-    implicit_conv<T>({declval<THead>(), declval<TMid>(), declval<TTail>()...}),
-    std::false_type{}));
+auto explicit_test(int) noexcept
+    -> decltype((implicit_conv<T>({std::declval<THead>(), std::declval<TMid>(),
+                     std::declval<TTail>()...}),
+        std::false_type{}));
 template <typename T, typename THead, typename TMid, typename... TTail>
 auto explicit_test(float) noexcept
     -> std::is_constructible<T, THead, TMid, TTail...>;

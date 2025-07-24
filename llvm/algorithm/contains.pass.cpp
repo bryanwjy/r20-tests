@@ -37,6 +37,7 @@
 #include <vector>
 
 namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 struct NotEqualityComparable {};
 
@@ -205,6 +206,8 @@ constexpr bool test() {
         }
     }
 
+// std::string did not work at constexpr before
+#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AFTER(2023, 11, 08)
     { // check invocations of the projection for std::string
         std::string const str{"hello world"};
         std::string const str1{"hi world"};
@@ -237,7 +240,9 @@ constexpr bool test() {
             assert(projection_count == 3);
         }
     }
+#endif
 
+#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AFTER(2024, 06, 11)
     { // check invocations of the projection for non-contiguous iterators
         std::vector<bool> whole{false, false, true, false};
         int projection_count = 0;
@@ -260,12 +265,11 @@ constexpr bool test() {
             assert(projection_count == 3);
         }
     }
-
+#endif
     { // check invocations of the projection for views::transform
         int a[] = {1, 2, 3, 4, 5};
         int projection_count = 0;
-        auto square_number =
-            a | std::views::transform([](int x) { return x * x; });
+        auto square_number = a | xviews::transform([](int x) { return x * x; });
         {
             bool ret = xranges::contains(
                 square_number.begin(), square_number.end(), 16, [&](int i) {

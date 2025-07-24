@@ -35,6 +35,10 @@ static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&)[]>);
 static_assert(!std::is_invocable_v<RangeSizeT, Incomplete (&&)[]>);
 
 extern Incomplete array_of_incomplete[42];
+#if RXX_COMPILER_CLANG
+// The standard doesn't specify whether or not an incomplete object
+// is valid; clang supports this but GCC's is_invocable does not work
+// on incomplete types.
 static_assert(std::is_invocable_v<RangeSizeT, Incomplete[42]>);
 static_assert(std::is_invocable_v<RangeSizeT, Incomplete (&)[42]>);
 static_assert(std::is_invocable_v<RangeSizeT, Incomplete (&&)[42]>);
@@ -43,6 +47,7 @@ static_assert(xranges::size(std::move(array_of_incomplete)) == 42);
 static_assert(xranges::size(std::as_const(array_of_incomplete)) == 42);
 static_assert(xranges::size(static_cast<Incomplete const (&&)[42]>(
                   array_of_incomplete)) == 42);
+#endif
 
 struct SizeMember {
     constexpr std::size_t size() { return 42; }
