@@ -33,7 +33,8 @@ struct NotTotallyOrdered {
 
 static_assert(!std::is_invocable_v<xranges::greater, NotTotallyOrdered,
               NotTotallyOrdered>);
-static_assert(!std::is_invocable_v<xranges::greater, int, MoveOnly>);
+// The following becomes true in C++23 thanks to P2404R3
+static_assert(std::is_invocable_v<xranges::greater, int, MoveOnly>);
 static_assert(std::is_invocable_v<xranges::greater, explicit_operators,
     explicit_operators>);
 

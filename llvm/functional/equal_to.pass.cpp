@@ -36,7 +36,8 @@ struct NotEqualityComparable {
 
 static_assert(!std::is_invocable_v<xranges::equal_to, NotEqualityComparable,
               NotEqualityComparable>);
-static_assert(!std::is_invocable_v<xranges::equal_to, int, MoveOnly>);
+// The following becomes true in C++23 thanks to P2404R3
+static_assert(std::is_invocable_v<xranges::equal_to, int, MoveOnly>);
 static_assert(std::is_invocable_v<xranges::equal_to, explicit_operators,
     explicit_operators>);
 

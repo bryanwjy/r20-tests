@@ -50,6 +50,9 @@ template <class I>
 concept CanDecrement = CanPreDecrement<I> && CanPostDecrement<I>;
 
 constexpr bool test() {
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     { // `V` and `Pattern` are not empty. Test return type too.
         using V = xranges::owning_view<std::vector<std::string>>;
         using Pattern = xranges::single_view<char>;

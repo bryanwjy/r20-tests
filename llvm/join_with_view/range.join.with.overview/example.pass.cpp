@@ -31,6 +31,10 @@ namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
 constexpr bool test() {
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (std::is_constant_evaluated())
+        return true;
+#endif
     std::vector<std::string> vs = {"the", "quick", "brown", "fox"};
     std::string result;
     for (char c : vs | xviews::join_with('-')) {

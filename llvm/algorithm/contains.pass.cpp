@@ -268,7 +268,7 @@ constexpr bool test() {
             assert(projection_count == 3);
         }
     }
-#endif
+
     { // check invocations of the projection for views::transform
         int a[] = {1, 2, 3, 4, 5};
         int projection_count = 0;
