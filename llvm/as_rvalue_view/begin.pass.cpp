@@ -54,7 +54,8 @@ constexpr void test_range() {
     int a[] = {1, 2};
     xranges::subrange range(Iter(std::begin(a)), Sent(Iter(std::end(a))));
     xranges::as_rvalue_view view(std::move(range));
-    std::same_as<std::move_iterator<Iter>> decltype(auto) iter = view.begin();
+    std::same_as<__RXX move_iterator<Iter>> decltype(auto) iter =
+        view.begin();
     assert(base(iter.base()) == std::begin(a));
 }
 
@@ -80,13 +81,14 @@ constexpr void test_const_range() {
     int a[] = {1, 2};
     auto range = WrapRange{Iter(a), Sent(Iter(a + 2))};
     xranges::as_rvalue_view const view(xviews::all(range));
-    std::same_as<std::move_iterator<Iter>> decltype(auto) iter = view.begin();
+    std::same_as<__RXX move_iterator<Iter>> decltype(auto) iter =
+        view.begin();
     assert(base(iter.base()) == std::begin(a));
 }
 
 struct move_iterator_view : xranges::view_base {
-    constexpr std::move_iterator<int*> begin() const { return {}; }
-    constexpr std::move_iterator<int*> end() const { return {}; }
+    constexpr __RXX move_iterator<int*> begin() const { return {}; }
+    constexpr __RXX move_iterator<int*> end() const { return {}; }
 };
 
 constexpr bool test() {
@@ -103,11 +105,12 @@ constexpr bool test() {
         test_const_range<Iter, sized_sentinel<Iter>>();
     });
 
-    { // check that with a std::move_iterator begin() doesn't return
+    { // check that with a __RXX move_iterator begin() doesn't return
         // move_iterator<move_iterator<T>>
         xranges::as_rvalue_view view{move_iterator_view{}};
-        std::same_as<std::move_iterator<int*>> decltype(auto) it = view.begin();
-        assert(it == std::move_iterator<int*>{});
+        std::same_as<__RXX move_iterator<int*>> decltype(auto) it =
+            view.begin();
+        assert(it == __RXX move_iterator<int*>{});
     }
 
     return true;

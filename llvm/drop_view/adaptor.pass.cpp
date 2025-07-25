@@ -221,7 +221,7 @@ constexpr bool test() {
         auto subrange = Subrange(view.begin(), view.end(),
             xranges::distance(view.begin(), view.end()));
 #if RXX_LIBCXX
-        static_assert(!decltype(subrange)::_StoreSize);
+        static_assert(decltype(subrange)::_StoreSize);
 #endif
 
         std::same_as<Subrange> decltype(auto) result =

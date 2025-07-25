@@ -234,6 +234,11 @@ constexpr void test_pre_increment() {
         }
     }
 
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (std::is_constant_evaluated())
+        return;
+#endif
+
     { // Only last element of `V` is not empty. `Pattern` is empty. `V` models
       // input range.
         using V = BasicView<VRange<RefIsGlvalue, std::string>, ViewProperties{},

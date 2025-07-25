@@ -74,16 +74,16 @@ static_assert(!HasEnd<xranges::as_rvalue_view<NonConstView> const>);
 static_assert(std::is_same_v<
     decltype(std::declval<xranges::as_rvalue_view<DefaultConstructibleView>>()
                  .end()),
-    std::move_iterator<int*>>);
+    __RXX move_iterator<int*>>);
 static_assert(std::is_same_v<
     decltype(std::declval<xranges::as_rvalue_view<NonConstCommonRange> const>()
                  .end()),
-    std::move_sentinel<sentinel_wrapper<int*>>>);
+    __RXX move_sentinel<sentinel_wrapper<int*>>>);
 
 template <class Iter, class Sent, bool is_common>
 constexpr void test_range() {
-    using Expected = std::conditional_t<is_common, std::move_iterator<Sent>,
-        std::move_sentinel<Sent>>;
+    using Expected = std::conditional_t<is_common, __RXX move_iterator<Sent>,
+        __RXX move_sentinel<Sent>>;
     int a[] = {1, 2};
     xranges::subrange range(Iter(std::begin(a)), Sent(Iter(std::end(a))));
     xranges::as_rvalue_view view(std::move(range));
@@ -110,8 +110,8 @@ WrapRange(Iter, Sent) -> WrapRange<Iter, Sent>;
 
 template <class Iter, class Sent, bool is_common>
 constexpr void test_const_range() {
-    using Expected = std::conditional_t<is_common, std::move_iterator<Sent>,
-        std::move_sentinel<Sent>>;
+    using Expected = std::conditional_t<is_common, __RXX move_iterator<Sent>,
+        __RXX move_sentinel<Sent>>;
     int a[] = {1, 2};
     auto range = WrapRange{Iter(a), Sent(Iter(a + 2))};
     xranges::as_rvalue_view const view(std::move(range));
@@ -120,8 +120,8 @@ constexpr void test_const_range() {
 }
 
 struct move_iterator_view : xranges::view_base {
-    constexpr std::move_iterator<int*> begin() const { return {}; }
-    constexpr std::move_iterator<int*> end() const { return {}; }
+    constexpr __RXX move_iterator<int*> begin() const { return {}; }
+    constexpr __RXX move_iterator<int*> end() const { return {}; }
 };
 
 constexpr bool test() {
@@ -146,11 +146,12 @@ constexpr bool test() {
         assert(view.base().const_called);
     }
 
-    { // check that with a std::move_iterator begin() doesn't return
+    { // check that with a __RXX move_iterator begin() doesn't return
         // move_iterator<move_iterator<T>>
         xranges::as_rvalue_view view{move_iterator_view{}};
-        std::same_as<std::move_iterator<int*>> decltype(auto) it = view.end();
-        assert(it == std::move_iterator<int*>{});
+        std::same_as<__RXX move_iterator<int*>> decltype(auto) it =
+            view.end();
+        assert(it == __RXX move_iterator<int*>{});
     }
 
     return true;
