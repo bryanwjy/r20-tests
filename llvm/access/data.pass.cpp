@@ -71,18 +71,15 @@ constexpr bool testReturnTypes() {
         ASSERT_SAME_TYPE(decltype(xranges::data(x)), int(*)[2]);
         ASSERT_SAME_TYPE(decltype(xranges::cdata(x)), int const(*)[2]);
     }
-    RXX_DISABLE_WARNING_PUSH()
-#if RXX_COMPILER_CLANG | RXX_COMPILER_GCC
-    RXX_DISABLE_WARNING("-Wundefined-inline")
-#endif
+
     {
         struct D {
             char*& data();
             short*& data() const;
-            constexpr char* begin();
-            constexpr char* end();
-            constexpr short const* begin() const;
-            constexpr short const* end() const;
+            char* begin();
+            char* end();
+            short const* begin() const;
+            short const* end() const;
         };
         ASSERT_SAME_TYPE(
             decltype(xranges::data(std::declval<D const&>())), short*);
@@ -114,7 +111,6 @@ constexpr bool testReturnTypes() {
             decltype(xranges::cdata(std::declval<const NC&>())), char const*);
         static_assert(!std::is_invocable_v<RangeCDataT, const NC&&>);
     }
-    RXX_DISABLE_WARNING_POP()
     return true;
 }
 

@@ -14,8 +14,8 @@ RXX_DIR := $(TEST_ROOT)/rxx
 
 TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -name '*.pass.cpp')
 TEST_OBJECTS := $(addsuffix .o, $(TEST_SRCS:$(TEST_ROOT)/%=%))
-CXX_FLAGS := -std=c++20 -O1 -I$(RXX_SRC) -ftemplate-backtrace-limit=0
-LINKER_FLAGS := 
+CXX_FLAGS := $(CXX_FLAGS) -std=c++20 -O1 -I$(RXX_SRC) -ftemplate-backtrace-limit=0
+LINKER_FLAGS := $(LINKER_FLAGS)
 
 DEPENDENCIES := $(TEST_OBJECTS:.o=.d)
 
@@ -23,7 +23,7 @@ PASS_OBJECTS := $(filter-out %.compile.pass.cpp.o,$(TEST_OBJECTS))
 PASS_EXES := $(patsubst %.cpp.o,%,$(PASS_OBJECTS))
 
 COMPILE_OBJECTS := $(patsubst %.cpp.o,%,$(filter %.compile.pass.cpp.o,$(TEST_OBJECTS)))
-
+PREPROCESS_OBJECTS := $(addsuffix .i, $(TEST_SRCS:$(TEST_ROOT)/%=%))
 .PHONY = all clean run compile
 
 all: run
@@ -66,9 +66,17 @@ $(INTERMEDIATE_DIR)/%.pass.cpp.o: $(TEST_ROOT)/%.pass.cpp makefile
 	@mkdir -p '$(@D)'
 	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@'
 
+$(PREPROCESS_OBJECTS):%.cpp.i: $(INTERMEDIATE_DIR)/%.cpp.i
+	@
+
+$(INTERMEDIATE_DIR)/%.pass.cpp.i: $(TEST_ROOT)/%.pass.cpp makefile
+	@mkdir -p '$(@D)'
+	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.i=.d)' -MT '$@' -E $< -o '$@'
+
 -include $(addprefix $(INTERMEDIATE_DIR)/,$(DEPENDENCIES))
 
 clean:
+	@find $(INTERMEDIATE_DIR) -name '*.i' -delete
 	@find $(INTERMEDIATE_DIR) -name '*.o' -delete
 	@find $(INTERMEDIATE_DIR) -name '*.d' -delete
 	@find $(INTERMEDIATE_DIR) -name '*.prep.cpp' -delete

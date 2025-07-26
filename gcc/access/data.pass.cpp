@@ -96,7 +96,7 @@ void test03() {
     // PR libstdc++/100824 comment 3
     // Check for member data() should use decay-copy
     RXX_DISABLE_WARNING_PUSH()
-#if RXX_COMPILER_CLANG | RXX_COMPILER_GCC
+#if RXX_COMPILER_CLANG
     RXX_DISABLE_WARNING("-Wundefined-internal")
 #endif
     struct A {

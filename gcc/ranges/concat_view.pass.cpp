@@ -29,13 +29,10 @@
 
 #include <array>
 #include <cassert>
-#include <ranges>
 #include <sstream>
 #include <utility>
 #include <vector>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
@@ -48,15 +45,19 @@ constexpr bool test01() {
 
     assert(xranges::size(v) == 9);
     assert(xranges::size(std::as_const(v)) == 9);
+#if !RXX_COMPILER_GCC
+    // FIXME: Unfortunately there is an OOM issue on GCC
     assert(xranges::equal(v, xviews::iota(1, 10)));
     assert(xranges::equal(
         v | xviews::reverse, xviews::iota(1, 10) | xviews::reverse));
-
+#endif
     auto it0 = v.begin();
     auto cit = std::as_const(v).begin();
     assert(it0 == it0);
     assert(cit == cit);
     assert(it0 == cit);
+#if !RXX_COMPILER_GCC
+    // FIXME: Unfortunately there is an OOM issue on GCC
     for (int i = 0; i < 10; i++) {
         assert(it0 + i - it0 == i);
         assert(it0 + i - (it0 + 1) == i - 1);
@@ -65,6 +66,7 @@ constexpr bool test01() {
         assert(it0 + i - i + i == it0 + i);
         assert(it0 + i - (it0 + i) == 0);
     }
+#endif
     assert(std::default_sentinel - it0 == 9);
     assert(it0 + 9 == std::default_sentinel);
 

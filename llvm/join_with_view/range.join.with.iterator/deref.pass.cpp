@@ -90,6 +90,9 @@ private:
 static_assert(std::forward_iterator<ProxyIter>);
 
 constexpr bool test() {
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     { // Result of `operator*` is (maybe const) lvalue reference
         using V = xranges::owning_view<std::vector<std::string>>;
         using Pattern = xranges::owning_view<std::string>;
@@ -185,6 +188,9 @@ constexpr bool test() {
         }
     }
 
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     { // Result of `operator*` is (maybe const) rvalue reference
         using Inner =
             xranges::as_rvalue_view<xranges::owning_view<std::string>>;

@@ -26,6 +26,16 @@ template <class View, class Separator>
 constexpr void test_one(Separator sep) {
     using namespace std::string_literals;
     using namespace std::string_view_literals;
+#if RXX_LIBSTDCXX &&                       \
+    (!RXX_LIBSTDCXX_AFTER(2023, 11, 08) || \
+        !RXX_COMPILER_CLANG_AT_LEAST(22, 0, 0))
+    // Clang has a language bug related to splitting template declaration
+    // and definition: https://github.com/llvm/llvm-project/issues/73232
+    // Tentatively assume it will be fixed by llvm-22
+    // `View` is a forward range.
+    if (std::is_constant_evaluated())
+        return;
+#endif
 
     View v("abc def ghi"sv, sep);
 
@@ -47,7 +57,6 @@ constexpr void test_one(Separator sep) {
 }
 
 constexpr bool test() {
-    // `View` is a forward range.
     test_one<SplitViewDiff>(" ");
     test_one<SplitViewInput>(' ');
 

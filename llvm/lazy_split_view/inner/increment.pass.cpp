@@ -60,6 +60,9 @@ constexpr bool test() {
     }
 
     // Can call `inner-iterator::operator++`; `View` is an input range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         // ++i
         {
@@ -93,6 +96,9 @@ constexpr bool test() {
     // `Pattern` is an "empty" range.
     {
         // ++i
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             xranges::lazy_split_view<InputView, EmptyView> v("a", EmptyView());
             auto val = *v.begin();
@@ -110,6 +116,9 @@ constexpr bool test() {
         }
 
         // i++
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             xranges::lazy_split_view<InputView, EmptyView> v("a", EmptyView());
             auto val = *v.begin();

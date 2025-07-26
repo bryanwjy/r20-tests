@@ -37,10 +37,9 @@
 #include "../maths.h"
 #include "../static_asserts.h"
 #include "../test_range.h"
-#include "rxx/algorithm/fold.h"
+#include "rxx/algorithm.h"
 #include "rxx/ranges.h"
 
-#include <algorithm>
 #include <cassert>
 #include <concepts>
 #include <deque>
@@ -54,6 +53,7 @@
 #include <vector>
 
 namespace xranges = rxx::ranges;
+namespace xviews = rxx::views;
 
 using xranges::fold_left;
 using xranges::fold_left_with_iter;
@@ -215,7 +215,7 @@ constexpr void empty_range_test_case() {
     check(data, 100, std::plus(), 100);
     check(data, -100, std::multiplies(), -100);
 
-    check(data | std::views::take_while([](auto) { return false; }), 1.23,
+    check(data | xviews::take_while([](auto) { return false; }), 1.23,
         std::plus(), 1.23);
     check(data, Integer(52), &Integer::plus, Integer(52));
 }
@@ -260,10 +260,13 @@ constexpr void non_common_range_test_case() {
             : (assert(false), 10.0); // the number here is arbitrary
     };
 
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         auto data = std::vector<std::string>{
             "five", "three", "two", "six", "one", "four"};
-        auto range = data | std::views::transform(parse);
+        auto range = data | xviews::transform(parse);
         check(range, 0, std::plus(), triangular_sum(range));
     }
 
@@ -273,9 +276,8 @@ constexpr void non_common_range_test_case() {
             auto const n = xranges::distance(r);
             return std::string_view(&*r.begin(), n);
         };
-        auto range = std::views::lazy_split(data, ' ') |
-            std::views::transform(to_string_view) |
-            std::views::transform(parse);
+        auto range = xviews::lazy_split(data, ' ') |
+            xviews::transform(to_string_view) | xviews::transform(parse);
         check(range, 0, std::plus(), triangular_sum(range));
     }
 }
@@ -299,7 +301,7 @@ void runtime_only_test_case() {
 
         {
             auto input = std::istringstream(raw_data);
-            auto data = std::views::istream<std::string>(input);
+            auto data = xviews::istream<std::string>(input);
             is_in_value_result<xranges::basic_istream_view<std::string, char>,
                 std::string> decltype(auto) result =
                 fold_left_with_iter(
@@ -311,7 +313,7 @@ void runtime_only_test_case() {
 
         {
             auto input = std::istringstream(raw_data);
-            auto data = std::views::istream<std::string>(input);
+            auto data = xviews::istream<std::string>(input);
             is_in_value_result<xranges::basic_istream_view<std::string, char>,
                 std::string> decltype(auto) result =
                 fold_left_with_iter(data, init, std::plus());
@@ -321,14 +323,14 @@ void runtime_only_test_case() {
 
         {
             auto input = std::istringstream(raw_data);
-            auto data = std::views::istream<std::string>(input);
+            auto data = xviews::istream<std::string>(input);
             assert(fold_left(data.begin(), data.end(), init, std::plus()) ==
                 expected);
         }
 
         {
             auto input = std::istringstream(raw_data);
-            auto data = std::views::istream<std::string>(input);
+            auto data = xviews::istream<std::string>(input);
             assert(fold_left(data, init, std::plus()) == expected);
         }
     }

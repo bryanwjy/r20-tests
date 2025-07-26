@@ -24,10 +24,7 @@
 
 #include <cassert>
 #include <memory>
-#include <ranges>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 

@@ -18,6 +18,9 @@
 
 constexpr bool test() {
     // Can call `inner-iterator::operator*`; `View` is a forward range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         SplitViewDiff v("abc def", " ");
         auto val = *v.begin();
@@ -40,6 +43,9 @@ constexpr bool test() {
     }
 
     // Can call `inner-iterator::operator*`; `View` is an input range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         SplitViewInput v("abc def", ' ');
         auto val = *v.begin();

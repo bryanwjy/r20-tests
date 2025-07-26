@@ -33,6 +33,9 @@ constexpr bool test() {
         }
 
         // Input range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             SplitViewInput v1("abc def", ' ');
             auto v2 = v1;
@@ -52,6 +55,9 @@ constexpr bool test() {
         }
 
         // Input range.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             InputView base("abc def");
             SplitViewInput v1(base, ' ');
@@ -61,6 +67,9 @@ constexpr bool test() {
     }
 
     // `non-propagating-cache` is not copied.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         SplitViewInput v1("abc def ghi", ' ');
         auto outer_iter1 = v1.begin();

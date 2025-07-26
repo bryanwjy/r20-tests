@@ -24,6 +24,17 @@
 #include <string>
 
 constexpr bool test() {
+#if RXX_LIBSTDCXX &&                       \
+    (!RXX_LIBSTDCXX_AFTER(2023, 11, 08) || \
+        !RXX_COMPILER_CLANG_AT_LEAST(22, 0, 0))
+    // Clang has a language bug related to splitting template declaration
+    // and definition taht libstdc++ does. See
+    // https://github.com/llvm/llvm-project/issues/73232.
+    // Tentatively assume it will be fixed by llvm-22
+    if (std::is_constant_evaluated())
+        return true;
+#endif
+
     using namespace std::string_literals;
     // Can call `outer-iterator::operator++`; `View` is a forward range.
     {

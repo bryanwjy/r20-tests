@@ -27,8 +27,6 @@
 #include <cassert>
 #include <utility>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 
@@ -71,7 +69,7 @@ constexpr bool test01() {
     (void)v3.base();
 
     auto const v5 = y | xviews::adjacent<5>;
-    assert(xranges::equal(v5, xviews::single(std::make_tuple(1, 2, 3, 4, 5))));
+    assert(xranges::equal(v5, xviews::single(rxx::make_tuple(1, 2, 3, 4, 5))));
 
     auto const v6 = y | xviews::adjacent<6>;
     assert(xranges::empty(v6));

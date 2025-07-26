@@ -54,6 +54,11 @@ constexpr void test_begin() {
     using Str = std::string;
     using Vec = std::vector<Str>;
 
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (std::is_constant_evaluated())
+        return;
+#endif
+
     { // `V` models simple-view
         // `is_reference_v<InnerRng>` is true
         // `Pattern` models simple-view

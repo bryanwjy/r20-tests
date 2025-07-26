@@ -52,6 +52,9 @@ constexpr bool test() {
 
     // When `View` is an input range, `inner-iterator only supports comparing an
     // `inner-iterator` to the default sentinel.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (!std::is_constant_evaluated())
+#endif
     {
         SplitViewInput v("abc def", ' ');
         auto val = *v.begin();

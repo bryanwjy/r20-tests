@@ -28,6 +28,10 @@ static_assert(xranges::forward_range<SplitViewForward>);
 static_assert(!std::is_constructible_v<OuterIterForward, SplitViewForward&>);
 
 constexpr bool test() {
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+    if (std::is_constant_evaluated())
+        return true;
+#endif
     InputView input;
     SplitViewInput v(input, ForwardTinyView());
     [[maybe_unused]] OuterIterInput i(v);

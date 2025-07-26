@@ -117,6 +117,9 @@ constexpr bool test() {
         using V = xranges::lazy_split_view<StrView, StrView>;
 
         // Calling the constructor with `(std::string, range_value_t)`.
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (!std::is_constant_evaluated())
+#endif
         {
             std::string input;
             V v(input, ' ');

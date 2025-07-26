@@ -26,7 +26,6 @@
 
 #include <cassert>
 #include <iterator>
-#include <ranges>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -36,8 +35,6 @@ using rxx::tests::forward_iterator_wrapper;
 using rxx::tests::input_iterator_wrapper;
 using rxx::tests::test_range;
 
-namespace ranges = std::ranges;
-namespace views = std::ranges::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 

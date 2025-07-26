@@ -26,8 +26,6 @@
 #include <sstream>
 #include <vector>
 
-namespace ranges = std::ranges;
-namespace views = std::views;
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 

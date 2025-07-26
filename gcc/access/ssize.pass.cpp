@@ -84,7 +84,9 @@ void test06() {
 }
 
 void test07() {
-#if RXX_SUPPORTS_INT128
+#if RXX_SUPPORTS_INT128 && \
+    (RXX_LIBCXX ||         \
+        RXX_LIBSTDCXX && (!__STRICT_ANSI__ || RXX_LIBSTDCXX_AT_LEAST(16)))
     struct R {
         unsigned __int128 size() const { return 4; }
     };

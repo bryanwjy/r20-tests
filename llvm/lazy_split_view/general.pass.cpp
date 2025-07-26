@@ -190,6 +190,11 @@ constexpr void test_one(
         assert(test_with_piping(
             CopyableView(input), ForwardTinyView(separator), expected));
 
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+        if (std::is_constant_evaluated())
+            return;
+#endif
+
         assert(test_function_call(
             InputView(input), ForwardTinyView(separator), expected));
         assert(test_with_piping(
