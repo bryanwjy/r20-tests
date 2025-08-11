@@ -19,12 +19,12 @@
 #include "../test_iterators.h"
 #include "rxx/algorithm.h"
 #include "rxx/functional.h"
+#include "rxx/ranges/empty_view.h"
 #include "rxx/ranges/join_view.h"
 #include "rxx/ranges/single_view.h"
 #include "rxx/ranges/transform_view.h"
 
 #include <cassert>
-#include <sstream>
 #include <vector>
 
 namespace xranges = rxx::ranges;
