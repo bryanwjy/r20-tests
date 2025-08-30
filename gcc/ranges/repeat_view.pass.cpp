@@ -18,6 +18,7 @@
 
 #include "../test_iterators.h"
 #include "rxx/algorithm.h"
+#include "rxx/ranges/concepts.h"
 #include "rxx/ranges/drop_view.h"
 #include "rxx/ranges/take_view.h"
 
@@ -89,7 +90,7 @@ constexpr bool test03() {
     struct A {
         int n, m;
     };
-#if !RXX_TARGET_APPLE
+#if !RXX_TARGET_APPLE || RXX_COMPILER_APPLE_CLANG_AT_LEAST(17000013)
     auto v = xranges::repeat_view<A, unsigned>(
         std::piecewise_construct, std::tuple{1, 2}, std::tuple{3});
     assert(v[0].n == 1);
