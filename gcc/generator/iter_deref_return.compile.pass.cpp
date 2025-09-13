@@ -20,6 +20,8 @@
 
 #include "rxx/generator.h"
 
+#if RXX_SUPPORTS_GENERATOR
+
 template <typename... Ts>
 using xgenerator = rxx::generator<Ts...>;
 
@@ -31,3 +33,5 @@ xgenerator<bool, bool> foo();
 
 static_assert(std::is_same_v<decltype(*foo().begin()), bool>);
 static_assert(std::is_same_v<typename decltype(foo())::yielded, bool const&>);
+
+#endif

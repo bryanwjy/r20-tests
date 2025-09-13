@@ -20,6 +20,7 @@
 
 #include "rxx/generator.h"
 
+#if RXX_SUPPORTS_GENERATOR
 template <typename... Ts>
 using xgenerator = rxx::generator<Ts...>;
 
@@ -79,3 +80,8 @@ int main() {
         auto is = *i;
     }
 }
+#else
+int main() {
+    return 0;
+}
+#endif

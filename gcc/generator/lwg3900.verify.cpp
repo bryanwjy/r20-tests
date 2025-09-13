@@ -6,7 +6,9 @@
 
 #include "rxx/generator.h"
 
-#include <memory_resource>
+#if RXX_SUPPORTS_GENERATOR
+
+#  include <memory_resource>
 
 namespace xpmr {
 using rxx::pmr::generator;
@@ -20,3 +22,5 @@ xpmr::generator<int> bar(
 
 // { dg-error "static assertion failed" "" { target *-*-* } 0 }
 // { dg-error "no matching function .*memory_resource&" "" { target *-*-* } 0 }
+
+#endif

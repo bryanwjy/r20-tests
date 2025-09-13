@@ -20,7 +20,8 @@
 
 #include "rxx/generator.h"
 
-#include <cassert>
+#if RXX_SUPPORTS_GENERATOR
+#  include <cassert>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -295,3 +296,8 @@ int main() {
         f.check(qualifier::rvalue_ref, f);
     }
 }
+#else
+int main() {
+    return 0;
+}
+#endif

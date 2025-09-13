@@ -20,10 +20,11 @@
 
 #include "rxx/generator.h"
 
-#include <bit>
-#include <cassert>
-#include <memory_resource>
-#include <utility>
+#if RXX_SUPPORTS_GENERATOR
+#  include <bit>
+#  include <cassert>
+#  include <memory_resource>
+#  include <utility>
 
 namespace xpmr {
 using rxx::pmr::generator;
@@ -42,13 +43,13 @@ struct S {
         co_yield '2';
     }
 
-#if RXX_CXX23
+#  if RXX_CXX23
     template <typename Self, typename... Args>
     xpmr::generator<long long> genx(this Self& self, Args...) {
         co_yield 1LL;
         co_yield 2LL;
     }
-#endif
+#  endif
 };
 
 struct bad_size : std::exception {
@@ -85,13 +86,13 @@ public:
             auto const header_offset =
                 (1u << (current->alignment_shift - default_alignment_shift)) -
                 1;
-#if RXX_SUPPORTS_SIZED_DEALLOCATION
+#  if RXX_SUPPORTS_SIZED_DEALLOCATION
             ::operator delete(current - header_offset, current->bytes,
                 std::align_val_t(alignment));
-#else
+#  else
             ::operator delete(
                 current - header_offset, std::align_val_t(alignment));
-#endif
+#  endif
         }
     }
 
@@ -159,13 +160,13 @@ private:
             }
 
             previous->next = next;
-#if RXX_SUPPORTS_SIZED_DEALLOCATION
+#  if RXX_SUPPORTS_SIZED_DEALLOCATION
             ::operator delete(current - header_offset, current->bytes,
                 std::align_val_t(alignment));
-#else
+#  else
             ::operator delete(
                 current - header_offset, std::align_val_t(alignment));
-#endif
+#  endif
             return;
         }
         std::abort();
@@ -188,13 +189,13 @@ int main() {
     for (auto _ : gen(std::allocator_arg, std::pmr::new_delete_resource()))
         assert(mr.number_of_active_allocations() == 0);
 
-#if RXX_WITH_EXCEPTIONS
+#  if RXX_WITH_EXCEPTIONS
     try {
         for (auto _ :
             gen(std::allocator_arg, std::pmr::null_memory_resource())) {}
         assert(false);
     } catch (std::bad_alloc const&) {}
-#endif
+#  endif
 
     assert(mr.number_of_active_allocations() == 0);
 
@@ -208,10 +209,15 @@ int main() {
         assert(mr.number_of_active_allocations() == 1);
 
     assert(mr.number_of_active_allocations() == 0);
-#if RXX_CXX23
+#  if RXX_CXX23
     for (auto _ : s.genx(std::allocator_arg, &mr))
         assert(mr.number_of_active_allocations() == 1);
-#endif
+#  endif
 
     assert(mr.number_of_active_allocations() == 0);
 }
+#else
+int main() {
+    return 0;
+}
+#endif

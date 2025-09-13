@@ -3,6 +3,8 @@
 
 #include "rxx/generator.h"
 
+#if RXX_SUPPORTS_GENERATOR
+
 template <typename... Ts>
 using xgenerator = rxx::generator<Ts...>;
 
@@ -16,4 +18,4 @@ xgenerator<O&&> gen() {
     co_yield o;
 }
 
-int main() {}
+#endif

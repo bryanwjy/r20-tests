@@ -19,10 +19,12 @@
 // <http://www.gnu.org/licenses/>.
 
 #include "rxx/generator.h"
-#include "rxx/ranges.h"
 
-#include <cassert>
-#include <span>
+#if RXX_SUPPORTS_GENERATOR
+#  include "rxx/ranges.h"
+
+#  include <cassert>
+#  include <span>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
@@ -61,3 +63,8 @@ int main() {
         assert(a == x);
     }
 }
+#else
+int main() {
+    return 0;
+}
+#endif

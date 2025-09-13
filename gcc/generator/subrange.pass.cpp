@@ -22,16 +22,17 @@
 // Adapted from GCC testsuite
 
 #include "rxx/generator.h"
-#include "rxx/ranges.h"
+#if RXX_SUPPORTS_GENERATOR
+#  include "rxx/ranges.h"
 
-#include <array>
-#include <cassert>
+#  include <array>
+#  include <cassert>
 
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 template <typename... Ts>
 using xgenerator = rxx::generator<Ts...>;
-#include <vector>
+#  include <vector>
 
 xgenerator<int&> yield_vector() {
     std::vector foo{1, 2, 3};
@@ -48,3 +49,8 @@ int main() {
         assert(a == e);
     }
 }
+#else
+int main() {
+    return 0;
+}
+#endif

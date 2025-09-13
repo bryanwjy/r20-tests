@@ -20,6 +20,8 @@
 
 #include "rxx/generator.h"
 
+#if RXX_SUPPORTS_GENERATOR
+
 namespace xranges = rxx::ranges;
 namespace xviews = rxx::views;
 template <typename... Ts>
@@ -79,3 +81,9 @@ int main() {
         assert(x == 0);
     assert(catchy_caught);
 }
+
+#else
+int main() {
+    return 0;
+}
+#endif

@@ -3,6 +3,8 @@
 
 #include "rxx/generator.h"
 
+#if RXX_SUPPORTS_GENERATOR
+
 template <typename... Ts>
 using xgenerator = rxx::generator<Ts...>;
 
@@ -13,3 +15,4 @@ void try_reassigning() {
     auto gen2 = generator();
     gen = std::move(gen2);
 }
+#endif
