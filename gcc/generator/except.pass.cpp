@@ -18,8 +18,6 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/config.h"
-
 #include "rxx/generator.h"
 
 namespace xranges = rxx::ranges;

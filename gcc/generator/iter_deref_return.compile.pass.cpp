@@ -19,6 +19,7 @@
 // <http://www.gnu.org/licenses/>.
 
 #include "rxx/generator.h"
+
 template <typename... Ts>
 using xgenerator = rxx::generator<Ts...>;
 

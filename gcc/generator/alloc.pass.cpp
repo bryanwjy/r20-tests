@@ -18,8 +18,6 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/config.h"
-
 #include "rxx/generator.h"
 
 #include <bit>
@@ -88,8 +86,8 @@ public:
                 (1u << (current->alignment_shift - default_alignment_shift)) -
                 1;
 #if RXX_SUPPORTS_SIZED_DEALLOCATION
-            ::operator delete(
-                current - header_offset, bytes, std::align_val_t(alignment));
+            ::operator delete(current - header_offset, current->bytes,
+                std::align_val_t(alignment));
 #else
             ::operator delete(
                 current - header_offset, std::align_val_t(alignment));
@@ -162,8 +160,8 @@ private:
 
             previous->next = next;
 #if RXX_SUPPORTS_SIZED_DEALLOCATION
-            ::operator delete(
-                current - header_offset, bytes, std::align_val_t(alignment));
+            ::operator delete(current - header_offset, current->bytes,
+                std::align_val_t(alignment));
 #else
             ::operator delete(
                 current - header_offset, std::align_val_t(alignment));

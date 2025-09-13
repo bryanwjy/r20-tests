@@ -18,8 +18,6 @@
 // with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-#include "rxx/config.h"
-
 #include "rxx/generator.h"
 
 template <typename... Ts>
@@ -59,8 +57,8 @@ int main() {
     {
         auto gen = foo<copy_max<1> const&>();
         auto i = gen.begin();
-        *i;
-        *i;
+        (void)*i;
+        (void)*i;
         auto is = *i;
         assert(is.copy > 0);
     }
@@ -68,16 +66,16 @@ int main() {
     {
         auto gen2 = foo<copy_max<0>&&>();
         auto i = gen2.begin();
-        *i;
-        *i;
+        (void)*i;
+        (void)*i;
         auto is = *i;
     }
 
     {
         auto gen = foo<copy_max<0>>(); // should be same as case 2
         auto i = gen.begin();
-        *i;
-        *i;
+        (void)*i;
+        (void)*i;
         auto is = *i;
     }
 }

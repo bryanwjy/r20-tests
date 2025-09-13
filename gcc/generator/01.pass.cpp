@@ -20,7 +20,6 @@
 
 #include "rxx/generator.h"
 #include "rxx/ranges.h"
-#include "rxx/ranges/elements_of.h"
 
 #include <cassert>
 #include <span>
