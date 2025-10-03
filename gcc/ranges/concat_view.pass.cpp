@@ -45,8 +45,9 @@ constexpr bool test01() {
 
     assert(xranges::size(v) == 9);
     assert(xranges::size(std::as_const(v)) == 9);
-#if !RXX_COMPILER_GCC
+#if 1
     // FIXME: Unfortunately there is an OOM issue on GCC
+    // FIXED on 04 Oct 2025; Keeping comment to monitor
     assert(xranges::equal(v, xviews::iota(1, 10)));
     assert(xranges::equal(
         v | xviews::reverse, xviews::iota(1, 10) | xviews::reverse));
@@ -56,8 +57,9 @@ constexpr bool test01() {
     assert(it0 == it0);
     assert(cit == cit);
     assert(it0 == cit);
-#if !RXX_COMPILER_GCC
+#if 1
     // FIXME: Unfortunately there is an OOM issue on GCC
+    // FIXED on 04 Oct 2025; Keeping comment to monitor
     for (int i = 0; i < 10; i++) {
         assert(it0 + i - it0 == i);
         assert(it0 + i - (it0 + 1) == i - 1);
