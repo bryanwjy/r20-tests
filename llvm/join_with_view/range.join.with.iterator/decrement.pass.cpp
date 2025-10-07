@@ -140,7 +140,7 @@ constexpr bool test() {
         }
     }
 
-#if !defined(TEST_COMPILER_GCC) // GCC c++/101777
+#if !RXX_COMPILER_GCC || RXX_COMPILER_GCC_AT_LEAST(15, 0, 0) // GCC c++/101777
     { // `V` has empty subrange in the middle, `Pattern` is not empty. Try to go
       // back and forth.
         using V = std::array<std::vector<int>, 3>;
