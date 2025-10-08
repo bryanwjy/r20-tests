@@ -36,21 +36,30 @@ public:
         moved_from_this
     };
 
-    MoveOnlyInt() = default;
-    constexpr MoveOnlyInt(int val) : val_(val) {}
+    MoveOnlyInt() : ptr_{&data_} {}
+    constexpr MoveOnlyInt(int val)
+        : data_{
+              .val = val,
+              .status = constructed,
+          },
+          ptr_{&data_} {}
 
     constexpr MoveOnlyInt(MoveOnlyInt&& other) noexcept
-        : val_(other.val_)
-        , status_(move_constructed) {
-        other.val_ = -1;
-        other.status_ = moved_from_this;
+        : data_{
+              .val = other.data_.val,
+              .status = move_constructed,
+          }, ptr_{&data_} {
+        other.data_.val = -1;
+        other.data_.status = moved_from_this;
     }
 
     constexpr MoveOnlyInt(MoveOnlyInt const&& other) noexcept
-        : val_(other.val_)
-        , status_(move_constructed) {
-        other.val_ = -1;
-        other.status_ = moved_from_this;
+        : data_{
+              .val = other.data_.val,
+              .status = move_constructed,
+          }, ptr_{&data_} {
+        other.ptr_->val = -1;
+        other.ptr_->status = moved_from_this;
     }
 
     MoveOnlyInt(MoveOnlyInt const&) {
@@ -64,24 +73,30 @@ public:
     }
 
     constexpr bool was_normally_constructed() const {
-        return status_ == constructed;
+        return data_.status == constructed;
     }
     constexpr bool was_move_constructed() const {
-        return status_ == move_constructed;
+        return data_.status == move_constructed;
     }
-    constexpr bool was_moved_from() const { return status_ == moved_from_this; }
+    constexpr bool was_moved_from() const {
+        return data_.status == moved_from_this;
+    }
 
     friend constexpr bool operator==(MoveOnlyInt const& left, int right) {
-        return left.val_ == right;
+        return left.data_.val == right;
     }
     friend constexpr bool operator==(
         MoveOnlyInt const& left, MoveOnlyInt const& right) {
-        return left.val_ == right.val_;
+        return left.data_.val == right.data_.val;
     }
 
 private:
-    mutable int val_ = -1;
-    mutable Status status_ = constructed;
+    struct data {
+        int val = -1;
+        Status status = constructed;
+    };
+    data data_;
+    data* ptr_;
 };
 
 static_assert(std::movable<MoveOnlyInt>);

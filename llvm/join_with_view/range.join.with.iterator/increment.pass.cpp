@@ -374,7 +374,7 @@ constexpr void test_post_increment() {
         static_assert(std::is_void_v<decltype(it++)>);
     }
 
-#if !defined(TEST_COMPILER_GCC) // GCC c++/101777
+#if !RXX_COMPILER_GCC || RXX_COMPILER_GCC_AT_LEAST(15, 0, 0) // GCC c++/101777
     { // Only first element of `V` is not empty. `Pattern` is empty. InnerIter
       // does not model forward
         // iterator (return type should be `void`).
