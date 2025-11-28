@@ -13,6 +13,7 @@
 #define RANGES_RANGE_UTILITY_RANGE_UTILITY_CONV_CONTAINER_H
 
 #include "rxx/ranges/concepts.h"
+#include "rxx/ranges/from_range.h"
 
 #include <algorithm>
 #include <cstddef>
@@ -74,7 +75,7 @@ struct Container {
     }
 
     // Case 2 -- use `from_range_t` constructor.
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
     constexpr Container(std::from_range_t, xranges::input_range auto&& in)
     requires (Rank >= CtrChoice::FromRangeT)
         : ctr_choice(CtrChoice::FromRangeT)

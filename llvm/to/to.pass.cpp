@@ -144,7 +144,7 @@ struct CtrDirectOrFallback : Fallback {
     }
 };
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
 struct CtrFromRangeTOrFallback : Fallback {
     using Fallback::Fallback;
     constexpr CtrFromRangeTOrFallback(
@@ -237,7 +237,7 @@ constexpr void test_constraints() {
         }
     }
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
     {     // Case 2 -- construct using the `from_range_t` tagged constructor.
         { // (range)
             auto result = xranges::to<CtrFromRangeTOrFallback>(InputRange());
@@ -381,7 +381,7 @@ constexpr void test_ctr_choice_order() {
         }
     }
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
     { // Case 2 -- construct using the `from_range_t` tag.
         {
             using C = Container<int, CtrChoice::FromRangeT>;
@@ -500,7 +500,7 @@ struct NotARange {
     constexpr NotARange(xranges::input_range auto&&)
     requires (Rank >= CtrChoice::DirectCtr)
     {}
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
     constexpr NotARange(std::from_range_t, xranges::input_range auto&&)
     requires (Rank >= CtrChoice::FromRangeT)
     {}

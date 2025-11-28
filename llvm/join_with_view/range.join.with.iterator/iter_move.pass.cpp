@@ -305,7 +305,7 @@ constexpr bool test() {
         using JWV = xranges::join_with_view<xranges::owning_view<V>,
             xranges::owning_view<Pattern>>;
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
         // requires from_ranges ctor to work
         V v;
         v.reserve(2);
