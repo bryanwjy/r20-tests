@@ -375,7 +375,8 @@ static_assert(IteratorValueTypeIs<View<long>, Pattern<int>, long>);
 static_assert(IteratorValueTypeIs<View<std::nullptr_t>, Pattern<void*>, void*>);
 static_assert(IteratorValueTypeIs<View<rxx::tuple<long, int>>,
     Pattern<rxx::tuple<int, long>>, rxx::tuple<long, long>>);
-#if RXX_CXX23
+
+#if RXX_CXX23 && __cpp_lib_tuple_like >= 202207L
 static_assert(IteratorValueTypeIs<View<std::tuple<long, int>>,
     Pattern<std::tuple<int, long>>, std::tuple<long, long>>);
 #endif
@@ -399,7 +400,7 @@ static_assert(
 static_assert(ConstIteratorValueTypeIs<View<rxx::tuple<long, int>>,
     Pattern<rxx::tuple<int, long>>, rxx::tuple<long, long>>);
 
-#if RXX_CXX23
+#if RXX_CXX23 && __cpp_lib_tuple_like >= 202207L
 static_assert(ConstIteratorValueTypeIs<View<std::tuple<long, int>>,
     Pattern<std::tuple<int, long>>, std::tuple<long, long>>);
 #endif
@@ -417,7 +418,7 @@ static_assert(
     ConstIteratorValueTypeIs<View<rxx::tuple<long, int>, std::pair<long, int>>,
         Pattern<rxx::tuple<int, long>, std::pair<int, long>>,
         std::pair<long, long>>);
-#if RXX_CXX23
+#if RXX_CXX23 && __cpp_lib_tuple_like >= 202207L
 static_assert(
     ConstIteratorValueTypeIs<View<std::tuple<long, int>, std::pair<long, int>>,
         Pattern<std::tuple<int, long>, std::pair<int, long>>,
