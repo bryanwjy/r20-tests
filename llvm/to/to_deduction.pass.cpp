@@ -49,7 +49,7 @@ template <xranges::input_range Range>
 ContainerWithDirectCtr(Range&&, int, char)
     -> ContainerWithDirectCtr<xranges::range_value_t<Range>>;
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
 // from_range only available in C++23
 template <class ElementType>
 struct ContainerWithFromRangeT : Container<ElementType, CtrChoice::FromRangeT> {
@@ -120,7 +120,7 @@ constexpr bool test() {
         }
     }
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
     { // Case 2 -- can construct from the given range using the `from_range_t`
       // tagged constructor.
         {

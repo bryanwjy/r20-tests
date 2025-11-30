@@ -21,6 +21,7 @@
 #include "rxx/memory.h"
 
 #include <cassert>
+#include <memory>
 #include <type_traits>
 
 namespace xranges = rxx::ranges;

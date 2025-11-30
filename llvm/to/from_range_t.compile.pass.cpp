@@ -14,8 +14,9 @@
 // struct from_range_t { explicit from_range_t() = default; };  // Since C++23
 // inline constexpr from_range_t from_range{};                  // Since C++23
 
-#if RXX_CXX23
-#  include <ranges>
+#include "rxx/ranges.h"
+
+#if RXX_SUPPORTS_FROM_RANGE
 
 template <class T>
 void check(std::from_range_t);
