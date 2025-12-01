@@ -260,7 +260,7 @@ constexpr void non_common_range_test_case() {
             : (assert(false), 10.0); // the number here is arbitrary
     };
 
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

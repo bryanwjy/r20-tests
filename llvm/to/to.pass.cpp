@@ -589,7 +589,7 @@ constexpr void test_recursive() {
         assert(c3.ctr_choice == CtrChoice::BeginEndPair);
 
         for (auto& c2 : c3) {
-#if RXX_CXX23
+#if RXX_CXX23 & RXX_SUPPORTS_FROM_RANGE
             assert(c2.ctr_choice == CtrChoice::FromRangeT);
 #endif
             for (auto& c1 : c2) {

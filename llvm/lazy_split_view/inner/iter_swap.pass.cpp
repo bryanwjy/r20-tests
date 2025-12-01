@@ -95,7 +95,7 @@ constexpr bool test() {
     // Can use `iter_swap` with `inner-iterator`; `View` is a forward range.
     {
         // Non-const iterator.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
         if (!std::is_constant_evaluated())
 #endif
         {
@@ -117,7 +117,7 @@ constexpr bool test() {
         }
 
         // Const iterator.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
         if (!std::is_constant_evaluated())
 #endif
         {
@@ -139,7 +139,7 @@ constexpr bool test() {
     }
 
 // Can use `iter_swap` with `inner-iterator`; `View` is an input range.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {
@@ -185,7 +185,7 @@ constexpr bool test() {
         }
 
         // Const iterator.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
         if (!std::is_constant_evaluated())
 #endif
         {

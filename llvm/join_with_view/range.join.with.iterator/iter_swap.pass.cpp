@@ -104,7 +104,7 @@ static_assert(std::forward_iterator<
         IterSwapTrackingIterator<int*, IterKind::inner_view>>);
 
 constexpr bool test() {
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     { // Test common usage

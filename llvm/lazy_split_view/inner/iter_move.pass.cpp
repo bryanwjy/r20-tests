@@ -115,7 +115,7 @@ constexpr bool test() {
     }
 
     // Can use `iter_move` with `inner-iterator`, `View` is an input range.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

@@ -50,7 +50,7 @@ template <class I>
 concept CanDecrement = CanPreDecrement<I> && CanPostDecrement<I>;
 
 constexpr bool test() {
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     { // `V` and `Pattern` are not empty. Test return type too.

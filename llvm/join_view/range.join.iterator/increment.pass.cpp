@@ -242,7 +242,7 @@ constexpr bool test() {
         static_assert(std::is_void_v<decltype(iter++)>);
     }
 
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

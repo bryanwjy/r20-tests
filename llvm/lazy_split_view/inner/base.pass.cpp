@@ -72,7 +72,7 @@ constexpr bool test() {
     }
 
     // `base` works with an input view (no overloads).
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

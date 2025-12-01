@@ -60,16 +60,16 @@ constexpr bool std::ranges::enable_borrowed_range<R1V> = true;
 void test01() {
     R1 r;
     const R1& c = r;
-    assert(std::ranges::crbegin(r) == xranges::rbegin(c));
-    assert(std::ranges::crbegin(c) == xranges::rbegin(c));
+    assert(xranges::crbegin(r) == xranges::rbegin(c));
+    assert(xranges::crbegin(c) == xranges::rbegin(c));
 
     R1V v{r};
-    assert(std::ranges::crbegin(v) == xranges::rbegin(c));
-    assert(std::ranges::crbegin(std::move(v)) == xranges::rbegin(c));
+    assert(xranges::crbegin(v) == xranges::rbegin(c));
+    assert(xranges::crbegin(std::move(v)) == xranges::rbegin(c));
 
     const R1V cv{r};
-    assert(std::ranges::crbegin(cv) == xranges::rbegin(c));
-    assert(std::ranges::crbegin(std::move(cv)) == xranges::rbegin(c));
+    assert(xranges::crbegin(cv) == xranges::rbegin(c));
+    assert(xranges::crbegin(std::move(cv)) == xranges::rbegin(c));
 }
 
 struct R2 {
@@ -90,11 +90,11 @@ constexpr bool std::ranges::enable_borrowed_range<R2> = true;
 void test02() {
     R2 r;
     const R2& c = r;
-    assert(std::ranges::crbegin(r) == xranges::rbegin(c));
-    assert(std::ranges::crbegin(c) == xranges::rbegin(c));
+    assert(xranges::crbegin(r) == xranges::rbegin(c));
+    assert(xranges::crbegin(c) == xranges::rbegin(c));
 
-    assert(std::ranges::crbegin(std::move(r)) == xranges::rbegin(c));
-    assert(std::ranges::crbegin(std::move(c)) == xranges::rbegin(c));
+    assert(xranges::crbegin(std::move(r)) == xranges::rbegin(c));
+    assert(xranges::crbegin(std::move(c)) == xranges::rbegin(c));
 }
 
 int main() {

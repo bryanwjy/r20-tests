@@ -54,7 +54,7 @@ constexpr void test_begin() {
     using Str = std::string;
     using Vec = std::vector<Str>;
 
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (std::is_constant_evaluated())
         return;
 #endif
@@ -194,18 +194,16 @@ constexpr void test_const_begin() {
     // `is_reference_v<range_reference_t<const V>>` is true
     // `range_reference_t<const V>` models input range
     static_assert(!JoinWithViewHasConstBegin<
-                  BasicView<Vec, ViewProperties{.common = false},
-                      cpp20_input_iterator>,
-                  BasicView<Pat, ViewProperties{}, forward_iterator>>);
+        BasicView<Vec, ViewProperties{.common = false}, cpp20_input_iterator>,
+        BasicView<Pat, ViewProperties{}, forward_iterator>>);
 
     // `const V` models forward range
     // `const Pattern` does not model forward range
     // `is_reference_v<range_reference_t<const V>>` is true
     // `range_reference_t<const V>` models input range
     static_assert(!JoinWithViewHasConstBegin<
-                  BasicView<Vec, ViewProperties{}, forward_iterator>,
-                  BasicView<Pat, ViewProperties{.common = false},
-                      cpp20_input_iterator>>);
+        BasicView<Vec, ViewProperties{}, forward_iterator>,
+        BasicView<Pat, ViewProperties{.common = false}, cpp20_input_iterator>>);
 
     // `const V` models forward range
     // `const Pattern` models forward range
@@ -221,15 +219,15 @@ constexpr void test_const_begin() {
     // `is_reference_v<range_reference_t<const V>>` is true
     // `range_reference_t<const V>` does not model input range
     static_assert(!JoinWithViewHasConstBegin<
-                  BasicView<std::vector<InputRangeButOutputWhenConst<int>>,
-                      ViewProperties{}, forward_iterator>,
-                  BasicView<Pat, ViewProperties{}, forward_iterator>>);
+        BasicView<std::vector<InputRangeButOutputWhenConst<int>>,
+            ViewProperties{}, forward_iterator>,
+        BasicView<Pat, ViewProperties{}, forward_iterator>>);
 
     // `concatable<range_reference_t<const V>, const Pattern>` is not satisfied
     // See also LWG-4074: compatible-joinable-ranges is underconstrained
     static_assert(!JoinWithViewHasConstBegin<
-                  BasicVectorView<int, ViewProperties{}, forward_iterator>,
-                  lwg4074::PatternWithProxyConstAccess>);
+        BasicVectorView<int, ViewProperties{}, forward_iterator>,
+        lwg4074::PatternWithProxyConstAccess>);
 
     // Check situation when iterators returned by `begin()` and `begin() const`
     // are the same

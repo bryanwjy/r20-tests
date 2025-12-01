@@ -54,9 +54,9 @@ static_assert(!HasContainsIt<InputIteratorNotInputOrOutputIterator>);
 static_assert(
     !HasContainsIt<cpp20_input_iterator<int*>, SentinelForNotSemiregular>);
 static_assert(!HasContainsIt<cpp20_input_iterator<int*>,
-              InputRangeNotSentinelEqualityComparableWith>);
+    InputRangeNotSentinelEqualityComparableWith>);
 static_assert(!HasContainsIt<cpp20_input_iterator<int*>,
-              sentinel_wrapper<cpp20_input_iterator<int*>>>);
+    sentinel_wrapper<cpp20_input_iterator<int*>>>);
 
 static_assert(!HasContainsIt<int*, int>);
 static_assert(!HasContainsIt<int, int*>);
@@ -207,7 +207,7 @@ constexpr bool test() {
     }
 
 // std::string did not work at constexpr before
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     { // check invocations of the projection for std::string

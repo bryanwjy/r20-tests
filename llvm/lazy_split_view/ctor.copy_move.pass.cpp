@@ -33,7 +33,7 @@ constexpr bool test() {
         }
 
         // Input range.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
         if (!std::is_constant_evaluated())
 #endif
         {
@@ -55,7 +55,7 @@ constexpr bool test() {
         }
 
         // Input range.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
         if (!std::is_constant_evaluated())
 #endif
         {
@@ -67,7 +67,7 @@ constexpr bool test() {
     }
 
     // `non-propagating-cache` is not copied.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

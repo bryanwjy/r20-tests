@@ -69,7 +69,7 @@ constexpr bool is_equal(View& view, Expected const& expected) {
     auto actual_it = view.begin();
     auto expected_it = expected.begin();
     for (; actual_it != view.end() && expected_it != expected.end();
-         ++actual_it, ++expected_it) {
+        ++actual_it, ++expected_it) {
         if (Str(*actual_it) != Str(*expected_it))
             return false;
     }
@@ -190,7 +190,7 @@ constexpr void test_one(
         assert(test_with_piping(
             CopyableView(input), ForwardTinyView(separator), expected));
 
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
         if (std::is_constant_evaluated())
             return;
 #endif

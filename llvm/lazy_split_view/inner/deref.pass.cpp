@@ -18,7 +18,7 @@
 
 constexpr bool test() {
     // Can call `inner-iterator::operator*`; `View` is a forward range.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {
@@ -43,7 +43,7 @@ constexpr bool test() {
     }
 
     // Can call `inner-iterator::operator*`; `View` is an input range.
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

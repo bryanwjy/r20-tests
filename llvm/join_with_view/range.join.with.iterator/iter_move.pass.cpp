@@ -216,7 +216,7 @@ private:
 static_assert(std::forward_iterator<IterMoveTrackingIterator<int*>> &&
     !std::bidirectional_iterator<IterMoveTrackingIterator<int*>>);
 
-#if !RXX_CXX23
+#if !RXX_SUPPORTS_FROM_RANGE
 
 template <typename C, typename R>
 constexpr C reserve_and_emplace(R&& arg) {
@@ -388,13 +388,13 @@ constexpr bool test() {
         using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         static_assert(!std::same_as<xranges::range_rvalue_reference_t<V>,
-                      xranges::range_rvalue_reference_t<JWV>>);
+            xranges::range_rvalue_reference_t<JWV>>);
         static_assert(!std::same_as<xranges::range_rvalue_reference_t<Pattern>,
-                      xranges::range_rvalue_reference_t<JWV>>);
+            xranges::range_rvalue_reference_t<JWV>>);
         static_assert(std::same_as<CommonProxyRvalueRef,
             xranges::range_rvalue_reference_t<JWV>>);
 
-#if RXX_CXX23
+#if RXX_SUPPORTS_FROM_RANGE
         V v;
         v.reserve(2);
         v.emplace_back(xranges::to<Inner>(xviews::iota(0, 4)));
