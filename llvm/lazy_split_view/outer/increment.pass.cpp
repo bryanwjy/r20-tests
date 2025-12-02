@@ -24,9 +24,8 @@
 #include <string>
 
 constexpr bool test() {
-#if RXX_LIBSTDCXX &&                       \
-    (!RXX_LIBSTDCXX_AFTER(2023, 11, 08) || \
-        !RXX_COMPILER_CLANG_AT_LEAST(22, 0, 0))
+#if RXX_LIBSTDCXX && \
+    (!RXX_LIBSTDCXX_AT_LEAST(15) || !RXX_COMPILER_CLANG_AT_LEAST(22, 0, 0))
     // Clang has a language bug related to splitting template declaration
     // and definition taht libstdc++ does. See
     // https://github.com/llvm/llvm-project/issues/73232.

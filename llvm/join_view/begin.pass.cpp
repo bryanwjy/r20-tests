@@ -149,9 +149,8 @@ constexpr bool test() {
     {
         auto innerRValueRange = xviews::iota(0, 5) |
             xviews::transform([](int) { return ChildView{}; });
-        static_assert(
-            !std::is_reference_v<
-                xranges::range_reference_t<const decltype(innerRValueRange)>>);
+        static_assert(!std::is_reference_v<
+            xranges::range_reference_t<const decltype(innerRValueRange)>>);
         xranges::join_view jv{innerRValueRange};
         static_assert(!HasConstBegin<decltype(jv)>);
     }
@@ -160,7 +159,7 @@ constexpr bool test() {
     {
         xranges::join_view<NonSimpleParentView> jv;
         static_assert(!std::same_as<decltype(jv.begin()),
-                      decltype(std::as_const(jv).begin())>);
+            decltype(std::as_const(jv).begin())>);
     }
 
     // simple-view<V> && is_reference_v<range_reference_t<V>>;
@@ -172,7 +171,7 @@ constexpr bool test() {
 
 // Check stashing iterators (LWG3698: regex_iterator and join_view don't
 // work together very well)
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     {

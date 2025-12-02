@@ -90,7 +90,7 @@ private:
 static_assert(std::forward_iterator<ProxyIter>);
 
 constexpr bool test() {
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     { // Result of `operator*` is (maybe const) lvalue reference
@@ -188,7 +188,7 @@ constexpr bool test() {
         }
     }
 
-#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2023, 11, 08)
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(15)
     if (!std::is_constant_evaluated())
 #endif
     { // Result of `operator*` is (maybe const) rvalue reference
@@ -234,9 +234,9 @@ constexpr bool test() {
         using JWV = xranges::join_with_view<xranges::owning_view<V>, Pattern>;
 
         static_assert(!std::same_as<xranges::range_reference_t<V>,
-                      xranges::range_reference_t<JWV>>);
+            xranges::range_reference_t<JWV>>);
         static_assert(!std::same_as<xranges::range_reference_t<Pattern>,
-                      xranges::range_reference_t<JWV>>);
+            xranges::range_reference_t<JWV>>);
 
         std::array<int, 2> pattern = {-1, -1};
         Pattern pattern_as_subrange(ProxyIter{pattern.data()},
