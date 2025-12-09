@@ -159,10 +159,19 @@ struct HasOnlySpaceship {
     constexpr std::weak_ordering operator<=>(HasOnlySpaceship const&) const;
 };
 
+#if RXX_COMPILER_CLANG
+RXX_DISABLE_WARNING_PUSH()
+// Silence the warnings because the functions are not evaluated
+RXX_DISABLE_WARNING("-Wundefined-inline")
+#endif
 struct HasFullOrdering {
     constexpr bool operator==(HasFullOrdering const&) const;
     constexpr std::weak_ordering operator<=>(HasFullOrdering const&) const;
 };
+
+#if RXX_COMPILER_CLANG
+RXX_DISABLE_WARNING_POP()
+#endif
 
 // operator<=> must resolve the return types of all its union types'
 // operator<=>s to determine its own return type, so it is detectable by SFINAE
