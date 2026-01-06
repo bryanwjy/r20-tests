@@ -1,4 +1,4 @@
-// Copyright 2025 Bryan Wong
+// Copyright 2025-2026 Bryan Wong
 // Adapted from LLVM testsuite
 
 //===----------------------------------------------------------------------===//
@@ -83,7 +83,7 @@ constexpr void test(std::decay_t<T> v) {
     }
 
     { // __RXX ranges::size for an engaged optional<T> == 1, disengaged
-        // optional<T> == 0
+      // optional<T> == 0
         __RXX optional<T> const disengaged{__RXX nullopt};
         __RXX optional<T> disengaged2{__RXX nullopt};
         assert(__RXX ranges::size(opt) == 1);

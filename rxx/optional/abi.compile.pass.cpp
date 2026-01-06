@@ -1,5 +1,5 @@
 // Copyright 2025-2026 Bryan Wong
-
+#define RXX_OPTIONAL_ABI_INTEROP 1
 #include "rxx/optional.h"
 
 struct nothing {};
@@ -25,6 +25,9 @@ struct PaddedBool {
 
 #if !RXX_COMPILER_MSVC
 static_assert(sizeof(__RXX nua::optional<PaddedBool>) == sizeof(PaddedBool));
+#else
+static_assert(sizeof(__RXX nua::optional<PaddedBool>) ==
+    sizeof(PaddedBool) + alignof(PaddedBool));
 #endif
 
 static_assert(sizeof(__RXX gcc::optional<PaddedBool>) ==

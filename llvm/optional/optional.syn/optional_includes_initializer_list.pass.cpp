@@ -10,22 +10,17 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14
-
 // <optional>
-
-// class bad_optional_access : public exception
 
 #include "rxx/optional.h"
 
-#include <type_traits>
+#include <initializer_list>
 
 int main(int, char**) {
-    using __RXX bad_optional_access;
+    using __RXX optional;
 
-    static_assert(
-        std::is_base_of<std::exception, bad_optional_access>::value, "");
-    static_assert(
-        std::is_convertible<bad_optional_access*, std::exception*>::value, "");
+    std::initializer_list<int> list;
+    (void)list;
 
     return 0;
 }

@@ -10,22 +10,19 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11, c++14
-
 // <optional>
 
-// class bad_optional_access : public exception
+// struct nullopt_t{see below};
+// inline constexpr nullopt_t nullopt(unspecified);
+
+// [optional.nullopt]/2:
+//   Type nullopt_t shall not have a default constructor or an initializer-list
+//   constructor, and shall not be an aggregate.
 
 #include "rxx/optional.h"
 
-#include <type_traits>
-
 int main(int, char**) {
-    using __RXX bad_optional_access;
-
-    static_assert(
-        std::is_base_of<std::exception, bad_optional_access>::value, "");
-    static_assert(
-        std::is_convertible<bad_optional_access*, std::exception*>::value, "");
+    __RXX nullopt_t n = {};
 
     return 0;
 }

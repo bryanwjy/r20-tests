@@ -1,4 +1,4 @@
-// Copyright 2025 Bryan Wong
+// Copyright 2025-2026 Bryan Wong
 // Adapted from LLVM testsuite
 
 //===----------------------------------------------------------------------===//
@@ -43,7 +43,7 @@ constexpr bool test() {
     }
 
     { // Calling begin() multiple times on a disengaged optional returns the
-      // same iterator.
+        // same iterator.
         __RXX optional<T> disengaged{__RXX nullopt};
         auto iter1 = disengaged.begin();
         auto iter2 = std::as_const(disengaged).begin();

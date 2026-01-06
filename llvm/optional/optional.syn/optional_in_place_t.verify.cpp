@@ -13,19 +13,13 @@
 
 // <optional>
 
-// class bad_optional_access : public exception
+// A program that necessitates the instantiation of template optional for
+// (possibly cv-qualified) in_place_t is ill-formed.
 
-#include "rxx/optional.h"
+#include <optional>
 
-#include <type_traits>
-
-int main(int, char**) {
-    using __RXX bad_optional_access;
-
-    static_assert(
-        std::is_base_of<std::exception, bad_optional_access>::value, "");
-    static_assert(
-        std::is_convertible<bad_optional_access*, std::exception*>::value, "");
-
-    return 0;
+void f() {
+    std::optional<std::in_place_t> opt; // expected-note {{requested here}}
+    // expected-error@optional:* {{instantiation of optional with in_place_t is
+    // ill-formed}}
 }
