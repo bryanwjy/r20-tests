@@ -33,15 +33,27 @@ void swap(B&, B&) noexcept(false);
 static_assert(std::is_swappable_v<__RXX optional<B>>);
 static_assert(!std::is_nothrow_swappable_v<__RXX optional<B>>);
 
-// Not swappable, and optional<C> not swappable via the generic std::swap.
-struct C {};
+// Not swappable, and optional<C> not swappable
+struct C {
+    C(C&&) = delete;
+};
 void swap(C&, C&) = delete;
-
 static_assert(!std::is_swappable_v<__RXX optional<C>>);
 
-// Not swappable, and optional<D> not swappable via the generic std::swap.
+// Not swappable, and optional<D> not swappable
 struct D {
     D(D&&) = delete;
 };
 
 static_assert(!std::is_swappable_v<__RXX optional<D>>);
+
+struct E {};
+void swap(E&, E&) = delete;
+static_assert(std::is_swappable_v<__RXX optional<E>>);
+
+// Swappable, and optional<F> not swappable
+struct F {
+    F(F&&) = delete;
+};
+void swap(F&, F&);
+static_assert(!std::is_swappable_v<__RXX optional<F>>);

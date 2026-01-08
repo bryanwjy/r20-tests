@@ -20,6 +20,7 @@
 #include "rxx/algorithm.h"
 #include "rxx/ranges/counted.h"
 #include "rxx/ranges/elements_view.h"
+#include "rxx/ranges/empty_view.h"
 #include "rxx/ranges/repeat_view.h"
 #include "rxx/ranges/reverse_view.h"
 
