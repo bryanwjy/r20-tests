@@ -12,7 +12,7 @@ C const cs(1);
 
 template <typename T>
 using decay_pre26 =
-#if __cplusplus > 202302
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
     T;
 #else
     std::decay_t<T>;

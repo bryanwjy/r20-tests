@@ -55,7 +55,7 @@ struct Tracker {
 };
 
 template <typename T>
-void test_trivial() {
+constexpr void test_trivial() {
     static_assert(std::is_copy_assignable_v<__RXX optional<T&>>);
     static_assert(std::is_move_assignable_v<__RXX optional<T&>>);
 }

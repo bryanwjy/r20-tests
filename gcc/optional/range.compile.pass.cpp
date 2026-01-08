@@ -40,9 +40,11 @@ constexpr void test_range_concepts() {
     static_assert(xranges::sized_range<O>);
     static_assert(xranges::common_range<O>);
 
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
     // an optional<T&> is borrowed range
     constexpr bool is_ref_opt = std::is_reference_v<T>;
     static_assert(xranges::borrowed_range<O> == is_ref_opt);
+#endif
 
     // for any T (including const U) such that optional<T> is not assignable,
     // it does not satisfy ranges::view

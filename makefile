@@ -32,7 +32,7 @@ $(patsubst $(TEST_ROOT)/%.cpp,$(OUTPUT_DIR)/%.crc,$(wildcard $(TEST_ROOT)/$(1)/*
 $(patsubst $(TEST_ROOT)/%.cpp,$(OUTPUT_DIR)/%.crc,$(wildcard $(TEST_ROOT)/$(1)/**/*.pass.cpp))
 endef
 
-.PHONY: all clean run compile $(BUILD_SUBDIRS) $(PASS_EXES) $(BUILD_OBJECTS) $(PREPROCESS_OBJECTS)
+.PHONY: all clean run compile print $(BUILD_SUBDIRS) $(PASS_EXES) $(BUILD_OBJECTS) $(PREPROCESS_OBJECTS)
 .SECONDARY: $(addprefix $(OUTPUT_DIR)/,$(PASS_EXES))
 
 all: run

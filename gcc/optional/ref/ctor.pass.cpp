@@ -38,7 +38,7 @@ struct Tracker {
 };
 
 template <typename T>
-void test_trivial() {
+constexpr void test_trivial() {
     static_assert(std::is_trivially_copyable_v<__RXX optional<T&>>);
     static_assert(std::is_copy_constructible_v<__RXX optional<T&>>);
     static_assert(std::is_move_constructible_v<__RXX optional<T&>>);
