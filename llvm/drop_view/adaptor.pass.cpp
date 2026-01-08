@@ -59,7 +59,7 @@ struct SizedViewWithUnsizedSentinel : xranges::view_base {
 static_assert(xranges::random_access_range<SizedViewWithUnsizedSentinel>);
 static_assert(xranges::sized_range<SizedViewWithUnsizedSentinel>);
 static_assert(!std::sized_sentinel_for<SizedViewWithUnsizedSentinel::sentinel,
-              SizedViewWithUnsizedSentinel::iterator>);
+    SizedViewWithUnsizedSentinel::iterator>);
 static_assert(xranges::view<SizedViewWithUnsizedSentinel>);
 
 template <class T>
@@ -131,12 +131,12 @@ constexpr bool test() {
             static_assert(
                 !std::is_invocable_v<decltype(xviews::drop), NotAView, int>);
             static_assert(CanBePiped<SomeView&, decltype(xviews::drop(3))>);
-            static_assert(CanBePiped<int(&)[10], decltype(xviews::drop(3))>);
-            static_assert(!CanBePiped<int(&&)[10], decltype(xviews::drop(3))>);
+            static_assert(CanBePiped<int (&)[10], decltype(xviews::drop(3))>);
+            static_assert(!CanBePiped<int (&&)[10], decltype(xviews::drop(3))>);
             static_assert(!CanBePiped<NotAView, decltype(xviews::drop(3))>);
 
             static_assert(!CanBePiped<SomeView&,
-                          decltype(xviews::drop(/*n=*/NotAView{}))>);
+                decltype(xviews::drop(/*n=*/NotAView{}))>);
         }
     }
 
@@ -261,6 +261,17 @@ constexpr bool test() {
         assert(result.size() == 5);
         assert(*result.begin() == 1);
     }
+
+#if __cpp_lib_ranges_repeat >= 202207L
+    {
+        auto repeat = std::ranges::repeat_view<int, int>(1, 8);
+        using Result = std::ranges::repeat_view<int, int>;
+        std::same_as<Result> decltype(auto) result = repeat | xviews::drop(3);
+        static_assert(xranges::sized_range<Result>);
+        assert(result.size() == 5);
+        assert(*result.begin() == 1);
+    }
+#endif
 
     // `views::drop(repeat_view, n)` returns a `repeat_view` when `repeat_view`
     // doesn't model `sized_range`.

@@ -14,7 +14,7 @@ RXX_DIR := $(TEST_ROOT)/rxx
 
 TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -name '*.pass.cpp')
 TEST_SUBDIRS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -type d)
-CXX_FLAGS := $(CXX_FLAGS) -std=c++23 -O0 -g -I$(RXX_SRC) -ftemplate-backtrace-limit=0
+CXX_FLAGS := $(CXX_FLAGS) -std=c++23 -O0 -g -I$(RXX_SRC)
 LINKER_FLAGS := $(LINKER_FLAGS)
 
 BUILD_SUBDIRS := $(patsubst $(TEST_ROOT)/%,%,$(TEST_SUBDIRS))
@@ -33,6 +33,7 @@ $(patsubst $(TEST_ROOT)/%.cpp,$(OUTPUT_DIR)/%.crc,$(wildcard $(TEST_ROOT)/$(1)/*
 endef
 
 .PHONY: all clean run compile $(BUILD_SUBDIRS) $(PASS_EXES) $(BUILD_OBJECTS) $(PREPROCESS_OBJECTS)
+.SECONDARY: $(addprefix $(OUTPUT_DIR)/,$(PASS_EXES))
 
 all: run
 	@
