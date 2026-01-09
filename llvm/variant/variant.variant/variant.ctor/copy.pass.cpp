@@ -22,6 +22,7 @@
 
 #include <cassert>
 #include <type_traits>
+#include <variant>
 
 struct NonT {
     constexpr NonT(int v) : value(v) {}
@@ -237,7 +238,8 @@ constexpr void test_constexpr_copy_ctor_trivial() {
     // Make sure we properly propagate triviality, which implies constexpr-ness
     // (see P0602R4).
     using V = __RXX variant<long, void*, int const>;
-#ifdef TEST_WORKAROUND_MSVC_BROKEN_IS_TRIVIALLY_COPYABLE
+#if defined(TEST_WORKAROUND_MSVC_BROKEN_IS_TRIVIALLY_COPYABLE) || \
+    (RXX_COMPILER_GCC && !RXX_COMPILER_GCC_AT_LEAST(14, 2, 0))
     static_assert(std::is_trivially_destructible<V>::value, "");
     static_assert(std::is_trivially_copy_constructible<V>::value, "");
     static_assert(std::is_trivially_move_constructible<V>::value, "");
