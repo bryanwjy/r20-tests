@@ -28,8 +28,8 @@
 #include <string_view>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 using namespace std::literals;
 
 constexpr bool test01() {
@@ -64,9 +64,9 @@ constexpr bool test02() {
 }
 
 constexpr bool test03() {
-    using rxx::tests::test_bidirectional_range;
-    using rxx::tests::test_forward_range;
-    using rxx::tests::test_input_range;
+    using __RXX tests::test_bidirectional_range;
+    using __RXX tests::test_forward_range;
+    using __RXX tests::test_input_range;
 
     using ty1 = xranges::join_with_view<
         xviews::all_t<test_input_range<test_input_range<int>>>,

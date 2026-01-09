@@ -30,8 +30,8 @@
 #include <utility>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

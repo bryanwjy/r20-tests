@@ -25,8 +25,8 @@
 #include <cassert>
 #include <memory>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     auto v = xviews::repeat(42);

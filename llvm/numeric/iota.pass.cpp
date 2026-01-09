@@ -24,7 +24,7 @@
 #include <cassert>
 #include <utility>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 //
 // Testing constraints

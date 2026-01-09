@@ -27,8 +27,7 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
 using std::ptrdiff_t;
 
@@ -46,15 +45,16 @@ void test01() {
 
 void test02() {
     int a[3] = {};
-    rxx::tests::test_sized_range<int, rxx::tests::input_iterator_wrapper> ri(a);
+    __RXX tests::test_sized_range<int, __RXX tests::input_iterator_wrapper>
+        ri(a);
     assert(xranges::ssize(ri) == 3);
     static_assert(noexcept(xranges::ssize(ri)));
 }
 
 void test04() {
     int a[] = {0, 1};
-    rxx::tests::test_range<int, rxx::tests::random_access_iterator_wrapper> r(
-        a);
+    __RXX tests::test_range<int, __RXX tests::random_access_iterator_wrapper>
+        r(a);
     assert(xranges::ssize(r) == xranges::end(r) - xranges::begin(r));
 }
 

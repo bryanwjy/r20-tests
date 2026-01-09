@@ -25,8 +25,8 @@
 #include <optional>
 #include <utility>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 template <typename T>
 struct MoveOnly {
@@ -74,7 +74,7 @@ constexpr bool test01() {
 void test02() {
     MoveOnly<int> x = MakeMoveOnly<int>(42);
     MoveOnly<int> y;
-    rxx::tests::test_input_range<MoveOnly<int>> rx(&x, &x + 1);
+    __RXX tests::test_input_range<MoveOnly<int>> rx(&x, &x + 1);
     auto v = rx | xviews::as_rvalue;
     static_assert(!xranges::common_range<decltype(v)>);
     xranges::copy(v, &y);

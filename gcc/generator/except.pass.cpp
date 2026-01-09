@@ -22,10 +22,10 @@
 
 #if RXX_SUPPORTS_GENERATOR
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+
 template <typename... Ts>
-using xgenerator = rxx::generator<Ts...>;
+using xgenerator = __RXX generator<Ts...>;
 
 xgenerator<int> foo() {
     co_yield 0;

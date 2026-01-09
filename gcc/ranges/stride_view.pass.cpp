@@ -25,8 +25,8 @@
 #include <cassert>
 #include <utility>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3, 4, 5, 6, 7};
@@ -82,7 +82,7 @@ void test02() {
 void test03() {
     // PR libstdc++/107313
     int x[] = {1, 2, 3, 4, 5};
-    rxx::tests::test_input_range<int> rx(x);
+    __RXX tests::test_input_range<int> rx(x);
     auto r = xviews::counted(rx.begin(), 4) | xviews::stride(2);
     auto i = r.begin();
     std::default_sentinel_t s = r.end();
@@ -98,7 +98,7 @@ void test03() {
 
 int main() {
     static_assert(test01());
-    test02<rxx::tests::test_input_range<int>>();
-    test02<rxx::tests::test_forward_range<int>>();
+    test02<__RXX tests::test_input_range<int>>();
+    test02<__RXX tests::test_forward_range<int>>();
     test03();
 }

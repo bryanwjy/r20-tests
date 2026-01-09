@@ -27,10 +27,9 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
-static_assert(rxx::tests::is_customization_point_object(xranges::size));
+static_assert(__RXX tests::is_customization_point_object(xranges::size));
 
 void test01() {
     constexpr int a[10] = {};
@@ -60,7 +59,8 @@ void test02() {
     static_assert(noexcept(xranges::size(c)));
 
     int a[3] = {};
-    rxx::tests::test_sized_range<int, rxx::tests::input_iterator_wrapper> ri(a);
+    __RXX tests::test_sized_range<int, __RXX tests::input_iterator_wrapper>
+        ri(a);
     assert(xranges::size(ri) == 3);
     static_assert(noexcept(xranges::size(ri)));
 }
@@ -90,8 +90,8 @@ void test03() {
 
 void test04() {
     int a[] = {0, 1};
-    rxx::tests::test_range<int, rxx::tests::random_access_iterator_wrapper> r(
-        a);
+    __RXX tests::test_range<int, __RXX tests::random_access_iterator_wrapper>
+        r(a);
     assert(xranges::size(r) == unsigned(xranges::end(r) - xranges::begin(r)));
 }
 

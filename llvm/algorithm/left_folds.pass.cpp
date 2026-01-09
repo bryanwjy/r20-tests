@@ -52,8 +52,8 @@
 #include <string_view>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 using xranges::fold_left;
 using xranges::fold_left_with_iter;

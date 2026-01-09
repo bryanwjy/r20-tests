@@ -27,8 +27,8 @@
 #include <cassert>
 #include <sstream>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3};
@@ -66,7 +66,7 @@ constexpr bool test01() {
     auto v3 = xviews::cartesian_product(x, y, z);
     assert(xranges::size(v3) == 18);
     assert(xranges::equal(v3,
-        (rxx::tuple<int, int, int>[]){
+        (__RXX tuple<int, int, int>[]){
             {1, 4, 7},
             {1, 4, 8},
             {1, 5, 7},
@@ -93,26 +93,26 @@ constexpr bool test01() {
 
     auto i4 = v4.begin(), j4 = i4 + 1;
     assert(j4 > i4);
-    assert(i4[0] == rxx::tuple(1, 4, 7, 9));
+    assert(i4[0] == __RXX tuple(1, 4, 7, 9));
     assert(i4 + 18 == v4.end());
     i4 += 5;
     assert(i4 != v4.begin());
     assert(i4 - 5 == v4.begin());
-    assert(*i4 == rxx::tuple(1, 6, 8, 9));
+    assert(*i4 == __RXX tuple(1, 6, 8, 9));
     assert(i4 - 5 != i4);
     i4 -= 3;
-    assert(*i4 == rxx::tuple(1, 5, 7, 9));
+    assert(*i4 == __RXX tuple(1, 5, 7, 9));
     assert(j4 + 1 == i4);
     xranges::iter_swap(i4, j4);
-    assert(*j4 == rxx::tuple(1, 5, 7, 9));
-    assert(*i4 == rxx::tuple(1, 4, 8, 9));
+    assert(*j4 == __RXX tuple(1, 5, 7, 9));
+    assert(*i4 == __RXX tuple(1, 4, 8, 9));
 
     return true;
 }
 
 void test02() {
     int x[] = {1, 2};
-    rxx::tests::test_input_range<int> rx(x);
+    __RXX tests::test_input_range<int> rx(x);
     auto v = xviews::cartesian_product(rx, x);
     auto i = v.begin();
     std::default_sentinel_t s = v.end();
@@ -137,7 +137,7 @@ void test02() {
 
 void test03() {
     int x[2];
-    rxx::tests::test_input_range<int> rx(x);
+    __RXX tests::test_input_range<int> rx(x);
     auto v = xviews::cartesian_product(xviews::counted(rx.begin(), 2), x);
     assert(v.size() == 4);
     auto i = v.begin();

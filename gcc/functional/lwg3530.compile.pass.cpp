@@ -23,7 +23,7 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct S {
     constexpr operator int*() const { return nullptr; }

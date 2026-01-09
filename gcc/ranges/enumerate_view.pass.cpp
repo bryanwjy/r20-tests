@@ -25,13 +25,13 @@
 #include <cassert>
 #include <memory>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
-using rxx::tests::test_bidirectional_range;
-using rxx::tests::test_forward_range;
-using rxx::tests::test_input_range;
-using rxx::tests::test_random_access_range;
+using __RXX tests::test_bidirectional_range;
+using __RXX tests::test_forward_range;
+using __RXX tests::test_input_range;
+using __RXX tests::test_random_access_range;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3};

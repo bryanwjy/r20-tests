@@ -20,8 +20,8 @@
 #include <concepts>
 #include <type_traits>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 struct sentinel {
     bool operator==(std::input_or_output_iterator auto const&) const;

@@ -39,7 +39,7 @@
 #include <chrono>
 
 using namespace std::chrono;
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 template <class Iter1, class Sent1 = Iter1, class Iter2 = int*,
     class Sent2 = Iter2>
@@ -57,7 +57,7 @@ static_assert(!HasEndsWithIt<int*, int*, ForwardIteratorNotDerivedFrom>);
 static_assert(!HasEndsWithIt<int*, int*, ForwardIteratorNotIncrementable>);
 static_assert(!HasEndsWithIt<int*, int*, int*, SentinelForNotSemiregular>);
 static_assert(!HasEndsWithIt<int*, int*, int*,
-              SentinelForNotWeaklyEqualityComparableWith>);
+    SentinelForNotWeaklyEqualityComparableWith>);
 
 template <class Range1, class Range2 = UncheckedRange<int*>>
 concept HasEndsWithR = requires(Range1&& range1, Range2&& range2) {
@@ -72,7 +72,7 @@ static_assert(!HasEndsWithR<ForwardRangeNotSentinelSemiregular>);
 static_assert(!HasEndsWithR<ForwardRangeNotSentinelEqualityComparableWith>);
 static_assert(HasEndsWithR<UncheckedRange<int*>, UncheckedRange<int*>>);
 static_assert(!HasEndsWithR<UncheckedRange<int*>,
-              UncheckedRange<int**>>); // not indirectly comparable
+    UncheckedRange<int**>>); // not indirectly comparable
 static_assert(!HasEndsWithR<UncheckedRange<int*>, ForwardRangeNotDerivedFrom>);
 static_assert(
     !HasEndsWithR<UncheckedRange<int*>, ForwardRangeNotSentinelSemiregular>);

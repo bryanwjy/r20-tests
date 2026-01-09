@@ -11,7 +11,7 @@
 #  include <memory_resource>
 
 namespace xpmr {
-using rxx::pmr::generator;
+using __RXX pmr::generator;
 }
 
 xpmr::generator<int> bar(

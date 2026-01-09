@@ -25,7 +25,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct NotEqualityComparable {
     friend bool operator==(
@@ -35,7 +35,7 @@ struct NotEqualityComparable {
 };
 
 static_assert(!std::is_invocable_v<xranges::equal_to, NotEqualityComparable,
-              NotEqualityComparable>);
+    NotEqualityComparable>);
 // The following becomes true in C++23 thanks to P2404R3
 static_assert(std::is_invocable_v<xranges::equal_to, int, MoveOnly>);
 static_assert(std::is_invocable_v<xranges::equal_to, explicit_operators,

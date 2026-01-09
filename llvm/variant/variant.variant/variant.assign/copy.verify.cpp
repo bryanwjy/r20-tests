@@ -31,7 +31,7 @@ int main(int, char**) {
     __RXX variant<NotCopyConstructible> v1;
     __RXX variant<NotCopyConstructible> v2(
         v); // expected-error {{call to implicitly-deleted copy constructor of
-            // 'rxx::variant<NotCopyConstructible>'}}
+            // '__RXX variant<NotCopyConstructible>'}}
     v1 = v; // expected-error-re {{object of type
             // 'rxx:{{.*}}:variant<NotCopyConstructible>' cannot be assigned
             // because its copy assignment operator is implicitly deleted}}

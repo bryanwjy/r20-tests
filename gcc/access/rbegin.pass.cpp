@@ -27,10 +27,9 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
-static_assert(rxx::tests::is_customization_point_object(xranges::rbegin));
+static_assert(__RXX tests::is_customization_point_object(xranges::rbegin));
 
 struct R1 {
     int i = 0;
@@ -78,8 +77,8 @@ void test02() {
 
 void test03() {
     struct R3 :
-        rxx::tests::test_range<int,
-            rxx::tests::bidirectional_iterator_wrapper> {
+        __RXX tests::test_range<int,
+            __RXX tests::bidirectional_iterator_wrapper> {
         R3(int (&a)[2]) : test_range(a) {}
 
         using test_range::begin;
@@ -87,7 +86,7 @@ void test03() {
         // Replace test_range::end() to return same type as begin()
         // so ranges::rbegin will wrap it in a reverse_iterator .
         auto end() & {
-            using rxx::tests::bidirectional_iterator_wrapper;
+            using __RXX tests::bidirectional_iterator_wrapper;
             return bidirectional_iterator_wrapper<int>(bounds.last, &bounds);
         }
     };

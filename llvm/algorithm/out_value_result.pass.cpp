@@ -20,7 +20,7 @@
 #include <cassert>
 #include <type_traits>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 using xranges::out_value_result;
 
@@ -105,14 +105,14 @@ constexpr bool test_constraints() {
 
     // conversions should not work if there is no conversion
     static_assert(!std::is_convertible_v<out_value_result<NotConvertible, int>,
-                  out_value_result<int, NotConvertible>>);
+        out_value_result<int, NotConvertible>>);
     static_assert(!std::is_convertible_v<out_value_result<int, NotConvertible>,
-                  out_value_result<NotConvertible, int>>);
+        out_value_result<NotConvertible, int>>);
 
     // check standard layout
     static_assert(std::is_standard_layout_v<out_value_result<int, int>>);
     static_assert(!std::is_standard_layout_v<
-                  out_value_result<NonStandardLayoutType, int>>);
+        out_value_result<NonStandardLayoutType, int>>);
 
     return true;
 }

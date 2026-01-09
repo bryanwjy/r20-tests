@@ -31,12 +31,12 @@
 #include <utility>
 #include <vector>
 
-using rxx::tests::forward_iterator_wrapper;
-using rxx::tests::input_iterator_wrapper;
-using rxx::tests::test_range;
+using __RXX tests::forward_iterator_wrapper;
+using __RXX tests::input_iterator_wrapper;
+using __RXX tests::test_range;
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 using namespace std::literals;
 
@@ -116,7 +116,7 @@ void test06() {
     // Verify that _Iterator<false> is implicitly convertible to
     // _Iterator<true>.
     static_assert(!std::same_as<decltype(xranges::begin(v)),
-                  decltype(xranges::cbegin(v))>);
+        decltype(xranges::cbegin(v))>);
     auto b = xranges::cbegin(v);
     b = xranges::begin(v);
 }

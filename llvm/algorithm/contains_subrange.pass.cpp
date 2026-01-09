@@ -43,8 +43,8 @@
 #include <concepts>
 #include <utility>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 struct NotEqualityComparable {};
 
@@ -70,7 +70,7 @@ static_assert(
 static_assert(
     !HasContainsSubrangeIt<int*, int*, int*, SentinelForNotSemiregular>);
 static_assert(!HasContainsSubrangeIt<int*, int*, int*,
-              SentinelForNotWeaklyEqualityComparableWith>);
+    SentinelForNotWeaklyEqualityComparableWith>);
 
 template <class Range1, class Range2 = UncheckedRange<int*>>
 concept HasContainsSubrangeR = requires(Range1&& range1, Range2&& range2) {
@@ -85,15 +85,15 @@ static_assert(!HasContainsSubrangeR<ForwardRangeNotSentinelSemiregular>);
 static_assert(
     !HasContainsSubrangeR<ForwardRangeNotSentinelEqualityComparableWith>);
 static_assert(!HasContainsSubrangeR<UncheckedRange<int*>,
-              UncheckedRange<int**>>); // not indirectly comparable
+    UncheckedRange<int**>>); // not indirectly comparable
 static_assert(
     !HasContainsSubrangeR<UncheckedRange<int*>, ForwardRangeNotDerivedFrom>);
 static_assert(
     !HasContainsSubrangeR<UncheckedRange<int*>, ForwardRangeNotIncrementable>);
 static_assert(!HasContainsSubrangeR<UncheckedRange<int*>,
-              ForwardRangeNotSentinelSemiregular>);
+    ForwardRangeNotSentinelSemiregular>);
 static_assert(!HasContainsSubrangeR<UncheckedRange<int*>,
-              ForwardRangeNotSentinelEqualityComparableWith>);
+    ForwardRangeNotSentinelEqualityComparableWith>);
 
 template <class Iter1, class Sent1 = Iter1, class Iter2, class Sent2 = Iter2>
 constexpr void test_iterators() {

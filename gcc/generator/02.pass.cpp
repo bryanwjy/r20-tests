@@ -23,10 +23,10 @@
 #if RXX_SUPPORTS_GENERATOR
 #  include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+
 template <typename... Ts>
-using xgenerator = rxx::generator<Ts...>;
+using xgenerator = __RXX generator<Ts...>;
 
 struct operation_watcher {
     int copy_ctor = 0;

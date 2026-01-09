@@ -37,13 +37,13 @@ struct expected {
     T y;
 };
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 // clang-format off
 // Checks [concept.swappable]/2.1
 template <class T, class U>
 requires std::same_as<std::remove_cvref_t<T>, std::remove_cvref_t<U> > &&
-         std::swappable<std::remove_cvref_t<T> >
+         __RXX swappable<std::remove_cvref_t<T> >
 constexpr bool check_swap_21(T&& x, U&& y) {
   expected<std::remove_cvref_t<T> > const e{y, x};
   xranges::swap(std::forward<T>(x), std::forward<U>(y));
@@ -51,7 +51,7 @@ constexpr bool check_swap_21(T&& x, U&& y) {
 }
 
 // Checks [concept.swappable]/2.2
-template <std::swappable T, std::size_t N>
+template <__RXX swappable T, std::size_t N>
 constexpr bool check_swap_22(T (&x)[N], T (&y)[N]) {
   expected<T[N]> e;
   std::copy(y, y + N, e.x);
@@ -63,7 +63,7 @@ constexpr bool check_swap_22(T (&x)[N], T (&y)[N]) {
 }
 
 // Checks [concept.swappable]/2.3
-template <std::swappable T>
+template <__RXX swappable T>
 requires std::copy_constructible<std::remove_cvref_t<T> >
 constexpr bool check_swap_23(T x, T y) {
   expected<std::remove_cvref_t<T> > const e{y, x};
@@ -146,8 +146,8 @@ enum class scoped {
 void swap(scoped&, scoped&);
 } // namespace swappable_namespace
 
-static_assert(std::swappable<swappable_namespace::unscoped>);
-static_assert(std::swappable<swappable_namespace::scoped>);
+static_assert(__RXX swappable<swappable_namespace::unscoped>);
+static_assert(__RXX swappable<swappable_namespace::scoped>);
 
 constexpr bool check_swap_arrays() {
     int x[] = {0, 1, 2, 3, 4};
@@ -208,34 +208,34 @@ union adl_swappable {
 void swap(adl_swappable&, adl_swappable&);
 void swap(adl_swappable&&, adl_swappable&&);
 } // namespace union_swap
-static_assert(std::swappable<union_swap::adl_swappable>);
-static_assert(std::swappable<union_swap::adl_swappable&>);
-static_assert(std::swappable<union_swap::adl_swappable&&>);
+static_assert(__RXX swappable<union_swap::adl_swappable>);
+static_assert(__RXX swappable<union_swap::adl_swappable&>);
+static_assert(__RXX swappable<union_swap::adl_swappable&&>);
 
-// All tests for std::swappable<T> are implicitly confirmed by `check_swap`, so
+// All tests for __RXX swappable<T> are implicitly confirmed by `check_swap`, so
 // we only need to sanity check for a few positive cases.
-static_assert(std::swappable<int volatile&>);
-static_assert(std::swappable<int&&>);
-static_assert(std::swappable<int (*)()>);
-static_assert(std::swappable<int rvalue_adl_swappable::*>);
-static_assert(std::swappable<int (rvalue_adl_swappable::*)()>);
-static_assert(std::swappable<std::unique_ptr<int>>);
+static_assert(__RXX swappable<int volatile&>);
+static_assert(__RXX swappable<int&&>);
+static_assert(__RXX swappable<int (*)()>);
+static_assert(__RXX swappable<int rvalue_adl_swappable::*>);
+static_assert(__RXX swappable<int (rvalue_adl_swappable::*)()>);
+static_assert(__RXX swappable<std::unique_ptr<int>>);
 
-static_assert(!std::swappable<void>);
-static_assert(!std::swappable<int const>);
-static_assert(!std::swappable<int const&>);
-static_assert(!std::swappable<int const&&>);
-static_assert(!std::swappable<int const volatile>);
-static_assert(!std::swappable<int const volatile&>);
-static_assert(!std::swappable<int const volatile&&>);
-static_assert(!std::swappable<int (&)()>);
-static_assert(!std::swappable<DeletedMoveCtor>);
-static_assert(!std::swappable<ImplicitlyDeletedMoveCtor>);
-static_assert(!std::swappable<DeletedMoveAssign>);
-static_assert(!std::swappable<ImplicitlyDeletedMoveAssign>);
-static_assert(!std::swappable<NonMovable>);
-static_assert(!std::swappable<DerivedFromNonMovable>);
-static_assert(!std::swappable<HasANonMovable>);
+static_assert(!__RXX swappable<void>);
+static_assert(!__RXX swappable<int const>);
+static_assert(!__RXX swappable<int const&>);
+static_assert(!__RXX swappable<int const&&>);
+static_assert(!__RXX swappable<int const volatile>);
+static_assert(!__RXX swappable<int const volatile&>);
+static_assert(!__RXX swappable<int const volatile&&>);
+static_assert(!__RXX swappable<int (&)()>);
+static_assert(!__RXX swappable<DeletedMoveCtor>);
+static_assert(!__RXX swappable<ImplicitlyDeletedMoveCtor>);
+static_assert(!__RXX swappable<DeletedMoveAssign>);
+static_assert(!__RXX swappable<ImplicitlyDeletedMoveAssign>);
+static_assert(!__RXX swappable<NonMovable>);
+static_assert(!__RXX swappable<DerivedFromNonMovable>);
+static_assert(!__RXX swappable<HasANonMovable>);
 
 using swap_type = std::remove_const_t<decltype(xranges::swap)>;
 static_assert(std::default_initializable<swap_type>);
@@ -245,14 +245,14 @@ static_assert(std::assignable_from<swap_type&, swap_type>);
 static_assert(std::assignable_from<swap_type&, swap_type&>);
 static_assert(std::assignable_from<swap_type&, swap_type const&>);
 static_assert(std::assignable_from<swap_type&, swap_type const>);
-static_assert(std::swappable<swap_type>);
+static_assert(__RXX swappable<swap_type>);
 
 enum class nothrow {
     no,
     yes
 };
 
-template <nothrow is_noexcept, std::swappable T>
+template <nothrow is_noexcept, __RXX swappable T>
 void check_swap(expected<T> const& e) {
     auto a = e.y;
     auto b = e.x;

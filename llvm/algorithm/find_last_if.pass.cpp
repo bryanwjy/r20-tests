@@ -31,8 +31,8 @@
 #include <array>
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 struct Predicate {
     bool operator()(int);
@@ -49,7 +49,7 @@ static_assert(!HasFindLastIfIt<ForwardIteratorNotIncrementable>);
 static_assert(
     !HasFindLastIfIt<forward_iterator<int*>, SentinelForNotSemiregular>);
 static_assert(!HasFindLastIfIt<forward_iterator<int*>,
-              InputRangeNotSentinelEqualityComparableWith>);
+    InputRangeNotSentinelEqualityComparableWith>);
 
 static_assert(!HasFindLastIfIt<int*, int>);
 static_assert(!HasFindLastIfIt<int, int*>);

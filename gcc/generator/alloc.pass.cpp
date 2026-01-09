@@ -27,7 +27,7 @@
 #  include <utility>
 
 namespace xpmr {
-using rxx::pmr::generator;
+using __RXX pmr::generator;
 }
 
 template <typename... Args>
@@ -71,7 +71,7 @@ public:
     size_t number_of_active_allocations() const noexcept {
         auto count = 0u;
         for (auto current = active.next; current != &active;
-             current = current->next)
+            current = current->next)
             ++count;
         return count;
     }

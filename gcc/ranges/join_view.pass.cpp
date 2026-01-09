@@ -29,8 +29,8 @@
 #include <string_view>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 void test01() {
     using namespace std::literals;
@@ -104,7 +104,7 @@ void test06() {
     // Verify that _Iterator<false> is implicitly convertible to
     // _Iterator<true>.
     static_assert(!std::same_as<decltype(xranges::begin(v)),
-                  decltype(xranges::cbegin(v))>);
+        decltype(xranges::cbegin(v))>);
     auto a = std::cbegin(v);
     a = xranges::begin(v);
 

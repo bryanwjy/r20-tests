@@ -26,10 +26,9 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
-static_assert(rxx::tests::is_customization_point_object(std::ranges::crbegin));
+static_assert(__RXX tests::is_customization_point_object(std::ranges::crbegin));
 
 struct R1 {
     int i = 0;

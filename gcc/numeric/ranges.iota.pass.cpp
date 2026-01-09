@@ -20,11 +20,11 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 void test01() {
     int x[3] = {};
-    rxx::tests::test_output_range<int> rx(x);
+    __RXX tests::test_output_range<int> rx(x);
     auto r0 = xranges::iota(rx, 0);
     assert(r0.out.ptr == x + 3);
     assert(r0.value == 3);

@@ -22,8 +22,8 @@
 #include <cassert>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 void test01() {
     std::vector<int> r{1, 2, 3};
@@ -50,7 +50,7 @@ void test01() {
 
 void test02() {
     int x[] = {1, 2, 3};
-    rxx::tests::test_input_range<int> rx(x);
+    __RXX tests::test_input_range<int> rx(x);
     static_assert(!xranges::common_range<decltype(rx)>);
     auto v = rx | xviews::to_input;
     static_assert(std::same_as<decltype(v), decltype(xviews::all(rx))>);

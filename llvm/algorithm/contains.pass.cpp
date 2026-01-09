@@ -36,8 +36,8 @@
 #include <string>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 struct NotEqualityComparable {};
 

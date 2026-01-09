@@ -27,12 +27,11 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
 #include <utility> // as_const
 
-static_assert(rxx::tests::is_customization_point_object(xranges::cbegin));
+static_assert(__RXX tests::is_customization_point_object(xranges::cbegin));
 
 using std::same_as;
 

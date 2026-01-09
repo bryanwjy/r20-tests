@@ -28,8 +28,7 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
 struct A {
     friend auto begin(A const&) -> int const*;

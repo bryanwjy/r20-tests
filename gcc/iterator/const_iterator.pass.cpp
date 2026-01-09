@@ -29,28 +29,28 @@
 #include <string_view>
 #include <vector>
 
-using rxx::tests::test_bidirectional_range;
-using rxx::tests::test_forward_range;
-using rxx::tests::test_input_range;
-using rxx::tests::test_random_access_range;
+using __RXX tests::test_bidirectional_range;
+using __RXX tests::test_forward_range;
+using __RXX tests::test_input_range;
+using __RXX tests::test_random_access_range;
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 template <class Iter, bool Const>
 void test01() {
     if constexpr (Const) {
-        static_assert(std::same_as<rxx::const_iterator<Iter>, Iter>);
-        static_assert(std::same_as<rxx::const_sentinel<Iter>, Iter>);
-        static_assert(std::same_as<rxx::iter_const_reference_t<Iter>,
-            rxx::iter_reference_t<Iter>>);
+        static_assert(std::same_as<__RXX const_iterator<Iter>, Iter>);
+        static_assert(std::same_as<__RXX const_sentinel<Iter>, Iter>);
+        static_assert(std::same_as<__RXX iter_const_reference_t<Iter>,
+            __RXX iter_reference_t<Iter>>);
     } else {
-        using Wrapped = rxx::basic_const_iterator<Iter>;
+        using Wrapped = __RXX basic_const_iterator<Iter>;
 
-        static_assert(std::same_as<rxx::const_iterator<Iter>, Wrapped>);
-        static_assert(std::same_as<rxx::const_sentinel<Iter>, Wrapped>);
-        static_assert(std::same_as<rxx::iter_const_reference_t<Iter>,
-            rxx::iter_reference_t<Wrapped>>);
+        static_assert(std::same_as<__RXX const_iterator<Iter>, Wrapped>);
+        static_assert(std::same_as<__RXX const_sentinel<Iter>, Wrapped>);
+        static_assert(std::same_as<__RXX iter_const_reference_t<Iter>,
+            __RXX iter_reference_t<Wrapped>>);
 
         static_assert(
             std::input_iterator<Iter> == std::input_iterator<Wrapped>);
@@ -82,14 +82,14 @@ void test02() {
                 decltype(xranges::end(std::declval<Range&>()))>);
     } else {
         static_assert(!xranges::constant_range<Range>);
-        using Wrapped = rxx::basic_const_iterator<xranges::iterator_t<Range>>;
+        using Wrapped = __RXX basic_const_iterator<xranges::iterator_t<Range>>;
 
         static_assert(std::same_as<xranges::const_iterator_t<Range>, Wrapped>);
         if constexpr (xranges::common_range<Range>)
             static_assert(
                 std::same_as<xranges::const_sentinel_t<Range>, Wrapped>);
         static_assert(std::same_as<xranges::range_const_reference_t<Range>,
-            rxx::iter_reference_t<Wrapped>>);
+            __RXX iter_reference_t<Wrapped>>);
 
         static_assert(
             xranges::input_range<Range> == std::input_iterator<Wrapped>);
@@ -119,8 +119,9 @@ void test02() {
 }
 
 void test03() {
-    static_assert(std::same_as<rxx::const_sentinel<std::unreachable_sentinel_t>,
-        std::unreachable_sentinel_t>);
+    static_assert(
+        std::same_as<__RXX const_sentinel<std::unreachable_sentinel_t>,
+            std::unreachable_sentinel_t>);
 }
 
 void test04() {
