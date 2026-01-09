@@ -26,6 +26,6 @@
 #include <vector>
 
 using I = std::vector<int>::iterator;
-using CI = rxx::basic_const_iterator<I>;
+using CI = __RXX basic_const_iterator<I>;
 using RCI = std::reverse_iterator<CI>;
 static_assert(std::totally_ordered<RCI>);

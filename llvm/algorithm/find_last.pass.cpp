@@ -41,8 +41,8 @@
 #include <memory>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 struct NotEqualityComparable {};
 
@@ -58,7 +58,7 @@ static_assert(!HasFindLastIt<ForwardIteratorNotIncrementable>);
 static_assert(
     !HasFindLastIt<forward_iterator<int*>, SentinelForNotSemiregular>);
 static_assert(!HasFindLastIt<forward_iterator<int*>,
-              InputRangeNotSentinelEqualityComparableWith>);
+    InputRangeNotSentinelEqualityComparableWith>);
 
 static_assert(!HasFindLastIt<int*, int>);
 static_assert(!HasFindLastIt<int, int*>);

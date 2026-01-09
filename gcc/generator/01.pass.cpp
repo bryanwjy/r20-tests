@@ -26,10 +26,10 @@
 #  include <cassert>
 #  include <span>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 template <typename... Ts>
-using xgenerator = rxx::generator<Ts...>;
+using xgenerator = __RXX generator<Ts...>;
 
 constexpr std::array test_sequence{1, 2, 3, 4, 5};
 constexpr struct {
@@ -38,9 +38,8 @@ constexpr struct {
 
 // basic example
 xgenerator<int> bar() {
-    for (auto const val :
-        std::span{test_sequence}
-            .subspan<bar_subsequence.offset, bar_subsequence.count>()) {
+    for (auto const val : std::span{test_sequence}
+             .subspan<bar_subsequence.offset, bar_subsequence.count>()) {
         co_yield val;
     }
 }
@@ -51,9 +50,8 @@ xgenerator<int> foo() {
         co_yield val;
     }
     co_yield xranges::elements_of{bar()};
-    for (auto const val :
-        std::span{test_sequence}
-            .subspan<bar_subsequence.offset + bar_subsequence.count>()) {
+    for (auto const val : std::span{test_sequence}
+             .subspan<bar_subsequence.offset + bar_subsequence.count>()) {
         co_yield val;
     }
 }

@@ -38,6 +38,7 @@ Thumbs.db
 
 # Fortran module files
 *.mod
+!*.mod/
 *.smod
 
 # Compiled Static libraries

@@ -18,11 +18,11 @@
 
 #include "../test_iterators.h"
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 void test01() {
     int x[] = {1, 2, 3};
-    using to_input = rxx::tests::test_input_range<int>;
+    using to_input = __RXX tests::test_input_range<int>;
     assert(xranges::contains(to_input(x), 1));
     assert(xranges::contains(to_input(x), 2));
     assert(xranges::contains(to_input(x), 3));

@@ -24,7 +24,7 @@
 #include <memory>
 #include <type_traits>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 static_assert(std::is_class_v<decltype(xranges::destroy_at)>);
 

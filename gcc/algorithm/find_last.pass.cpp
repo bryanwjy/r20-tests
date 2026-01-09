@@ -20,7 +20,7 @@
 #include "rxx/algorithm/equal.h"
 #include "rxx/ranges.h"
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 constexpr bool test01() {
     int x[] = {1, 2, 1, 2, 1, 2, 1, 2};
@@ -56,7 +56,7 @@ constexpr bool test01() {
 
 void test02() {
     int x[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
-    rxx::tests::test_forward_range<int> rx(x);
+    __RXX tests::test_forward_range<int> rx(x);
 
     auto sr0 = xranges::find_last(rx, 0);
     assert(xranges::empty(sr0));

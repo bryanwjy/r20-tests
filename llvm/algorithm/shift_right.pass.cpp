@@ -27,8 +27,8 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 template <class T, class Iter>
 constexpr bool test() {

@@ -22,8 +22,8 @@
 #include <cassert>
 #include <cmath>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 template <typename Range1, typename Range2>
 void test01() {
@@ -134,7 +134,7 @@ void test03() {
 }
 
 int main() {
-    using namespace rxx::tests;
+    using namespace __RXX tests;
     using forward = test_forward_range<int>;
     using bidirectional_common = bidirectional_container<int>;
     using input_sized = test_input_sized_range<int>;

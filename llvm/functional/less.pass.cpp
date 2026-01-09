@@ -25,7 +25,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct NotTotallyOrdered {
     friend bool operator<(NotTotallyOrdered const&, NotTotallyOrdered const&);

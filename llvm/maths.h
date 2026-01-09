@@ -25,7 +25,7 @@
 #include <utility>
 #include <vector>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 template <xranges::forward_range R>
 constexpr xranges::range_value_t<R> triangular_sum(R& input) {

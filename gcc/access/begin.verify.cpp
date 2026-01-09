@@ -26,8 +26,7 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
 auto test01() {
     using A = int[2];

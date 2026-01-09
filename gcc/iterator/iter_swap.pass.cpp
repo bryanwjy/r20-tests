@@ -23,9 +23,9 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
-static_assert(rxx::tests::is_customization_point_object(xranges::iter_swap));
+static_assert(__RXX tests::is_customization_point_object(xranges::iter_swap));
 
 struct X {
     int value;

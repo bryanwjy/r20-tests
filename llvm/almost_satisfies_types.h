@@ -17,8 +17,8 @@
 #include "rxx/ranges.h"
 #include "test_iterators.h"
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 template <class T, class U = sentinel_wrapper<T>>
 class UncheckedRange {
@@ -157,7 +157,7 @@ static_assert(
     std::input_or_output_iterator<SentinelForNotWeaklyEqualityComparableWith>);
 static_assert(std::semiregular<SentinelForNotWeaklyEqualityComparableWith>);
 static_assert(!std::sentinel_for<SentinelForNotWeaklyEqualityComparableWith,
-              cpp20_input_iterator<int*>>);
+    cpp20_input_iterator<int*>>);
 
 class WeaklyIncrementableNotMovable {
 public:
@@ -370,7 +370,7 @@ using InputRangeIndirectBinaryPredicateNotIndirectlyReadable =
         IndirectBinaryPredicateNotIndirectlyReadable>;
 
 static_assert(!std::indirect_binary_predicate<xranges::equal_to,
-              IndirectBinaryPredicateNotIndirectlyReadable, int*>);
+    IndirectBinaryPredicateNotIndirectlyReadable, int*>);
 
 class RandomAccessIteratorNotDerivedFrom {
     using Self = RandomAccessIteratorNotDerivedFrom;

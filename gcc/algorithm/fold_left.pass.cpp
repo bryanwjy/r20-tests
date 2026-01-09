@@ -20,8 +20,8 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 3, 4, 5};
@@ -40,7 +40,7 @@ void test02() {
     int x[] = {1, 2, 3, 4, 5};
     auto f = [](int&& acc, int& x) { return 2 * acc + x; };
 
-    rxx::tests::test_input_range<int> rx(x);
+    __RXX tests::test_input_range<int> rx(x);
     xranges::in_value_result ivr = xranges::fold_left_with_iter(rx, 0, f);
     assert(ivr.in == rx.end());
     assert(ivr.value == 57);

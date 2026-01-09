@@ -27,8 +27,8 @@
 #include <cassert>
 #include <utility>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     static_assert(xranges::empty(std::array{1, 2, 3} | xviews::adjacent<0>));
@@ -69,7 +69,8 @@ constexpr bool test01() {
     (void)v3.base();
 
     auto const v5 = y | xviews::adjacent<5>;
-    assert(xranges::equal(v5, xviews::single(rxx::make_tuple(1, 2, 3, 4, 5))));
+    assert(
+        xranges::equal(v5, xviews::single(__RXX make_tuple(1, 2, 3, 4, 5))));
 
     auto const v6 = y | xviews::adjacent<6>;
     assert(xranges::empty(v6));
@@ -81,9 +82,9 @@ constexpr bool test01() {
 }
 
 constexpr bool test02() {
-    using rxx::tests::test_forward_range;
-    using rxx::tests::test_input_range;
-    using rxx::tests::test_random_access_range;
+    using __RXX tests::test_forward_range;
+    using __RXX tests::test_input_range;
+    using __RXX tests::test_random_access_range;
 
     using ty1 =
         xranges::adjacent_view<xviews::all_t<test_forward_range<int>>, 2>;

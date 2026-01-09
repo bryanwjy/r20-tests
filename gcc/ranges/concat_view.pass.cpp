@@ -33,8 +33,8 @@
 #include <utility>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     std::vector<int> v1{1, 2, 3}, v2{4, 5}, v3{};
@@ -82,7 +82,7 @@ constexpr bool test01() {
 
 void test02() {
     int x[] = {1, 2, 3, 4, 5};
-    rxx::tests::test_input_range<int> rx(x);
+    __RXX tests::test_input_range<int> rx(x);
     auto v = xviews::concat(xviews::single(0), rx, xviews::empty<int>);
     static_assert(!xranges::forward_range<decltype(v)>);
     assert(xranges::equal(v | xviews::drop(1), x));

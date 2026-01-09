@@ -27,12 +27,11 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
 using std::same_as;
 
-static_assert(rxx::tests::is_customization_point_object(xranges::begin));
+static_assert(__RXX tests::is_customization_point_object(xranges::begin));
 
 void test01() {
     int a[2] = {};
@@ -51,10 +50,10 @@ void test01() {
 }
 
 void test02() {
-    using rxx::tests::input_iterator_wrapper;
-    using rxx::tests::output_iterator_wrapper;
-    using rxx::tests::random_access_iterator_wrapper;
-    using rxx::tests::test_range;
+    using __RXX tests::input_iterator_wrapper;
+    using __RXX tests::output_iterator_wrapper;
+    using __RXX tests::random_access_iterator_wrapper;
+    using __RXX tests::test_range;
 
     int a[] = {0, 1};
 

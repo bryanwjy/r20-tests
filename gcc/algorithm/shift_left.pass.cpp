@@ -23,12 +23,12 @@
 
 #include <cassert>
 
-using rxx::tests::bidirectional_iterator_wrapper;
-using rxx::tests::forward_iterator_wrapper;
-using rxx::tests::random_access_iterator_wrapper;
-using rxx::tests::test_range;
+using __RXX tests::bidirectional_iterator_wrapper;
+using __RXX tests::forward_iterator_wrapper;
+using __RXX tests::random_access_iterator_wrapper;
+using __RXX tests::test_range;
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct X {
     int a = -1;

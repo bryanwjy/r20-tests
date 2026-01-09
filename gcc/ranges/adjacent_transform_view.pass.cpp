@@ -18,15 +18,14 @@
 
 #include "../test_iterators.h"
 #include "rxx/algorithm.h"
-#include "rxx/ranges/empty_view.h"
 #include "rxx/ranges/filter_view.h"
 #include "rxx/ranges/iota_view.h"
 
 #include <cassert>
 #include <utility>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     auto v1 =
@@ -78,9 +77,9 @@ constexpr bool test01() {
 }
 
 constexpr bool test02() {
-    using rxx::tests::test_forward_range;
-    using rxx::tests::test_input_range;
-    using rxx::tests::test_random_access_range;
+    using __RXX tests::test_forward_range;
+    using __RXX tests::test_input_range;
+    using __RXX tests::test_random_access_range;
 
     using ty1 =
         xranges::adjacent_transform_view<xviews::all_t<test_forward_range<int>>,

@@ -26,10 +26,9 @@
 
 #include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
 
-static_assert(rxx::tests::is_customization_point_object(xranges::data));
+static_assert(__RXX tests::is_customization_point_object(xranges::data));
 
 template <typename T>
 concept has_data = requires(T&& t) { xranges::data(std::forward<T>(t)); };
@@ -59,12 +58,13 @@ void test02() {
     int a[] = {0, 1};
     assert(xranges::data(a) == a + 0);
 
-    rxx::tests::test_range<int, rxx::tests::contiguous_iterator_wrapper> r(a);
+    __RXX tests::test_range<int, __RXX tests::contiguous_iterator_wrapper> r(
+        a);
     assert(xranges::data(r) == std::to_address(xranges::begin(r)));
 
-    static_assert(has_data<int(&)[2]>);
+    static_assert(has_data<int (&)[2]>);
     static_assert(has_data<decltype(r)&>);
-    static_assert(!has_data<int(&&)[2]>);
+    static_assert(!has_data<int (&&)[2]>);
     static_assert(!has_data<decltype(r)&&>);
 }
 

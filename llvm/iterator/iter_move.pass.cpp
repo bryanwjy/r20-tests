@@ -22,7 +22,7 @@
 #include <cassert>
 #include <type_traits>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct IterMovingIt {
     using value_type = int;

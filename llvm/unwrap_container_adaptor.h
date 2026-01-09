@@ -12,6 +12,8 @@
 #ifndef SUPPORT_UNWRAP_CONTAINER_ADAPTOR_H
 #define SUPPORT_UNWRAP_CONTAINER_ADAPTOR_H
 
+#include <utility>
+
 // Allows accessing the underlying container of the given adaptor.
 template <class Adaptor>
 struct UnwrapAdaptor : Adaptor {

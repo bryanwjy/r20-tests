@@ -21,14 +21,14 @@
 #include <type_traits>
 #include <utility>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct A {
     explicit A(int);
 };
 // no implicit conversion
 static_assert(!std::is_constructible_v<xranges::in_value_result<A, A>,
-              xranges::in_value_result<int, int>>);
+    xranges::in_value_result<int, int>>);
 
 struct B {
     B(int);
@@ -47,7 +47,7 @@ struct C {
     C(int&);
 };
 static_assert(!std::is_constructible_v<xranges::in_value_result<C, C>,
-              xranges::in_value_result<int, int>&>);
+    xranges::in_value_result<int, int>&>);
 
 // has to be convertible via const&
 static_assert(std::is_convertible_v<xranges::in_value_result<int, int>&,

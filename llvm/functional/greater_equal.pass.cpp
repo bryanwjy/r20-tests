@@ -25,14 +25,14 @@
 #include <type_traits>
 #include <utility>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 
 struct NotTotallyOrdered {
     friend bool operator<(NotTotallyOrdered const&, NotTotallyOrdered const&);
 };
 
 static_assert(!std::is_invocable_v<xranges::greater_equal, NotTotallyOrdered,
-              NotTotallyOrdered>);
+    NotTotallyOrdered>);
 // The following becomes true in C++23 thanks to P2404R3
 static_assert(std::is_invocable_v<xranges::greater_equal, int, MoveOnly>);
 static_assert(std::is_invocable_v<xranges::greater_equal, explicit_operators,

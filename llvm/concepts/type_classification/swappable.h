@@ -16,7 +16,7 @@
 
 #include <concepts>
 
-namespace xranges = rxx::ranges;
+namespace xranges = __RXX ranges;
 // `adl_swappable` indicates it's been swapped using ADL by maintaining a
 // pointer to itself that isn't a part of the exchange. This is well-formed
 // since we say that two `adl_swappable` objects are equal only if their

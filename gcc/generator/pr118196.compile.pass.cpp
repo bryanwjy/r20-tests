@@ -6,7 +6,7 @@
 #if RXX_SUPPORTS_GENERATOR
 
 template <typename... Ts>
-using xgenerator = rxx::generator<Ts...>;
+using xgenerator = __RXX generator<Ts...>;
 
 xgenerator<int> generator();
 

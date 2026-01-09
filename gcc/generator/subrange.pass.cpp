@@ -28,10 +28,10 @@
 #  include <array>
 #  include <cassert>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+
 template <typename... Ts>
-using xgenerator = rxx::generator<Ts...>;
+using xgenerator = __RXX generator<Ts...>;
 #  include <vector>
 
 xgenerator<int&> yield_vector() {
@@ -45,7 +45,7 @@ xgenerator<int&> yield_vector() {
 
 int main() {
     constexpr std::array expected{123, 1, 2, 3, 456};
-    for (auto [a, e] : rxx::views::zip(yield_vector(), expected)) {
+    for (auto [a, e] : __RXX views::zip(yield_vector(), expected)) {
         assert(a == e);
     }
 }

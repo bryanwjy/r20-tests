@@ -27,8 +27,8 @@
 #include <cassert>
 #include <vector>
 
-namespace xranges = rxx::ranges;
-namespace xviews = rxx::views;
+namespace xranges = __RXX ranges;
+namespace xviews = __RXX views;
 
 constexpr bool test01() {
     int x[] = {1, 2, 2, 3, 0, 4, 5, 2};
@@ -64,7 +64,7 @@ constexpr bool test01() {
 
 void test02() {
     int x[] = {1, 2, 3};
-    rxx::tests::test_forward_range<int> rx(x);
+    __RXX tests::test_forward_range<int> rx(x);
     auto v = rx | xviews::chunk_by(xranges::equal_to{});
     static_assert(!xranges::bidirectional_range<decltype(v)> &&
         !xranges::common_range<decltype(v)>);
