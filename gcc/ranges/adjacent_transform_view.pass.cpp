@@ -18,7 +18,6 @@
 
 #include "../test_iterators.h"
 #include "rxx/algorithm.h"
-#include "rxx/ranges/empty_view.h"
 #include "rxx/ranges/filter_view.h"
 #include "rxx/ranges/iota_view.h"
 
