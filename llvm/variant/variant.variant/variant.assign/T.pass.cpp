@@ -191,6 +191,9 @@ constexpr void test_T_assignment_basic() {
         assert(v.index() == 0);
         assert(__RXX get<0>(v) == 43);
     }
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(14)
+    if (!std::is_constant_evaluated())
+#endif
     {
         __RXX variant<std::string, bool> v = true;
         v = "bar";
@@ -403,11 +406,16 @@ void test_T_assignment_performs_assignment_throw() {
 }
 
 constexpr void test_T_assignment_vector_bool() {
-    std::vector<bool> vec = {true};
-    __RXX variant<bool, int> v;
-    v = vec[0];
-    assert(v.index() == 0);
-    assert(__RXX get<0>(v) == true);
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AFTER(2024, 06, 11)
+    if (!std::is_constant_evaluated())
+#endif
+    {
+        std::vector<bool> vec = {true};
+        __RXX variant<bool, int> v;
+        v = vec[0];
+        assert(v.index() == 0);
+        assert(__RXX get<0>(v) == true);
+    }
 }
 
 void non_constexpr_test() {

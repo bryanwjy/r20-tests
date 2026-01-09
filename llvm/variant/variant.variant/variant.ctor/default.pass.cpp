@@ -110,7 +110,9 @@ constexpr void test_default_ctor_basic() {
 }
 
 constexpr void issue_86686() {
+#if !RXX_LIBSTDCXX || RXX_LIBSTDCXX_AT_LEAST(14)
     static_assert(__RXX variant<std::string>{}.index() == 0);
+#endif
 }
 
 constexpr bool test() {

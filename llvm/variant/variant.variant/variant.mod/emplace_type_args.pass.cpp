@@ -89,11 +89,18 @@ constexpr void test_basic() {
         static_assert(std::is_same_v<void const*&, decltype(ref2)>, "");
         assert(__RXX get<2>(v) == &x);
         assert(&ref2 == &__RXX get<2>(v));
-        // emplace with multiple args
-        auto& ref3 = v.emplace<std::string>(3u, 'a');
-        static_assert(std::is_same_v<std::string&, decltype(ref3)>, "");
-        assert(__RXX get<4>(v) == "aaa");
-        assert(&ref3 == &__RXX get<4>(v));
+
+        // Broken constexpr string in libstdc++
+#if RXX_LIBSTDCXX && !RXX_LIBSTDCXX_AT_LEAST(14)
+        if (!std::is_constant_evaluated())
+#endif
+        {
+            // emplace with multiple args
+            auto& ref3 = v.emplace<std::string>(3u, 'a');
+            static_assert(std::is_same_v<std::string&, decltype(ref3)>, "");
+            assert(__RXX get<4>(v) == "aaa");
+            assert(&ref3 == &__RXX get<4>(v));
+        }
     }
 }
 
