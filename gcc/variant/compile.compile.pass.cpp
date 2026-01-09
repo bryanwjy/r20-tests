@@ -23,8 +23,6 @@
 #include <string>
 #include <vector>
 
-using __RXX variant;
-using __RXX variant_alternative_t;
 using namespace std;
 
 struct AllDeleted {
@@ -86,85 +84,97 @@ struct virtual_default_dtor {
 };
 
 void default_ctor() {
-    static_assert(is_default_constructible_v<variant<int, string>>);
-    static_assert(is_default_constructible_v<variant<string, string>>);
-    static_assert(!is_default_constructible_v<variant<AllDeleted, string>>);
-    static_assert(is_default_constructible_v<variant<string, AllDeleted>>);
-    static_assert(is_default_constructible_v<variant<DeletedMoves>>);
+    static_assert(is_default_constructible_v<__RXX variant<int, string>>);
+    static_assert(is_default_constructible_v<__RXX variant<string, string>>);
+    static_assert(
+        !is_default_constructible_v<__RXX variant<AllDeleted, string>>);
+    static_assert(
+        is_default_constructible_v<__RXX variant<string, AllDeleted>>);
+    static_assert(is_default_constructible_v<__RXX variant<DeletedMoves>>);
 
-    static_assert(noexcept(variant<int>()));
-    static_assert(!noexcept(variant<Empty>()));
-    static_assert(noexcept(variant<DefaultNoexcept>()));
-    { variant<virtual_default_dtor> a; }
+    static_assert(noexcept(__RXX variant<int>()));
+    static_assert(!noexcept(__RXX variant<Empty>()));
+    static_assert(noexcept(__RXX variant<DefaultNoexcept>()));
+    { __RXX variant<virtual_default_dtor> a; }
 }
 
 void copy_ctor() {
-    static_assert(is_copy_constructible_v<variant<int, string>>);
-    static_assert(!is_copy_constructible_v<variant<AllDeleted, string>>);
-    static_assert(is_trivially_copy_constructible_v<variant<int>>);
-    static_assert(!is_trivially_copy_constructible_v<variant<std::string>>);
-    static_assert(is_trivially_copy_constructible_v<variant<DeletedMoves>>);
+    static_assert(is_copy_constructible_v<__RXX variant<int, string>>);
+    static_assert(
+        !is_copy_constructible_v<__RXX variant<AllDeleted, string>>);
+    static_assert(is_trivially_copy_constructible_v<__RXX variant<int>>);
+    static_assert(
+        !is_trivially_copy_constructible_v<__RXX variant<std::string>>);
+    static_assert(
+        is_trivially_copy_constructible_v<__RXX variant<DeletedMoves>>);
 
     {
-        variant<int> a;
-        static_assert(noexcept(variant<int>(a)));
+        __RXX variant<int> a;
+        static_assert(noexcept(__RXX variant<int>(a)));
     }
     {
-        variant<string> a;
-        static_assert(!noexcept(variant<string>(a)));
+        __RXX variant<string> a;
+        static_assert(!noexcept(__RXX variant<string>(a)));
     }
     {
-        variant<int, string> a;
-        static_assert(!noexcept(variant<int, string>(a)));
+        __RXX variant<int, string> a;
+        static_assert(!noexcept(__RXX variant<int, string>(a)));
     }
     {
-        variant<int, char> a;
-        static_assert(noexcept(variant<int, char>(a)));
+        __RXX variant<int, char> a;
+        static_assert(noexcept(__RXX variant<int, char>(a)));
     }
 }
 
 void move_ctor() {
-    static_assert(is_move_constructible_v<variant<int, string>>);
-    static_assert(!is_move_constructible_v<variant<AllDeleted, string>>);
+    static_assert(is_move_constructible_v<__RXX variant<int, string>>);
     static_assert(
-        is_move_constructible_v<variant<int, DeletedMoves>>); // uses copy ctor
-    static_assert(is_trivially_move_constructible_v<variant<int>>);
-    static_assert(!is_trivially_move_constructible_v<variant<std::string>>);
+        !is_move_constructible_v<__RXX variant<AllDeleted, string>>);
+    static_assert(is_move_constructible_v<
+        __RXX variant<int, DeletedMoves>>); // uses copy ctor
+    static_assert(is_trivially_move_constructible_v<__RXX variant<int>>);
     static_assert(
-        !noexcept(variant<int, Empty>(declval<variant<int, Empty>>())));
-    static_assert(noexcept(variant<int, DefaultNoexcept>(
-        declval<variant<int, DefaultNoexcept>>())));
+        !is_trivially_move_constructible_v<__RXX variant<std::string>>);
+    static_assert(!noexcept(
+        __RXX variant<int, Empty>(declval<__RXX variant<int, Empty>>())));
+    static_assert(noexcept(__RXX variant<int, DefaultNoexcept>(
+        declval<__RXX variant<int, DefaultNoexcept>>())));
 }
 
 void arbitrary_ctor() {
-    static_assert(!is_constructible_v<variant<string, string>, char const*>);
-    static_assert(is_constructible_v<variant<int, string>, char const*>);
-    static_assert(noexcept(variant<int, Empty>(int{})));
-    static_assert(noexcept(variant<int, DefaultNoexcept>(int{})));
-    static_assert(!noexcept(variant<int, Empty>(Empty{})));
-    static_assert(noexcept(variant<int, DefaultNoexcept>(DefaultNoexcept{})));
+    static_assert(
+        !is_constructible_v<__RXX variant<string, string>, char const*>);
+    static_assert(
+        is_constructible_v<__RXX variant<int, string>, char const*>);
+    static_assert(noexcept(__RXX variant<int, Empty>(int{})));
+    static_assert(noexcept(__RXX variant<int, DefaultNoexcept>(int{})));
+    static_assert(!noexcept(__RXX variant<int, Empty>(Empty{})));
+    static_assert(
+        noexcept(__RXX variant<int, DefaultNoexcept>(DefaultNoexcept{})));
 
     // P0608R3 disallow narrowing conversions and boolean conversions
-    static_assert(!is_constructible_v<variant<float>, int>);
-    static_assert(!is_constructible_v<variant<float, vector<int>>, int>);
-    static_assert(is_constructible_v<variant<float, int>, char>);
-    static_assert(!is_constructible_v<variant<float, char>, int>);
-    static_assert(is_constructible_v<variant<float, long>, int>);
+    static_assert(!is_constructible_v<__RXX variant<float>, int>);
+    static_assert(
+        !is_constructible_v<__RXX variant<float, vector<int>>, int>);
+    static_assert(is_constructible_v<__RXX variant<float, int>, char>);
+    static_assert(!is_constructible_v<__RXX variant<float, char>, int>);
+    static_assert(is_constructible_v<__RXX variant<float, long>, int>);
     struct big_int {
         big_int(int) {}
     };
-    static_assert(is_constructible_v<variant<float, big_int>, int>);
+    static_assert(is_constructible_v<__RXX variant<float, big_int>, int>);
 
-    static_assert(!is_constructible_v<variant<int>, unsigned>);
-    static_assert(!is_constructible_v<variant<bool>, int>);
-    static_assert(!is_constructible_v<variant<bool>, void*>);
+    static_assert(!is_constructible_v<__RXX variant<int>, unsigned>);
+    static_assert(!is_constructible_v<__RXX variant<bool>, int>);
+    static_assert(!is_constructible_v<__RXX variant<bool>, void*>);
 
     // P1957R2 Converting from T* to bool should be considered narrowing
     struct ConvertibleToBool {
         operator bool() const { return true; }
     };
-    static_assert(is_constructible_v<variant<bool>, ConvertibleToBool>);
-    static_assert(is_constructible_v<variant<bool, int>, ConvertibleToBool>);
+    static_assert(is_constructible_v<__RXX variant<bool>, ConvertibleToBool>);
+    static_assert(
+        is_constructible_v<__RXX variant<bool, int>, ConvertibleToBool>);
 }
 
 struct None {
@@ -176,93 +186,96 @@ struct Any {
 };
 
 void in_place_index_ctor() {
-    variant<string, string> a(in_place_index<0>, "a");
-    variant<string, string> b(in_place_index<1>, {'a'});
+    __RXX variant<string, string> a(in_place_index<0>, "a");
+    __RXX variant<string, string> b(in_place_index<1>, {'a'});
 
-    static_assert(
-        !is_constructible_v<variant<None, Any>, std::in_place_index_t<0>>,
+    static_assert(!is_constructible_v<__RXX variant<None, Any>,
+                      std::in_place_index_t<0>>,
         "PR libstdc++/90165");
 }
 
 void in_place_type_ctor() {
-    variant<int, string, int> a(in_place_type<string>, "a");
-    variant<int, string, int> b(in_place_type<string>, {'a'});
-    static_assert(!is_constructible_v<variant<string, string>,
+    __RXX variant<int, string, int> a(in_place_type<string>, "a");
+    __RXX variant<int, string, int> b(in_place_type<string>, {'a'});
+    static_assert(!is_constructible_v<__RXX variant<string, string>,
         in_place_type_t<string>, char const*>);
-    static_assert(
-        !is_constructible_v<variant<None, Any>, std::in_place_type_t<None>>,
+    static_assert(!is_constructible_v<__RXX variant<None, Any>,
+                      std::in_place_type_t<None>>,
         "PR libstdc++/90165");
 }
 
 void dtor() {
-    static_assert(is_destructible_v<variant<int, string>>);
-    static_assert(is_destructible_v<variant<AllDeleted, string>>);
+    static_assert(is_destructible_v<__RXX variant<int, string>>);
+    static_assert(is_destructible_v<__RXX variant<AllDeleted, string>>);
 }
 
 void copy_assign() {
-    static_assert(is_copy_assignable_v<variant<int, string>>);
-    static_assert(!is_copy_assignable_v<variant<AllDeleted, string>>);
-    static_assert(is_trivially_copy_assignable_v<variant<int>>);
-    static_assert(!is_trivially_copy_assignable_v<variant<string>>);
-    static_assert(is_trivially_copy_assignable_v<variant<DeletedMoves>>);
+    static_assert(is_copy_assignable_v<__RXX variant<int, string>>);
+    static_assert(!is_copy_assignable_v<__RXX variant<AllDeleted, string>>);
+    static_assert(is_trivially_copy_assignable_v<__RXX variant<int>>);
+    static_assert(!is_trivially_copy_assignable_v<__RXX variant<string>>);
+    static_assert(
+        is_trivially_copy_assignable_v<__RXX variant<DeletedMoves>>);
     {
-        variant<Empty> a;
+        __RXX variant<Empty> a;
         static_assert(!noexcept(a = a));
     }
     {
-        variant<DefaultNoexcept> a;
+        __RXX variant<DefaultNoexcept> a;
         static_assert(noexcept(a = a));
     }
 }
 
 void move_assign() {
-    static_assert(is_move_assignable_v<variant<int, string>>);
-    static_assert(!is_move_assignable_v<variant<AllDeleted, string>>);
+    static_assert(is_move_assignable_v<__RXX variant<int, string>>);
+    static_assert(!is_move_assignable_v<__RXX variant<AllDeleted, string>>);
     static_assert(
-        is_move_assignable_v<variant<int, DeletedMoves>>); // uses copy
-                                                           // assignment
-    static_assert(is_trivially_move_assignable_v<variant<int>>);
-    static_assert(!is_trivially_move_assignable_v<variant<string>>);
+        is_move_assignable_v<__RXX variant<int, DeletedMoves>>); // uses copy
+                                                                   // assignment
+    static_assert(is_trivially_move_assignable_v<__RXX variant<int>>);
+    static_assert(!is_trivially_move_assignable_v<__RXX variant<string>>);
     {
-        variant<Empty> a;
+        __RXX variant<Empty> a;
         static_assert(!noexcept(a = std::move(a)));
     }
     {
-        variant<DefaultNoexcept> a;
+        __RXX variant<DefaultNoexcept> a;
         static_assert(noexcept(a = std::move(a)));
     }
 }
 
 void arbitrary_assign() {
-    static_assert(!is_assignable_v<variant<string, string>, char const*>);
-    static_assert(is_assignable_v<variant<int, string>, char const*>);
-    static_assert(noexcept(variant<int, Empty>() = int{}));
-    static_assert(noexcept(variant<int, DefaultNoexcept>() = int{}));
-    static_assert(!noexcept(variant<int, Empty>() = Empty{}));
     static_assert(
-        noexcept(variant<int, DefaultNoexcept>() = DefaultNoexcept{}));
+        !is_assignable_v<__RXX variant<string, string>, char const*>);
+    static_assert(is_assignable_v<__RXX variant<int, string>, char const*>);
+    static_assert(noexcept(__RXX variant<int, Empty>() = int{}));
+    static_assert(noexcept(__RXX variant<int, DefaultNoexcept>() = int{}));
+    static_assert(!noexcept(__RXX variant<int, Empty>() = Empty{}));
+    static_assert(
+        noexcept(__RXX variant<int, DefaultNoexcept>() = DefaultNoexcept{}));
 }
 
 void test_get() {
-    static_assert(
-        is_same<decltype(get<0>(variant<int, string>())), int&&>::value);
-    static_assert(
-        is_same<decltype(get<1>(variant<int, string>())), string&&>::value);
-    static_assert(is_same<decltype(get<1>(variant<int, string const>())),
-        string const&&>::value);
-
-    static_assert(
-        is_same<decltype(get<int>(variant<int, string>())), int&&>::value);
-    static_assert(is_same<decltype(get<string>(variant<int, string>())),
+    static_assert(is_same<decltype(get<0>(__RXX variant<int, string>())),
+        int&&>::value);
+    static_assert(is_same<decltype(get<1>(__RXX variant<int, string>())),
         string&&>::value);
     static_assert(
-        is_same<decltype(get<string const>(variant<int, string const>())),
+        is_same<decltype(get<1>(__RXX variant<int, string const>())),
             string const&&>::value);
+
+    static_assert(is_same<decltype(get<int>(__RXX variant<int, string>())),
+        int&&>::value);
+    static_assert(is_same<decltype(get<string>(__RXX variant<int, string>())),
+        string&&>::value);
+    static_assert(is_same<decltype(get<string const>(
+                              __RXX variant<int, string const>())),
+        string const&&>::value);
 }
 
 void test_relational() {
     {
-        constexpr variant<int, nonliteral> a(42), b(43);
+        constexpr __RXX variant<int, nonliteral> a(42), b(43);
         static_assert((a < b));
         static_assert(!(a > b));
         static_assert((a <= b));
@@ -271,7 +284,7 @@ void test_relational() {
         static_assert(!(a >= b));
     }
     {
-        constexpr variant<int, nonliteral> a(42), b(42);
+        constexpr __RXX variant<int, nonliteral> a(42), b(42);
         static_assert(!(a < b));
         static_assert(!(a > b));
         static_assert((a <= b));
@@ -280,7 +293,7 @@ void test_relational() {
         static_assert((a >= b));
     }
     {
-        constexpr variant<int, nonliteral> a(43), b(42);
+        constexpr __RXX variant<int, nonliteral> a(43), b(42);
         static_assert(!(a < b));
         static_assert((a > b));
         static_assert(!(a <= b));
@@ -299,46 +312,46 @@ void test_relational() {
     }
 }
 
-// swappable, and variant<C> not swappable via the generic std::swap.
+// swappable, and __RXX variant<C> not swappable via the generic std::swap.
 struct C {
     C(C&&) = delete;
 };
 void swap(C&, C&) = delete;
 
-static_assert(!std::is_swappable_v<variant<C>>);
-static_assert(!std::is_swappable_v<variant<int, C>>);
-static_assert(!std::is_swappable_v<variant<C, int>>);
+static_assert(!std::is_swappable_v<__RXX variant<C>>);
+static_assert(!std::is_swappable_v<__RXX variant<int, C>>);
+static_assert(!std::is_swappable_v<__RXX variant<C, int>>);
 
-// Not swappable, and variant<D> not swappable
+// Not swappable, and __RXX variant<D> not swappable
 struct D {
     D(D&&) = delete;
 };
 
-static_assert(!std::is_swappable_v<variant<D>>);
-static_assert(!std::is_swappable_v<variant<int, D>>);
-static_assert(!std::is_swappable_v<variant<D, int>>);
+static_assert(!std::is_swappable_v<__RXX variant<D>>);
+static_assert(!std::is_swappable_v<__RXX variant<int, D>>);
+static_assert(!std::is_swappable_v<__RXX variant<D, int>>);
 
 // swappable, swappable via exchange
 struct E {};
-static_assert(std::is_swappable_v<variant<E>>);
-static_assert(std::is_swappable_v<variant<int, E>>);
-static_assert(std::is_swappable_v<variant<E, int>>);
+static_assert(std::is_swappable_v<__RXX variant<E>>);
+static_assert(std::is_swappable_v<__RXX variant<int, E>>);
+static_assert(std::is_swappable_v<__RXX variant<E, int>>);
 
-// Swappable, and variant<E2> not swappable even if E2 is swappable
+// Swappable, and __RXX variant<E2> not swappable even if E2 is swappable
 struct E2 {
     E2(E2&&) = delete;
 };
 void swap(E2&, E2&);
 static_assert(std::is_swappable_v<E2>);
-static_assert(!std::is_swappable_v<variant<E2>>);
-static_assert(!std::is_swappable_v<variant<int, E2>>);
-static_assert(!std::is_swappable_v<variant<E2, int>>);
+static_assert(!std::is_swappable_v<__RXX variant<E2>>);
+static_assert(!std::is_swappable_v<__RXX variant<int, E2>>);
+static_assert(!std::is_swappable_v<__RXX variant<E2, int>>);
 
 void test_swap() {
-    static_assert(is_swappable_v<variant<int, string>>);
-    static_assert(!is_swappable_v<variant<MoveCtorOnly>>);
-    static_assert(is_swappable_v<variant<MoveCtorAndSwapOnly>>);
-    static_assert(!is_swappable_v<variant<AllDeleted>>);
+    static_assert(is_swappable_v<__RXX variant<int, string>>);
+    static_assert(!is_swappable_v<__RXX variant<MoveCtorOnly>>);
+    static_assert(is_swappable_v<__RXX variant<MoveCtorAndSwapOnly>>);
+    static_assert(!is_swappable_v<__RXX variant<AllDeleted>>);
 }
 
 void test_visit() {
@@ -359,21 +372,22 @@ void test_visit() {
             bool operator()(char, float) { return false; }
             bool operator()(char, double) { return false; }
         };
-        visit(Visitor(), variant<int, char>(), variant<float, double>());
+        visit(Visitor(), __RXX variant<int, char>(),
+            __RXX variant<float, double>());
     }
     {
         struct Visitor {
             constexpr bool operator()(int const&) { return true; }
             constexpr bool operator()(nonliteral const&) { return false; }
         };
-        static_assert(visit(Visitor(), variant<int, nonliteral>(0)));
+        static_assert(visit(Visitor(), __RXX variant<int, nonliteral>(0)));
     }
     {
         struct Visitor {
             constexpr bool operator()(int const&) { return true; }
             constexpr bool operator()(nonliteral const&) { return false; }
         };
-        static_assert(visit(Visitor(), variant<int, nonliteral>(0)));
+        static_assert(visit(Visitor(), __RXX variant<int, nonliteral>(0)));
     }
     // PR libstdc++/79513
     {
@@ -384,17 +398,17 @@ void test_visit() {
 }
 
 void test_constexpr() {
-    constexpr variant<int> a;
+    constexpr __RXX variant<int> a;
     static_assert(holds_alternative<int>(a));
-    constexpr variant<int, char> b(in_place_index<0>, int{});
+    constexpr __RXX variant<int, char> b(in_place_index<0>, int{});
     static_assert(holds_alternative<int>(b));
-    constexpr variant<int, char> c(in_place_type<int>, int{});
+    constexpr __RXX variant<int, char> c(in_place_type<int>, int{});
     static_assert(holds_alternative<int>(c));
-    constexpr variant<int, char> d(in_place_index<1>, char{});
+    constexpr __RXX variant<int, char> d(in_place_index<1>, char{});
     static_assert(holds_alternative<char>(d));
-    constexpr variant<int, char> e(in_place_type<char>, char{});
+    constexpr __RXX variant<int, char> e(in_place_type<char>, char{});
     static_assert(holds_alternative<char>(e));
-    constexpr variant<int, char> f(char{});
+    constexpr __RXX variant<int, char> f(char{});
     static_assert(holds_alternative<char>(f));
 
     {
@@ -402,57 +416,58 @@ void test_constexpr() {
             constexpr literal() = default;
         };
 
-        constexpr variant<literal, nonliteral> v{};
-        constexpr variant<literal, nonliteral> v1{in_place_type<literal>};
-        constexpr variant<literal, nonliteral> v2{in_place_index<0>};
+        constexpr __RXX variant<literal, nonliteral> v{};
+        constexpr __RXX variant<literal, nonliteral> v1{
+            in_place_type<literal>};
+        constexpr __RXX variant<literal, nonliteral> v2{in_place_index<0>};
     }
 
     {
-        constexpr variant<int> a(42);
+        constexpr __RXX variant<int> a(42);
         static_assert(get<0>(a) == 42);
     }
     {
-        constexpr variant<int, nonliteral> a(42);
+        constexpr __RXX variant<int, nonliteral> a(42);
         static_assert(get<0>(a) == 42);
     }
     {
-        constexpr variant<nonliteral, int> a(42);
+        constexpr __RXX variant<nonliteral, int> a(42);
         static_assert(get<1>(a) == 42);
     }
     {
-        constexpr variant<int> a(42);
+        constexpr __RXX variant<int> a(42);
         static_assert(get<int>(a) == 42);
     }
     {
-        constexpr variant<int, nonliteral> a(42);
+        constexpr __RXX variant<int, nonliteral> a(42);
         static_assert(get<int>(a) == 42);
     }
     {
-        constexpr variant<nonliteral, int> a(42);
+        constexpr __RXX variant<nonliteral, int> a(42);
         static_assert(get<int>(a) == 42);
     }
     {
-        constexpr variant<int> a(42);
+        constexpr __RXX variant<int> a(42);
         static_assert(get<0>(std::move(a)) == 42);
     }
     {
-        constexpr variant<int, nonliteral> a(42);
+        constexpr __RXX variant<int, nonliteral> a(42);
         static_assert(get<0>(std::move(a)) == 42);
     }
     {
-        constexpr variant<nonliteral, int> a(42);
+        constexpr __RXX variant<nonliteral, int> a(42);
         static_assert(get<1>(std::move(a)) == 42);
     }
     {
-        constexpr variant<int> a(42);
+        constexpr __RXX variant<int> a(42);
         static_assert(get<int>(std::move(a)) == 42);
     }
     {
-        constexpr variant<int, nonliteral> a(42);
+        constexpr __RXX variant<int, nonliteral> a(42);
         static_assert(get<int>(std::move(a)) == 42);
     }
     {
-        constexpr variant<nonliteral, int> a(42);
+        constexpr __RXX variant<nonliteral, int> a(42);
         static_assert(get<int>(std::move(a)) == 42);
     }
 }
@@ -493,25 +508,29 @@ void test_adl() {
     v0.emplace<0>(x);
     v0.emplace<0>(il, x);
     visit(vis, v0);
-    variant<X> v1{in_place_index<0>, x};
-    variant<X> v2{in_place_type<X>, x};
-    variant<X> v3{in_place_index<0>, il, x};
-    variant<X> v4{in_place_type<X>, il, x};
+    __RXX variant<X> v1{in_place_index<0>, x};
+    __RXX variant<X> v2{in_place_type<X>, x};
+    __RXX variant<X> v3{in_place_index<0>, il, x};
+    __RXX variant<X> v4{in_place_type<X>, il, x};
 }
 
 void test_variant_alternative() {
     static_assert(
-        is_same_v<variant_alternative_t<0, variant<int, string>>, int>);
+        is_same_v<__RXX variant_alternative_t<0, __RXX variant<int, string>>,
+            int>);
     static_assert(
-        is_same_v<variant_alternative_t<1, variant<int, string>>, string>);
+        is_same_v<__RXX variant_alternative_t<1, __RXX variant<int, string>>,
+            string>);
 
     static_assert(
-        is_same_v<variant_alternative_t<0, variant<int> const>, int const>);
-    static_assert(is_same_v<variant_alternative_t<0, variant<int> volatile>,
+        is_same_v<__RXX variant_alternative_t<0, __RXX variant<int> const>,
+            int const>);
+    static_assert(is_same_v<
+        __RXX variant_alternative_t<0, __RXX variant<int> volatile>,
         int volatile>);
-    static_assert(
-        is_same_v<variant_alternative_t<0, variant<int> const volatile>,
-            int const volatile>);
+    static_assert(is_same_v<
+        __RXX variant_alternative_t<0, __RXX variant<int> const volatile>,
+        int const volatile>);
 }
 
 template <typename V, typename T>
@@ -537,22 +556,23 @@ constexpr bool has_index_emplace(...) {
 };
 
 void test_emplace() {
-    static_assert(has_type_emplace<variant<int>, int>(0));
-    static_assert(!has_type_emplace<variant<long>, int>(0));
-    static_assert(has_index_emplace<variant<int>, 0>(0));
-    static_assert(!has_type_emplace<variant<AllDeleted>, AllDeleted>(0));
-    static_assert(!has_index_emplace<variant<AllDeleted>, 0>(0));
-    static_assert(has_type_emplace<variant<int, AllDeleted>, int>(0));
-    static_assert(has_index_emplace<variant<int, AllDeleted>, 0>(0));
+    static_assert(has_type_emplace<__RXX variant<int>, int>(0));
+    static_assert(!has_type_emplace<__RXX variant<long>, int>(0));
+    static_assert(has_index_emplace<__RXX variant<int>, 0>(0));
     static_assert(
-        has_type_emplace<variant<int, vector<int>, AllDeleted>, vector<int>>(
-            0));
+        !has_type_emplace<__RXX variant<AllDeleted>, AllDeleted>(0));
+    static_assert(!has_index_emplace<__RXX variant<AllDeleted>, 0>(0));
+    static_assert(has_type_emplace<__RXX variant<int, AllDeleted>, int>(0));
+    static_assert(has_index_emplace<__RXX variant<int, AllDeleted>, 0>(0));
     static_assert(
-        has_index_emplace<variant<int, vector<int>, AllDeleted>, 1>(0));
+        has_type_emplace<__RXX variant<int, vector<int>, AllDeleted>,
+            vector<int>>(0));
+    static_assert(
+        has_index_emplace<__RXX variant<int, vector<int>, AllDeleted>, 1>(0));
 
     // The above tests only check the emplace members are available for
     // overload resolution. The following odr-uses will instantiate them:
-    variant<int, vector<int>, AllDeleted> v;
+    __RXX variant<int, vector<int>, AllDeleted> v;
     v.emplace<0>(1);
     v.emplace<int>(1);
     v.emplace<1>(1, 1);
@@ -562,21 +582,23 @@ void test_emplace() {
 }
 
 void test_triviality() {
-#define TEST_TEMPLATE(DT, CC, MC, CA, MA, CC_VAL, MC_VAL, CA_VAL, MA_VAL)    \
-    []() {                                                                   \
-        struct A {                                                           \
-            ~A() DT;                                                         \
-            A(const A&) CC;                                                  \
-            A(A&&) MC;                                                       \
-            A& operator=(const A&) CA;                                       \
-            A& operator=(A&&) MA;                                            \
-        };                                                                   \
-        static_assert(                                                       \
-            CC_VAL == is_trivially_copy_constructible_v<variant<A>>);        \
-        static_assert(                                                       \
-            MC_VAL == is_trivially_move_constructible_v<variant<A>>);        \
-        static_assert(CA_VAL == is_trivially_copy_assignable_v<variant<A>>); \
-        static_assert(MA_VAL == is_trivially_move_assignable_v<variant<A>>); \
+#define TEST_TEMPLATE(DT, CC, MC, CA, MA, CC_VAL, MC_VAL, CA_VAL, MA_VAL)   \
+    []() {                                                                  \
+        struct A {                                                          \
+            ~A() DT;                                                        \
+            A(const A&) CC;                                                 \
+            A(A&&) MC;                                                      \
+            A& operator=(const A&) CA;                                      \
+            A& operator=(A&&) MA;                                           \
+        };                                                                  \
+        static_assert(                                                      \
+            CC_VAL == is_trivially_copy_constructible_v<__RXX variant<A>>); \
+        static_assert(                                                      \
+            MC_VAL == is_trivially_move_constructible_v<__RXX variant<A>>); \
+        static_assert(                                                      \
+            CA_VAL == is_trivially_copy_assignable_v<__RXX variant<A>>);    \
+        static_assert(                                                      \
+            MA_VAL == is_trivially_move_assignable_v<__RXX variant<A>>);    \
     }()
     TEST_TEMPLATE(= default, = default, = default, = default, = default, true,
         true, true, true);
@@ -628,22 +650,22 @@ void test_triviality() {
     TEST_TEMPLATE(, , , , , false, false, false, false);
 #undef TEST_TEMPLATE
 
-#define TEST_TEMPLATE(CC, MC, CA, MA)                                    \
-    []() {                                                               \
-        struct A {                                                       \
-            A(const A&) CC;                                              \
-            A(A&&) MC;                                                   \
-            A& operator=(const A&) CA;                                   \
-            A& operator=(A&&) MA;                                        \
-        };                                                               \
-        static_assert(                                                   \
-            !is_trivially_copy_constructible_v<variant<AllDeleted, A>>); \
-        static_assert(                                                   \
-            !is_trivially_move_constructible_v<variant<AllDeleted, A>>); \
-        static_assert(                                                   \
-            !is_trivially_copy_assignable_v<variant<AllDeleted, A>>);    \
-        static_assert(                                                   \
-            !is_trivially_move_assignable_v<variant<AllDeleted, A>>);    \
+#define TEST_TEMPLATE(CC, MC, CA, MA)                                          \
+    []() {                                                                     \
+        struct A {                                                             \
+            A(const A&) CC;                                                    \
+            A(A&&) MC;                                                         \
+            A& operator=(const A&) CA;                                         \
+            A& operator=(A&&) MA;                                              \
+        };                                                                     \
+        static_assert(                                                         \
+            !is_trivially_copy_constructible_v<__RXX variant<AllDeleted, A>>); \
+        static_assert(                                                         \
+            !is_trivially_move_constructible_v<__RXX variant<AllDeleted, A>>); \
+        static_assert(                                                         \
+            !is_trivially_copy_assignable_v<__RXX variant<AllDeleted, A>>);    \
+        static_assert(                                                         \
+            !is_trivially_move_assignable_v<__RXX variant<AllDeleted, A>>);    \
     }()
     TEST_TEMPLATE(= default, = default, = default, = default);
     TEST_TEMPLATE(= default, = default, = default, );
@@ -664,11 +686,11 @@ void test_triviality() {
 #undef TEST_TEMPLATE
 
     static_assert(is_trivially_copy_constructible_v<
-        variant<DefaultNoexcept, int, char, float, double>>);
+        __RXX variant<DefaultNoexcept, int, char, float, double>>);
     static_assert(is_trivially_move_constructible_v<
-        variant<DefaultNoexcept, int, char, float, double>>);
+        __RXX variant<DefaultNoexcept, int, char, float, double>>);
     static_assert(is_trivially_copy_assignable_v<
-        variant<DefaultNoexcept, int, char, float, double>>);
+        __RXX variant<DefaultNoexcept, int, char, float, double>>);
     static_assert(is_trivially_move_assignable_v<
-        variant<DefaultNoexcept, int, char, float, double>>);
+        __RXX variant<DefaultNoexcept, int, char, float, double>>);
 }
