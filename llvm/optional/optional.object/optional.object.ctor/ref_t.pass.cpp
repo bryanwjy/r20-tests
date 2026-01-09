@@ -63,12 +63,14 @@ constexpr bool array_ref_test() {
 }
 
 constexpr bool tests() {
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
     assert((test<int&, 1>()));
     assert((test<double&, 1.0>()));
     assert((fn_ref_test<int, 1>()));
     assert((array_ref_test<int, 1>()));
     assert((fn_ref_test<double, 1.0>()));
     assert((array_ref_test<double, 1.0>()));
+#endif
     return true;
 }
 

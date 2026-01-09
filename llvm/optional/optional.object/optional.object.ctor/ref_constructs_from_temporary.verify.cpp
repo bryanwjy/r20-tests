@@ -14,7 +14,8 @@
 
 #include "rxx/optional.h"
 
-#include <utility>
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  include <utility>
 
 struct X {
     int i;
@@ -39,3 +40,4 @@ int main(int, char**) {
     __RXX optional<X const&> o7{_co}; // optional(const optional<U>&)
     __RXX optional<X const&> o8{_o}; // optional(optional<U>&)
 }
+#endif
