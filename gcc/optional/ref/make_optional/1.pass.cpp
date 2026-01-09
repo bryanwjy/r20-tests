@@ -3,8 +3,9 @@
 
 #include "rxx/optional.h"
 
-#include <cassert>
-#include <utility>
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  include <cassert>
+#  include <utility>
 
 struct NonTrivial {
     constexpr NonTrivial() {}
@@ -23,7 +24,7 @@ constexpr bool test() {
     NonTrivial t;
     NonTrivial const& ct = t;
 
-#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  if RXX_SUPPORTS_OPTIONAL_REFERENCES
     auto o1 = __RXX make_optional<NonTrivial&>(t);
     assert(o1.has_value());
     assert(&o1.value() == &t);
@@ -48,7 +49,7 @@ constexpr bool test() {
     auto o6 = __RXX make_optional<NonTrivial&>(Conv<NonTrivial&>(t));
     assert(o6.has_value());
     assert(&o6.value() == &t);
-#endif
+#  endif
 
     return true;
 }
@@ -57,3 +58,7 @@ int main() {
     test();
     static_assert(test());
 }
+
+#else
+int main() {}
+#endif

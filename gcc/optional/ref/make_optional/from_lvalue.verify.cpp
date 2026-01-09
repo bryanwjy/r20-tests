@@ -3,7 +3,8 @@
 
 #include "rxx/optional.h"
 
-#include <type_traits>
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  include <type_traits>
 
 struct C {
     C();
@@ -14,11 +15,11 @@ C const cs(1);
 
 template <typename T>
 using decay_pre26 =
-#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  if RXX_SUPPORTS_OPTIONAL_REFERENCES
     T;
-#else
+#  else
     std::decay_t<T>;
-#endif
+#  endif
 
 auto lr1 = __RXX make_optional<C&>(s); // changed meaning
 static_assert(std::is_same_v<decltype(lr1), __RXX optional<decay_pre26<C&>>>);
@@ -46,3 +47,5 @@ auto clr3 = __RXX make_optional<C const&&>(
 // pointer to reference type" } { dg-prune-output "cannot bind .* reference of
 // type" } { dg-prune-output "binding reference of type" } { dg-prune-output "no
 // matching function for call to `__RXX optional" }
+
+#endif

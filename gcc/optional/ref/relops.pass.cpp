@@ -3,9 +3,10 @@
 
 #include "rxx/optional.h"
 
-#include <cassert>
-#include <functional>
-#include <type_traits>
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  include <cassert>
+#  include <functional>
+#  include <type_traits>
 
 template <typename T, typename H = std::hash<T>>
 constexpr bool has_disabled_hash = !std::is_default_constructible_v<H> &&
@@ -216,3 +217,6 @@ int main() {
     test_all();
     static_assert(test_all());
 }
+#else
+int main() {}
+#endif

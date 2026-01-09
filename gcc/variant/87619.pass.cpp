@@ -50,7 +50,10 @@ void f() {
 }
 
 int main() {
+#if !RXX_COMPILER_GCC
+    // Disable on GCC for now until we can selectively modify compile flags
     f<std::numeric_limits<unsigned char>::max() - 1>();
     f<std::numeric_limits<unsigned char>::max()>();
     f<std::numeric_limits<unsigned char>::max() + 1>();
+#endif
 }

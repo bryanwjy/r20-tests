@@ -20,21 +20,17 @@
 #include <cassert>
 #include <memory>
 #include <string>
-#include <string_view>
 
 template <typename T>
 constexpr bool test_ref() {
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
     T i{0};
     auto opt = __RXX make_optional<T&>(i);
 
-#if !RXX_SUPPORTS_OPTIONAL_REFERENCES
-    assert((std::is_same_v<decltype(opt), __RXX optional<T>>));
-#else
     assert((std::is_same_v<decltype(opt), __RXX optional<T&>>));
-#endif
 
     assert(*opt == 0);
-
+#endif
     return true;
 }
 

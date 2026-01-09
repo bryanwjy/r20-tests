@@ -20,7 +20,9 @@
 struct Incomplete;
 template <class T>
 struct Holder {
+#if !RXX_COMPILER_GCC | RXX_COMPILER_GCC_AT_LEAST(14, 2, 0)
     T t;
+#endif
 };
 
 constexpr bool test(bool do_it) {

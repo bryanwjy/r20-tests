@@ -1,12 +1,17 @@
 // Copyright 2025-2026 Bryan Wong
 // Adapted from GCC testsuite
 
+#include "rxx/optional/fwd.h"
+
 #include "rxx/optional.h"
 #include "rxx/ranges.h"
 
 #include <cassert>
 #include <concepts>
-#include <format> // IWYU pragma: keep
+#include <type_traits>
+#if RXX_SUPPORTS_RANGE_FORMAT
+#  include <format> // IWYU pragma: keep
+#endif
 #include <iterator>
 #include <string_view>
 #include <vector>
@@ -282,7 +287,7 @@ constexpr bool all_tests() {
     test(std::vector<int>{1, 2, 3, 4});
     test(__RXX optional<int>(42));
     test<int const>(42);
-
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
     test<int&>(i);
     test<int const&>(i);
     test<int (&)[10]>(arr);
@@ -295,35 +300,49 @@ constexpr bool all_tests() {
     test_not_range<void (&)(int)>();
     test_not_range<int (&)[]>();
     test_not_range<int const(&)[]>();
+#endif
 
     range_chain_example();
 
     test_as_const<false, int>(i);
     test_as_const<false, int const>(i);
-    test_as_const<true, int&>(i);
-    test_as_const<true, int const&>(i);
     test_as_const<false, NonMovable, int>(10);
     test_as_const<false, NonMovable const, int>(10);
-    test_as_const<true, NonMovable&>(nm);
-    test_as_const<true, NonMovable const&>(nm);
     test_as_const<false, NonAssignable>({});
     test_as_const<false, NonAssignable const>({});
+
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+    test_as_const<true, int&>(i);
+    test_as_const<true, int const&>(i);
+    test_as_const<true, NonMovable&>(nm);
+    test_as_const<true, NonMovable const&>(nm);
     test_as_const<true, NonAssignable&>(na);
     test_as_const<true, NonAssignable const&>(na);
+#endif
 
-#define TEST_ADAPTOR(name)                         \
-    test_##name<true, int>(i);                     \
-    test_##name<false, const int>(i);              \
-    test_##name<true, int&>(i);                    \
-    test_##name<true, const int&>(i);              \
-    test_##name<false, NonMovable, int>(10);       \
-    test_##name<false, const NonMovable, int>(10); \
-    test_##name<true, NonMovable&>(nm);            \
-    test_##name<true, const NonMovable&>(nm);      \
-    test_##name<false, NonAssignable>({});         \
-    test_##name<false, const NonAssignable>({});   \
-    test_##name<true, NonAssignable&>(na);         \
-    test_##name<true, const NonAssignable&>(na)
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  define TEST_ADAPTOR(name)                         \
+      test_##name<true, int>(i);                     \
+      test_##name<false, const int>(i);              \
+      test_##name<true, int&>(i);                    \
+      test_##name<true, const int&>(i);              \
+      test_##name<false, NonMovable, int>(10);       \
+      test_##name<false, const NonMovable, int>(10); \
+      test_##name<true, NonMovable&>(nm);            \
+      test_##name<true, const NonMovable&>(nm);      \
+      test_##name<false, NonAssignable>({});         \
+      test_##name<false, const NonAssignable>({});   \
+      test_##name<true, NonAssignable&>(na);         \
+      test_##name<true, const NonAssignable&>(na)
+#else
+#  define TEST_ADAPTOR(name)                         \
+      test_##name<true, int>(i);                     \
+      test_##name<false, const int>(i);              \
+      test_##name<false, NonMovable, int>(10);       \
+      test_##name<false, const NonMovable, int>(10); \
+      test_##name<false, NonAssignable>({});         \
+      test_##name<false, const NonAssignable>({})
+#endif
 
     TEST_ADAPTOR(reverse);
     TEST_ADAPTOR(take);

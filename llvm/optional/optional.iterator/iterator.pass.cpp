@@ -83,7 +83,7 @@ constexpr void test(std::decay_t<T> v) {
     }
 
     { // __RXX ranges::size for an engaged optional<T> == 1, disengaged
-      // optional<T> == 0
+        // optional<T> == 0
         __RXX optional<T> const disengaged{__RXX nullopt};
         __RXX optional<T> disengaged2{__RXX nullopt};
         assert(__RXX ranges::size(opt) == 1);
@@ -127,15 +127,17 @@ constexpr bool test() {
     static_assert(only_has_iterator<__RXX optional<int&>>);
     static_assert(only_has_iterator<__RXX optional<int const&>>);
     static_assert(only_has_iterator<__RXX optional<int (&)[1]>>);
-#endif
     static_assert(has_no_iterators<__RXX optional<int (&)[]>>);
     static_assert(has_no_iterators<__RXX optional<int (&)()>>);
+#endif
 
     test<int>(1);
     test<char>('a');
     test<bool>(true);
     test<int const>(2);
     test<char const>('b');
+
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
     test<int&>(1);
     test<char&>('a');
     test<bool&>(true);
@@ -145,6 +147,7 @@ constexpr bool test() {
     static_assert(!__RXX ranges::range<__RXX optional<int (&)()>>);
     static_assert(!__RXX ranges::range<__RXX optional<int (&)[]>>);
     static_assert(__RXX ranges::range<__RXX optional<int (&)[42]>>);
+#endif
 
     return true;
 }

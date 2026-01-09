@@ -3,6 +3,7 @@
 
 #include "rxx/optional.h"
 
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
 struct C {
     C();
     C(int);
@@ -12,11 +13,11 @@ C const cs(1);
 
 template <typename T>
 using decay_pre26 =
-#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  if RXX_SUPPORTS_OPTIONAL_REFERENCES
     T;
-#else
+#  else
     std::decay_t<T>;
-#endif
+#  endif
 
 auto z1 =
     __RXX make_optional<C&>(); // { dg-error "no matching function for call" }
@@ -49,3 +50,5 @@ auto t3 = __RXX make_optional<C const&&>(
 // pointer to reference type" } { dg-prune-output "cannot bind .* reference of
 // type" } { dg-prune-output "binding reference of type" } { dg-prune-output "no
 // matching function for call to '__RXX optional" }
+
+#endif

@@ -75,6 +75,7 @@ void test_call_operator_forwarding() {
         __RXX visit(std::move(cobj), v, v2);
         assert((Fn::check_call<long&, std::string&>(CT_Const | CT_RValue)));
     }
+#ifndef RXX_TEST_LIGHTWEIGHT
     {
         using V = __RXX variant<int, long, double, std::string>;
         V v1(42l), v2("hello"), v3(101), v4(1.1);
@@ -107,6 +108,7 @@ void test_call_operator_forwarding() {
         assert((Fn::check_call<long&, std::string&, int*&, double&>(
             CT_Const | CT_RValue)));
     }
+#endif
 }
 
 void test_argument_forwarding() {
@@ -134,6 +136,7 @@ void test_argument_forwarding() {
         __RXX visit(obj, std::as_const(v1), std::as_const(v2), std::move(v3));
         assert((Fn::check_call<int const&, std::string const&, long&&>(Val)));
     }
+#ifndef RXX_TEST_LIGHTWEIGHT
     {
         using V = __RXX variant<int, long, double, std::string>;
         V v1(42l), v2("hello"), v3(101), v4(1.1);
@@ -156,6 +159,7 @@ void test_argument_forwarding() {
             (Fn::check_call<long const&, std::string const&, int*&&, double&&>(
                 Val)));
     }
+#endif
 }
 
 void test_return_type() {
@@ -209,6 +213,7 @@ void test_return_type() {
             std::is_same_v<decltype(__RXX visit(std::move(cobj), v, v2)),
                 Fn const&&>);
     }
+#ifndef RXX_TEST_LIGHTWEIGHT
     {
         using V = __RXX variant<int, long, double, std::string>;
         V v1(42l), v2("hello"), v3(101), v4(1.1);
@@ -237,6 +242,7 @@ void test_return_type() {
                                          std::move(cobj), v1, v2, v3, v4)),
             Fn const&&>);
     }
+#endif
 }
 
 void test_constexpr() {
@@ -270,6 +276,7 @@ void test_constexpr() {
         constexpr V3 v3;
         static_assert(__RXX visit(aobj, v1, v2, v3) == 3, "");
     }
+#ifndef RXX_TEST_LIGHTWEIGHT
     {
         using V = __RXX variant<int, long, double, int*>;
         constexpr V v1(42l), v2(101), v3(nullptr), v4(1.1);
@@ -280,6 +287,7 @@ void test_constexpr() {
         constexpr V v1(42l), v2(101), v3(nullptr), v4(1.1);
         static_assert(__RXX visit(aobj, v1, v2, v3, v4) == 4, "");
     }
+#endif
 }
 
 void test_exceptions() {
@@ -324,6 +332,7 @@ void test_exceptions() {
         makeEmpty(v2);
         assert(test(v, v2));
     }
+#  ifndef RXX_TEST_LIGHTWEIGHT
     {
         using V = __RXX variant<int, long, double, MakeEmptyT>;
         V v1(42l), v2(101), v3(202), v4(1.1);
@@ -339,6 +348,7 @@ void test_exceptions() {
         makeEmpty(v4);
         assert(test(v1, v2, v3, v4));
     }
+#  endif
 #endif
 }
 

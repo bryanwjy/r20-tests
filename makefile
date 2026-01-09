@@ -14,8 +14,11 @@ RXX_DIR := $(TEST_ROOT)/rxx
 
 TEST_SRCS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -name '*.pass.cpp')
 TEST_SUBDIRS := $(shell find $(GCC_DIR) $(LLVM_DIR) $(RXX_DIR) -type d)
-CXX_FLAGS := $(CXX_FLAGS) -std=c++23 -O0 -g -I$(RXX_SRC)
-LINKER_FLAGS := $(LINKER_FLAGS)
+CXXFLAGS += -std=c++23 -O0 -g
+CPPFLAGS += -I$(RXX_SRC)
+ifdef LIGHTWEIGHT
+CPPFLAGS += -DRXX_TEST_LIGHTWEIGHT
+endif
 
 BUILD_SUBDIRS := $(patsubst $(TEST_ROOT)/%,%,$(TEST_SUBDIRS))
 BUILD_OBJECTS := $(addsuffix .o, $(TEST_SRCS:$(TEST_ROOT)/%=%))
@@ -62,7 +65,7 @@ $(OUTPUT_DIR)/%.compile.pass.crc: $(INTERMEDIATE_DIR)/%.compile.pass.cpp.o
 
 $(INTERMEDIATE_DIR)/%.compile.pass.cpp.o: $(TEST_ROOT)/%.compile.pass.cpp makefile
 	@mkdir -p '$(@D)'
-	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@' && \
+	@$(CXX) $(CXXFLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@' && \
 	echo "\033[0;34mCOMPILE\033[0m $(patsubst $(INTERMEDIATE_DIR)/%,%,$@): \033[0;32mSUCCESS\033[0m"  || \
 	{ echo "\033[0;34mCOMPILE\033[0m $(patsubst $(INTERMEDIATE_DIR)/%,%,$@): \033[0;31mFAILED\033[0m"; exit 1; }
 
@@ -73,21 +76,21 @@ $(OUTPUT_DIR)/%.pass.crc: $(OUTPUT_DIR)/%.pass
 $(OUTPUT_DIR)/%.pass: $(INTERMEDIATE_DIR)/%.pass.cpp.o makefile
 	@mkdir -p '$(@D)'
 	@echo "Building test" $(patsubst $(OUTPUT_DIR)/%,%,$@)
-	@$(CXX) $(LINKER_FLAGS) $< -o $@
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $< $(LDLIBS) -o $@
 
 $(BUILD_OBJECTS):%.cpp.o: $(INTERMEDIATE_DIR)/%.cpp.o
 	@
 
 $(INTERMEDIATE_DIR)/%.pass.cpp.o: $(TEST_ROOT)/%.pass.cpp makefile
 	@mkdir -p '$(@D)'
-	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@'
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -MF '$(@:.o=.d)' -MT '$@' -c $< -o '$@'
 
 $(PREPROCESS_OBJECTS):%.cpp.i: $(INTERMEDIATE_DIR)/%.cpp.i
 	@
 
 $(INTERMEDIATE_DIR)/%.pass.cpp.i: $(TEST_ROOT)/%.pass.cpp makefile
 	@mkdir -p '$(@D)'
-	@$(CXX) $(CXX_FLAGS) -MMD -MP -MF '$(@:.i=.d)' -MT '$@' -E $< -o '$@'
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -MF '$(@:.i=.d)' -MT '$@' -E $< -o '$@'
 
 -include $(addprefix $(INTERMEDIATE_DIR)/,$(DEPENDENCIES))
 

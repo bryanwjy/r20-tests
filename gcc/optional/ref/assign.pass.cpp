@@ -3,8 +3,9 @@
 
 #include "rxx/optional.h"
 
-#include <cassert>
-#include <type_traits>
+#if RXX_SUPPORTS_OPTIONAL_REFERENCES
+#  include <cassert>
+#  include <type_traits>
 
 struct NonTrivial {
     constexpr NonTrivial() {}
@@ -409,3 +410,6 @@ int main() {
     test_all();
     static_assert(test_all());
 }
+#else
+int main() {}
+#endif
